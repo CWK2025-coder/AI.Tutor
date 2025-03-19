@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>錯題本</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-color: #f8f9fa;
+    }
+    
+    body {
+      background-color: var(--bg-color);
+      padding: 0;
+      margin: 0;
+      font-family: "微軟正黑體", "Microsoft JhengHei", sans-serif;
+      height: 100%;
+      overflow-x: hidden;
+    }
+    
+    .back-button {
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+      background-color: rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .back-button i {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+    
+    .back-button:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+    
+    .back-button:active {
+      background-color: rgba(0, 0, 0, 0.15);
+    }
+    
+    .mistake-container {
+      padding: 20px;
+      padding-bottom: 100px;
+    }
+    
+    .filter-bar {
+      display: flex;
+      overflow-x: auto;
+      margin-bottom: 20px;
+      padding-bottom: 5px;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .filter-bar::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .filter-item {
+      padding: 8px 16px;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 20px;
+      margin-right: 10px;
+      font-size: 14px;
+      white-space: nowrap;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+    
+    .filter-item.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    
+    .stat-card {
+      flex: 1;
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 15px;
+      margin-right: 10px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    
+    .stat-card:last-child {
+      margin-right: 0;
+    }
+    
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: var(--primary-color);
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .batch-review-card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    
+    .batch-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      background-color: rgba(74, 107, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+    }
+    
+    .batch-icon i {
+      color: var(--primary-color);
+      font-size: 18px;
+    }
+    
+    .batch-content {
+      flex: 1;
+    }
+    
+    .batch-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    .batch-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .batch-btn {
+      padding: 8px 16px;
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: var(--border-radius);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .section-action {
+      font-size: 14px;
+      color: var(--primary-color);
+      cursor: pointer;
+    }
+    
+    .mistake-list {
+      margin-bottom: 30px;
+    }
+    
+    .mistake-item {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 16px;
+      margin-bottom: 15px;
+      box-shadow: var(--shadow);
+    }
+    
+    .mistake-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .mistake-subject {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary-color);
+      padding: 4px 8px;
+      background-color: rgba(74, 107, 255, 0.1);
+      border-radius: 12px;
+    }
+    
+    .mistake-date {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .mistake-question {
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+    
+    .mistake-answer {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+    
+    .mistake-answer span {
+      color: #2ed573;
+      font-weight: 600;
+    }
+    
+    .mistake-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    
+    .mistake-action {
+      padding: 6px 12px;
+      border-radius: var(--border-radius);
+      font-size: 12px;
+      cursor: pointer;
+    }
+    
+    .review-btn {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .delete-btn {
+      background-color: rgba(0, 0, 0, 0.05);
+      color: var(--text-secondary);
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px 0;
+      color: var(--text-secondary);
+    }
+    
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      color: rgba(0, 0, 0, 0.1);
+    }
+    
+    .empty-text {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .empty-action {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: var(--border-radius);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="mistake-container">
+    <div class="back-button" id="back-button">
+      <i class="fas fa-arrow-left"></i>
+    </div>
+    
+    <div class="filter-bar">
+      <div class="filter-item active">全部</div>
+      <div class="filter-item">數學</div>
+      <div class="filter-item">物理</div>
+      <div class="filter-item">化學</div>
+      <div class="filter-item">英語</div>
+      <div class="filter-item">語文</div>
+      <div class="filter-item">生物</div>
+    </div>
+    
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value">32</div>
+        <div class="stat-label">總錯題數</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">18</div>
+        <div class="stat-label">已複習</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">14</div>
+        <div class="stat-label">待複習</div>
+      </div>
+    </div>
+    
+    <div class="batch-review-card">
+      <div style="display: flex; align-items: center;">
+        <div class="batch-icon">
+          <i class="fas fa-sync-alt"></i>
+        </div>
+        <div class="batch-content">
+          <div class="batch-title">批量複習</div>
+          <div class="batch-desc">一次性複習所有錯題，提高學習效率</div>
+        </div>
+      </div>
+      <div id="batch-review-btn" class="batch-btn">
+        開始
+      </div>
+    </div>
+    
+    <div class="batch-review-card">
+      <div style="display: flex; align-items: center;">
+        <div class="batch-icon" style="background-color: rgba(255, 159, 67, 0.1);">
+          <i class="fas fa-magic" style="color: var(--secondary-color);"></i>
+        </div>
+        <div class="batch-content">
+          <div class="batch-title">生成練習題</div>
+          <div class="batch-desc">根據錯題生成更多類似題目進行練習</div>
+        </div>
+      </div>
+      <div id="generate-practice-btn" class="batch-btn" style="background-color: var(--secondary-color);">
+        生成
+      </div>
+    </div>
+    
+    <div class="section-header">
+      <div class="section-title">最近錯題</div>
+      <div class="section-action">全部清空</div>
+    </div>
+    
+    <div class="mistake-list">
+      <div class="mistake-item">
+        <div class="mistake-header">
+          <div class="mistake-subject">數學</div>
+          <div class="mistake-date">2023-06-15</div>
+        </div>
+        <div class="mistake-question">
+          已知函數 f(x) = 2x² - 3x + 1，求 f'(x) 的值。
+        </div>
+        <div class="mistake-answer">
+          正確答案：<span>f'(x) = 4x - 3</span>
+        </div>
+        <div class="mistake-actions">
+          <div class="mistake-action delete-btn">刪除</div>
+          <div class="mistake-action review-btn">複習</div>
+        </div>
+      </div>
+      
+      <div class="mistake-item">
+        <div class="mistake-header">
+          <div class="mistake-subject">物理</div>
+          <div class="mistake-date">2023-06-14</div>
+        </div>
+        <div class="mistake-question">
+          一個物體從靜止開始做勻加速直線運動，5秒內通過的路程為50米，則它的加速度為多少？
+        </div>
+        <div class="mistake-answer">
+          正確答案：<span>a = 4 m/s²</span>
+        </div>
+        <div class="mistake-actions">
+          <div class="mistake-action delete-btn">刪除</div>
+          <div class="mistake-action review-btn">複習</div>
+        </div>
+      </div>
+      
+      <div class="mistake-item">
+        <div class="mistake-header">
+          <div class="mistake-subject">英語</div>
+          <div class="mistake-date">2023-06-12</div>
+        </div>
+        <div class="mistake-question">
+          Choose the correct form: "If I _____ rich, I would buy a big house."
+        </div>
+        <div class="mistake-answer">
+          正確答案：<span>were</span>
+        </div>
+        <div class="mistake-actions">
+          <div class="mistake-action delete-btn">刪除</div>
+          <div class="mistake-action review-btn">複習</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 空狀態（當沒有錯題時顯示） -->
+    <div class="empty-state" style="display: none;">
+      <div class="empty-icon">
+        <i class="fas fa-book-open"></i>
+      </div>
+      <div class="empty-text">
+        你還沒有保存任何錯題
+      </div>
+      <div class="empty-action">
+        開始練習
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // 過濾器點擊事件
+    document.querySelectorAll('.filter-item').forEach(item => {
+      item.addEventListener('click', function() {
+        // 移除其他過濾器的選中狀態
+        document.querySelectorAll('.filter-item').forEach(filter => {
+          filter.classList.remove('active');
+        });
+        
+        // 添加當前過濾器的選中狀態
+        this.classList.add('active');
+        
+        // 獲取選中的科目
+        const subject = this.textContent;
+        
+        // 過濾錯題列表（這裡只是示例）
+        if (subject === '全部') {
+          document.querySelectorAll('.mistake-item').forEach(item => {
+            item.style.display = 'block';
+          });
+        } else {
+          document.querySelectorAll('.mistake-item').forEach(item => {
+            const itemSubject = item.querySelector('.mistake-subject').textContent;
+            if (itemSubject === subject) {
+              item.style.display = 'block';
+            } else {
+              item.style.display = 'none';
+            }
+          });
+        }
+        
+        // 檢查是否有顯示的錯題
+        const hasVisibleMistakes = Array.from(document.querySelectorAll('.mistake-item')).some(item => {
+          return item.style.display !== 'none';
+        });
+        
+        // 如果沒有顯示的錯題，顯示空狀態
+        document.querySelector('.empty-state').style.display = hasVisibleMistakes ? 'none' : 'block';
+      });
+    });
+    
+    // 刪除按鈕點擊事件
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const mistakeItem = this.closest('.mistake-item');
+        mistakeItem.style.display = 'none';
+        
+        // 檢查是否還有顯示的錯題
+        const hasVisibleMistakes = Array.from(document.querySelectorAll('.mistake-item')).some(item => {
+          return item.style.display !== 'none';
+        });
+        
+        // 如果沒有顯示的錯題，顯示空狀態
+        document.querySelector('.empty-state').style.display = hasVisibleMistakes ? 'none' : 'block';
+        
+        // 更新統計數據（這裡只是示例）
+        const totalValue = document.querySelectorAll('.stat-value')[0];
+        totalValue.textContent = parseInt(totalValue.textContent) - 1;
+        
+        const reviewedValue = document.querySelectorAll('.stat-value')[1];
+        const toReviewValue = document.querySelectorAll('.stat-value')[2];
+        
+        // 假設刪除的是未複習的錯題
+        toReviewValue.textContent = parseInt(toReviewValue.textContent) - 1;
+      });
+    });
+    
+    // 複習按鈕點擊事件
+    document.querySelectorAll('.review-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const mistakeItem = this.closest('.mistake-item');
+        const question = mistakeItem.querySelector('.mistake-question').textContent.trim();
+        const answer = mistakeItem.querySelector('.mistake-answer span').textContent.trim();
+        
+        // 跳轉到複習頁面
+        window.parent.location.href = 'mistake_review.html';
+      });
+    });
+    
+    // 全部清空按鈕點擊事件
+    document.querySelector('.section-action').addEventListener('click', function() {
+      if (confirm('確定要清空所有錯題嗎？')) {
+        document.querySelectorAll('.mistake-item').forEach(item => {
+          item.style.display = 'none';
+        });
+        
+        // 顯示空狀態
+        document.querySelector('.empty-state').style.display = 'block';
+        
+        // 更新統計數據
+        document.querySelectorAll('.stat-value').forEach(value => {
+          value.textContent = '0';
+        });
+      }
+    });
+    
+    // 批量複習按鈕點擊事件
+    document.getElementById('batch-review-btn').addEventListener('click', function() {
+      window.parent.location.href = 'batch_review.html';
+    });
+    
+    // 批量複習卡片點擊事件
+    document.querySelector('.batch-review-card').addEventListener('click', function() {
+      window.parent.location.href = 'batch_review.html';
+    });
+    
+    // 生成練習題按鈕點擊事件
+    document.getElementById('generate-practice-btn').addEventListener('click', function() {
+      window.parent.location.href = 'quiz_generator.html?source=mistake_book';
+    });
+    
+    // 生成練習題卡片點擊事件
+    document.querySelectorAll('.batch-review-card')[1].addEventListener('click', function() {
+      window.parent.location.href = 'quiz_generator.html?source=mistake_book';
+    });
+    
+    // 返回按鈕點擊事件
+    document.getElementById('back-button').addEventListener('click', function() {
+      window.history.back();
+    });
+  </script>
+</body>
+</html> 

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>錯題本</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/transitions.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="js/font-size-handler.js"></script>
+  <style>
+    :root {
+      --bg-color: #f8f9fa;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      font-family: var(--font-traditional);
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    .device-container {
+      width: 100%;
+      height: 100vh;
+      max-width: 500px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      background-color: var(--bg-color);
+    }
+    
+    .status-bar {
+      height: 30px;
+      background-color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 15px;
+      font-size: 12px;
+      position: relative;
+      z-index: 10;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    iframe {
+      border: none;
+      width: 100%;
+      height: calc(100% - 30px);
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="device-container">
+    <!-- 狀態欄 -->
+    <div class="status-bar">
+      <div class="signal">
+        <i class="fas fa-signal"></i>
+      </div>
+      <div class="time">14:30</div>
+      <div class="battery">
+        <i class="fas fa-battery-three-quarters mr-1"></i>
+        <span>85%</span>
+      </div>
+    </div>
+    
+    <!-- 頁面內容 -->
+    <iframe src="mistake_content.html" frameborder="0"></iframe>
+  </div>
+  
+  <script>
+    // 更新時間
+    function updateTime() {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      document.querySelector('.time').textContent = `${hours}:${minutes}`;
+    }
+    
+    // 初始化時間並設置定時器
+    updateTime();
+    setInterval(updateTime, 60000);
+    
+    // 監聽語言變更事件
+    window.addEventListener('fontChange', function(e) {
+      const lang = e.detail.font;
+      // 將語言設置傳遞給 iframe
+      try {
+        const iframe = document.querySelector('iframe');
+        if (iframe.contentWindow) {
+          const langChangeEvent = new CustomEvent('fontChange', { 
+            detail: { font: lang } 
+          });
+          iframe.contentWindow.dispatchEvent(langChangeEvent);
+          iframe.contentWindow.localStorage.setItem('systemLang', lang);
+        }
+      } catch (e) {
+        console.error('無法向 iframe 發送事件:', e);
+      }
+    });
+    
+    // 監聽字體大小變更事件
+    window.addEventListener('fontSizeChange', function(e) {
+      const size = e.detail.size;
+      // 將字體大小設置傳遞給 iframe
+      try {
+        const iframe = document.querySelector('iframe');
+        if (iframe.contentWindow) {
+          const fontSizeChangeEvent = new CustomEvent('fontSizeChange', { 
+            detail: { size: size } 
+          });
+          iframe.contentWindow.dispatchEvent(fontSizeChangeEvent);
+          iframe.contentWindow.localStorage.setItem('appFontSize', size);
+        }
+      } catch (e) {
+        console.error('無法向 iframe 發送事件:', e);
+      }
+    });
+  </script>
+</body>
+</html> 

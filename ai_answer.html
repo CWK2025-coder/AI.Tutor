@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>快答通 - AI解答</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css">
+  <script src="js/font-size-handler.js"></script>
+  <style>
+    :root {
+      --border-radius: 12px;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      --ai-primary: #4a6bff;  /* Main AI color */
+      --ai-secondary: #6e8fff; /* Secondary AI color */
+      --ai-gradient: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
+      --ai-bg-light: rgba(74, 107, 255, 0.05);
+    }
+    
+    body {
+      background-color: #f8f9fa;
+      font-family: "微軟正黑體", "Microsoft JhengHei", sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .device-container {
+      max-width: 500px;
+      margin: 0 auto;
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    .app-content {
+      padding: 20px;
+      padding-bottom: 80px;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    
+    .app-content.loaded {
+      opacity: 1;
+      transform: scale(1);
+    }
+    
+    .answer-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .back-button {
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+      background-color: rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .back-button i {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+    
+    .back-button:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+    
+    .back-button:active {
+      background-color: rgba(0, 0, 0, 0.15);
+    }
+    
+    .answer-title {
+      font-size: 18px;
+      font-weight: 600;
+      flex: 1;
+    }
+    
+    .action-buttons {
+      display: flex;
+    }
+    
+    .action-button {
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+      background-color: rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .action-button:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+    
+    /* 問題卡片樣式 */
+    .question-card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .question-subject {
+      display: inline-block;
+      padding: 4px 10px;
+      background-color: var(--ai-bg-light);
+      color: var(--ai-primary);
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .question-time {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .question-content {
+      margin-bottom: 15px;
+    }
+    
+    .question-text {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+    
+    .question-image {
+      width: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 15px;
+    }
+    
+    .question-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    .question-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+    }
+    
+    .question-action {
+      display: flex;
+      align-items: center;
+      color: var(--text-secondary);
+      font-size: 12px;
+      cursor: pointer;
+    }
+    
+    .question-action i {
+      margin-right: 5px;
+    }
+    
+    /* AI 解答部分樣式 */
+    .answer-section {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+    
+    .section-title:before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 18px;
+      background: var(--ai-gradient);
+      border-radius: 2px;
+      margin-right: 8px;
+    }
+    
+    .section-action {
+      color: var(--text-secondary);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .section-action i {
+      margin-left: 4px;
+    }
+    
+    /* AI 回答步驟樣式 */
+    .answer-content {
+      padding: 0 5px;
+    }
+    
+    .answer-step {
+      display: flex;
+      margin-bottom: 25px;
+      position: relative;
+    }
+    
+    .answer-step:last-child {
+      margin-bottom: 0;
+    }
+    
+    .answer-step:not(:last-child):after {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: 14px;
+      width: 2px;
+      height: calc(100% - 14px);
+      background-color: rgba(74, 107, 255, 0.2);
+    }
+    
+    .step-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--ai-gradient);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      flex-shrink: 0;
+      margin-right: 15px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .step-content {
+      flex: 1;
+    }
+    
+    .step-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--ai-primary);
+    }
+    
+    .step-text {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+    
+    .step-formula {
+      background-color: var(--ai-bg-light);
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 10px;
+      overflow-x: auto;
+      font-size: 16px;
+      text-align: center;
+    }
+    
+    /* 相關練習部分樣式 */
+    .related-section {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+    
+    .related-items {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .related-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      background-color: var(--ai-bg-light);
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .related-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(74, 107, 255, 0.1);
+    }
+    
+    .related-item-content {
+      flex: 1;
+    }
+    
+    .related-item-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    
+    .related-item-difficulty {
+      display: inline-block;
+      padding: 2px 8px;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 10px;
+      font-size: 12px;
+      color: var(--ai-primary);
+    }
+    
+    .related-item-icon {
+      color: var(--ai-primary);
+      margin-left: 10px;
+    }
+    
+    /* 底部導航欄樣式 */
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      z-index: 100;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      height: 100%;
+      color: var(--text-secondary);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .tab-item i {
+      font-size: 20px;
+      margin-bottom: 4px;
+      transition: transform 0.2s ease, color 0.3s ease;
+    }
+    
+    .tab-item:hover i {
+      transform: translateY(-2px);
+    }
+    
+    .tab-item.active {
+      color: var(--primary-color);
+    }
+    
+    .tab-item.active i {
+      transform: translateY(-2px);
+    }
+    
+    .scan-button {
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+      background: var(--ai-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: -20px;
+      box-shadow: 0 4px 10px rgba(74, 107, 255, 0.3);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .scan-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(74, 107, 255, 0.4);
+    }
+    
+    .scan-button:active {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(74, 107, 255, 0.3);
+    }
+    
+    .scan-button i {
+      font-size: 20px;
+      color: white;
+    }
+    
+    /* 進入動畫效果 */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .app-content {
+      animation: fadeIn 0.5s ease forwards;
+    }
+  </style>
+</head>
+<body>
+  <div class="device-container">
+    <!-- 狀態欄 -->
+    <div class="status-bar">
+      <div class="signal">
+        <i class="fas fa-signal"></i>
+      </div>
+      <div class="time">14:30</div>
+      <div class="battery">
+        <i class="fas fa-battery-three-quarters mr-1"></i>
+        <span>85%</span>
+      </div>
+    </div>
+    
+    <!-- 應用內容 -->
+    <div class="app-content">
+      <!-- 頭部 -->
+      <div class="answer-header">
+        <div class="back-button" id="back-button">
+          <i class="fas fa-arrow-left"></i>
+        </div>
+        <div class="answer-title" data-lang-key="ai_answer">AI解答</div>
+        <div class="action-buttons">
+          <div class="action-button">
+            <i class="fas fa-share-alt"></i>
+          </div>
+          <div class="action-button">
+            <i class="fas fa-ellipsis-h"></i>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 問題卡片 -->
+      <div class="question-card">
+        <div class="question-meta">
+          <div class="question-subject" data-lang-key="math">數學</div>
+          <div class="question-time">
+            <i class="far fa-clock"></i>
+            <span data-lang-key="just_now">剛剛</span>
+          </div>
+        </div>
+        
+        <div class="question-content">
+          <div class="question-text">
+            已知函數f(x)=ln(x+1)，求f'(x)的值
+          </div>
+          <div class="question-image">
+            <img src="https://source.unsplash.com/random/300x200/?math" alt="問題圖片">
+          </div>
+        </div>
+        
+        <div class="question-actions">
+          <div class="question-action">
+            <i class="fas fa-bookmark"></i>
+            <span data-lang-key="save">保存</span>
+          </div>
+          <div class="question-action">
+            <i class="fas fa-exclamation-circle"></i>
+            <span data-lang-key="report">報告</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- AI解答 -->
+      <div class="answer-section">
+        <div class="section-header">
+          <div class="section-title" data-lang-key="ai_solution">AI解答</div>
+          <div class="section-action">
+            <i class="fas fa-thumbs-up"></i>
+            <span data-lang-key="helpful">有幫助</span>
+          </div>
+        </div>
+        
+        <div class="answer-content">
+          <div class="answer-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title" data-lang-key="step_1">理解問題</div>
+              <div class="step-text" data-lang-key="step_1_content">
+                我們需要求函數f(x)=ln(x+1)的導數f\'(x)。
+              </div>
+            </div>
+          </div>
+          
+          <div class="answer-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title" data-lang-key="step_2">應用導數公式</div>
+              <div class="step-text" data-lang-key="step_2_content">
+                對於函數f(x)=ln(u)，其中u是x的函數，我們知道f\'(x)=u\'/u。
+                在這個問題中，u=x+1，所以u\'=1。
+              </div>
+            </div>
+          </div>
+          
+          <div class="answer-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title" data-lang-key="step_3">計算結果</div>
+              <div class="step-text" data-lang-key="step_3_content">
+                因此，f\'(x)=1/(x+1)。
+              </div>
+              <div class="step-formula">
+                f'(x) = \frac{1}{x+1}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 相關練習 -->
+      <div class="related-section">
+        <div class="section-header">
+          <div class="section-title" data-lang-key="related_practice">相關練習</div>
+          <div class="section-action">
+            <span data-lang-key="more">更多</span>
+            <i class="fas fa-chevron-right"></i>
+          </div>
+        </div>
+        
+        <div class="related-items">
+          <div class="related-item">
+            <div class="related-item-content">
+              <div class="related-item-title">
+                求函數f(x)=e^(2x+1)的導數
+              </div>
+              <div class="related-item-difficulty" data-lang-key="medium">中等</div>
+            </div>
+            <div class="related-item-icon">
+              <i class="fas fa-chevron-right"></i>
+            </div>
+          </div>
+          
+          <div class="related-item">
+            <div class="related-item-content">
+              <div class="related-item-title">
+                如果f(x)=ln(x^2+1)，求f'(2)的值
+              </div>
+              <div class="related-item-difficulty" data-lang-key="hard">困難</div>
+            </div>
+            <div class="related-item-icon">
+              <i class="fas fa-chevron-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 底部標籤欄 -->
+    <div class="tab-bar">
+      <div class="tab-item" id="tab-home">
+        <i class="fas fa-home"></i>
+        <span data-lang-key="home">首頁</span>
+      </div>
+      <div class="tab-item active" id="tab-ai">
+        <i class="fas fa-robot"></i>
+        <span data-lang-key="ai_tutor">AI助教</span>
+      </div>
+      <div class="tab-item" id="tab-scan">
+        <div class="scan-button">
+          <i class="fas fa-camera"></i>
+        </div>
+        <span style="visibility: hidden;">掃描</span>
+      </div>
+      <div class="tab-item" id="tab-practice">
+        <i class="fas fa-book-open"></i>
+        <span data-lang-key="practice">練習</span>
+      </div>
+      <div class="tab-item" id="tab-profile">
+        <i class="fas fa-user"></i>
+        <span data-lang-key="profile">我的</span>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // 更新時間
+    function updateTime() {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      document.querySelector('.time').textContent = `${hours}:${minutes}`;
+    }
+    
+    // 頁面加載時的初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      // 更新時間
+      updateTime();
+      setInterval(updateTime, 60000);
+      
+      // 檢查本地存儲中的語言設置
+      const savedLang = localStorage.getItem('systemLang') || 'traditional';
+      
+      // 應用語言設置
+      applyLanguageSetting(savedLang);
+      
+      // 檢查轉場動畫類型
+      const transitionType = sessionStorage.getItem('transitionType');
+      const appContent = document.querySelector('.app-content');
+      
+      // 延遲一點時間後應用過渡動畫，確保DOM已完全加載
+      setTimeout(() => {
+        if (transitionType === 'smart-animate') {
+          // 智能動畫效果 - 從放大狀態縮小顯示
+          appContent.style.opacity = '0';
+          appContent.style.transform = 'scale(1.05)';
+          
+          setTimeout(() => {
+            appContent.style.transition = 'all 0.4s ease';
+            appContent.style.opacity = '1';
+            appContent.style.transform = 'scale(1)';
+          }, 50);
+        } else {
+          // 默認淡入效果
+          appContent.classList.add('loaded');
+        }
+        
+        // 清除會話存儲中的轉場類型
+        sessionStorage.removeItem('transitionType');
+      }, 100);
+      
+      // 返回按鈕點擊事件
+      document.getElementById('back-button').addEventListener('click', function() {
+        handleExit();
+      });
+      
+      // 監聽存儲變更事件
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'systemLang') {
+          const newLang = e.newValue || 'traditional';
+          applyLanguageSetting(newLang);
+        }
+      });
+      
+      // 底部標籤欄點擊事件
+      document.getElementById('tab-home').addEventListener('click', function() {
+        handleExit('home.html');
+      });
+      
+      document.getElementById('tab-ai').addEventListener('click', function() {
+        handleExit('ai_tutor.html');
+      });
+      
+      document.getElementById('tab-scan').addEventListener('click', function() {
+        handleExit('scan.html');
+      });
+      
+      document.querySelector('.scan-button').addEventListener('click', function() {
+        handleExit('scan.html');
+      });
+      
+      document.getElementById('tab-practice').addEventListener('click', function() {
+        handleExit('quiz_generator.html');
+      });
+      
+      document.getElementById('tab-profile').addEventListener('click', function() {
+        handleExit('settings.html');
+      });
+    });
+    
+    // 處理頁面退出動畫
+    function handleExit(url = null) {
+      const appContent = document.querySelector('.app-content');
+      appContent.style.transition = 'all 0.3s ease';
+      appContent.style.opacity = '0';
+      appContent.style.transform = 'scale(0.95)';
+      
+      setTimeout(() => {
+        if (url) {
+          window.location.href = url;
+        } else {
+          window.history.back();
+        }
+      }, 300);
+    }
+    
+    // 多語言支持
+    const translations = {
+      'simplified': {
+        'ai_answer': 'AI解答',
+        'math': '数学',
+        'just_now': '刚刚',
+        'save': '保存',
+        'report': '报告',
+        'ai_solution': 'AI解答',
+        'helpful': '有帮助',
+        'step_1': '理解问题',
+        'step_1_content': '我们需要求函数f(x)=ln(x+1)的导数f\'(x)。',
+        'step_2': '应用导数公式',
+        'step_2_content': '对于函数f(x)=ln(u)，其中u是x的函数，我们知道f\'(x)=u\'/u。\n在这个问题中，u=x+1，所以u\'=1。',
+        'step_3': '计算结果',
+        'step_3_content': '因此，f\'(x)=1/(x+1)。',
+        'related_practice': '相关练习',
+        'more': '更多',
+        'medium': '中等',
+        'hard': '困难',
+        'home': '首页',
+        'ai_tutor': 'AI助教',
+        'practice': '练习',
+        'profile': '我的'
+      },
+      'traditional': {
+        'ai_answer': 'AI解答',
+        'math': '數學',
+        'just_now': '剛剛',
+        'save': '保存',
+        'report': '報告',
+        'ai_solution': 'AI解答',
+        'helpful': '有幫助',
+        'step_1': '理解問題',
+        'step_1_content': '我們需要求函數f(x)=ln(x+1)的導數f\'(x)。',
+        'step_2': '應用導數公式',
+        'step_2_content': '對於函數f(x)=ln(u)，其中u是x的函數，我們知道f\'(x)=u\'/u。\n在這個問題中，u=x+1，所以u\'=1。',
+        'step_3': '計算結果',
+        'step_3_content': '因此，f\'(x)=1/(x+1)。',
+        'related_practice': '相關練習',
+        'more': '更多',
+        'medium': '中等',
+        'hard': '困難',
+        'home': '首頁',
+        'ai_tutor': 'AI助教',
+        'practice': '練習',
+        'profile': '我的'
+      },
+      'english': {
+        'ai_answer': 'AI Answer',
+        'math': 'Math',
+        'just_now': 'Just now',
+        'save': 'Save',
+        'report': 'Report',
+        'ai_solution': 'AI Solution',
+        'helpful': 'Helpful',
+        'step_1': 'Understanding the Problem',
+        'step_1_content': 'We need to find the derivative f\'(x) of the function f(x)=ln(x+1).',
+        'step_2': 'Applying Derivative Formula',
+        'step_2_content': 'For a function f(x)=ln(u), where u is a function of x, we know that f\'(x)=u\'/u.\nIn this problem, u=x+1, so u\'=1.',
+        'step_3': 'Calculating the Result',
+        'step_3_content': 'Therefore, f\'(x)=1/(x+1).',
+        'related_practice': 'Related Practice',
+        'more': 'More',
+        'medium': 'Medium',
+        'hard': 'Hard',
+        'home': 'Home',
+        'ai_tutor': 'AI Tutor',
+        'practice': 'Practice',
+        'profile': 'Profile'
+      }
+    };
+    
+    // 應用語言設置到整個應用的函數
+    function applyLanguageSetting(langType) {
+      const htmlElement = document.documentElement;
+      
+      // 轉換語言類型為語言代碼
+      let langCode = 'zh-TW';
+      if (langType === 'simplified') {
+        langCode = 'zh-CN';
+      } else if (langType === 'traditional') {
+        langCode = 'zh-TW';
+      } else if (langType === 'english') {
+        langCode = 'en';
+      }
+      
+      // 設置HTML語言屬性
+      htmlElement.setAttribute('lang', langCode);
+      
+      // 設置當前語言屬性
+      htmlElement.setAttribute('data-current-lang', langType);
+      
+      // 更新頁面上的文本
+      updatePageLanguage(langType);
+    }
+    
+    // 更新頁面語言
+    function updatePageLanguage(lang) {
+      const elements = document.querySelectorAll('[data-lang-key]');
+      elements.forEach(element => {
+        const key = element.getAttribute('data-lang-key');
+        if (translations[lang] && translations[lang][key]) {
+          element.textContent = translations[lang][key];
+        }
+      });
+    }
+  </script>
+</body>
+</html> 

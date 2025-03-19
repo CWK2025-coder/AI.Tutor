@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>快答通 - 練習</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/transitions.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="js/font-size-handler.js"></script>
+  <style>
+    :root {
+      --primary-color: #4a6bff;
+      --secondary-color: #ff9f43;
+      --text-primary: #333;
+      --text-secondary: #666;
+      --text-light: #999;
+      --bg-color: #f8f9fa;
+      --border-radius: 12px;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+    
+    body {
+      background-color: var(--bg-color);
+      padding: 0;
+      margin: 0;
+      font-family: "微軟正黑體", "Microsoft JhengHei", sans-serif;
+      height: 100%;
+      overflow-x: hidden;
+    }
+    
+    .device-container {
+      width: 100%;
+      height: 100vh;
+      max-width: 500px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      background-color: var(--bg-color);
+    }
+    
+    .app-content {
+      transition: all 0.3s ease;
+      position: relative;
+      transform: translateX(0);
+      opacity: 1;
+    }
+    
+    /* 動畫效果 */
+    .slide-out-left {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    
+    .slide-out-right {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    
+    .fade-out {
+      opacity: 0;
+    }
+    
+    .scale-out {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    
+    .zoom-fade-out {
+      transform: scale(1.1);
+      opacity: 0;
+    }
+    
+    .generator-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    
+    .generator-title {
+      font-size: 22px;
+      font-weight: 600;
+    }
+    
+    .history-icon {
+      font-size: 20px;
+      color: var(--text-secondary);
+    }
+    
+    .generator-intro {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    
+    .intro-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .intro-title i {
+      margin-right: 8px;
+      color: var(--primary-color);
+    }
+    
+    .intro-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    
+    .generator-form {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    
+    .form-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+    
+    .subject-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .subject-option {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      background-color: rgba(0, 0, 0, 0.05);
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+    
+    .subject-option.selected {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .difficulty-slider {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    
+    .difficulty-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .count-selector {
+      display: flex;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: var(--border-radius);
+      padding: 5px;
+      width: 100%;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    
+    .count-option {
+      flex: 1;
+      text-align: center;
+      padding: 8px 0;
+      font-size: 14px;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+    }
+    
+    .count-option.selected {
+      background-color: white;
+      box-shadow: var(--shadow);
+    }
+    
+    /* 時間選擇 */
+    .time-selector {
+      display: flex;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: var(--border-radius);
+      padding: 5px;
+      width: 100%;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    
+    .time-option {
+      flex: 1;
+      text-align: center;
+      padding: 8px 0;
+      font-size: 14px;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+    }
+    
+    .time-option.selected {
+      background-color: white;
+      box-shadow: var(--shadow);
+    }
+    
+    .source-options {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .source-option {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      cursor: pointer;
+    }
+    
+    .source-option:last-child {
+      margin-bottom: 0;
+    }
+    
+    .source-radio {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--text-light);
+      margin-right: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .source-radio.selected {
+      border-color: var(--primary-color);
+    }
+    
+    .source-radio.selected::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+    }
+    
+    .source-label {
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+    
+    .source-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+    
+    .generate-btn {
+      margin-top: 10px;
+    }
+    
+    .recent-quizzes {
+      margin-top: 30px;
+    }
+    
+    .recent-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+    
+    .quiz-item {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 16px;
+      margin-bottom: 15px;
+      box-shadow: var(--shadow);
+    }
+    
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .quiz-name {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .quiz-date {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .quiz-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .quiz-subjects {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    
+    .quiz-subject {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      background-color: rgba(74, 107, 255, 0.1);
+      color: var(--primary-color);
+    }
+    
+    .quiz-score {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .language-switcher {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      padding: 5px 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      display: none; /* 隱藏語言切換器 */
+    }
+    
+    .language-option {
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 0 3px;
+      transition: all 0.3s ease;
+    }
+    
+    .language-option.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    /* 確保圖標字體在不同語言模式下正確顯示 */
+    html[lang="zh-TW"] i.fas,
+    html[lang="zh-TW"] i.far,
+    html[lang="zh-TW"] i.fab {
+      font-family: "Font Awesome 6 Free", "微軟正黑體", "Microsoft JhengHei", sans-serif !important;
+    }
+    
+    html[lang="zh-CN"] i.fas,
+    html[lang="zh-CN"] i.far,
+    html[lang="zh-CN"] i.fab {
+      font-family: "Font Awesome 6 Free", "微软雅黑", "Microsoft YaHei", sans-serif !important;
+    }
+    
+    html[lang="en"] i.fas,
+    html[lang="en"] i.far,
+    html[lang="en"] i.fab {
+      font-family: "Font Awesome 6 Free", "Arial", sans-serif !important;
+    }
+    
+    /* 確保所有文本元素在不同語言模式下正確顯示 */
+    html[lang="zh-TW"] {
+      font-family: "微軟正黑體", "Microsoft JhengHei", sans-serif;
+    }
+    
+    html[lang="zh-CN"] {
+      font-family: "微软雅黑", "Microsoft YaHei", sans-serif;
+    }
+    
+    html[lang="en"] {
+      font-family: "Arial", "Helvetica", sans-serif;
+    }
+    
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      z-index: 100;
+      max-width: 500px;
+      margin: 0 auto;
+      animation: slideUp 0.5s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      height: 100%;
+      color: var(--text-secondary);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .tab-item i {
+      font-size: 20px;
+      margin-bottom: 4px;
+      transition: transform 0.2s ease, color 0.3s ease;
+    }
+    
+    .tab-item:hover i {
+      transform: translateY(-2px);
+    }
+    
+    .tab-item.active {
+      color: var(--primary-color);
+    }
+    
+    .tab-item.active i {
+      transform: translateY(-2px);
+    }
+    
+    .scan-button {
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+      background-color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: -20px;
+      box-shadow: 0 4px 10px rgba(74, 107, 255, 0.3);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .scan-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(74, 107, 255, 0.4);
+    }
+    
+    .scan-button:active {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(74, 107, 255, 0.3);
+    }
+    
+    .scan-button i {
+      font-size: 20px;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="device-container">
+    <!-- 狀態欄 -->
+    <div class="status-bar">
+      <div class="signal">
+        <i class="fas fa-signal"></i>
+      </div>
+      <div class="time">14:30</div>
+      <div class="battery">
+        <i class="fas fa-battery-three-quarters mr-1"></i>
+        <span>85%</span>
+      </div>
+    </div>
+    
+    <!-- 語言顯示器 -->
+    <!-- 已隱藏語言切換器
+    <div class="language-switcher">
+      <div class="language-option" data-lang="zh-TW">繁</div>
+      <div class="language-option" data-lang="zh-CN">简</div>
+      <div class="language-option" data-lang="en">EN</div>
+    </div>
+    -->
+    
+    <!-- 應用內容 -->
+    <div class="app-content slide-in-right">
+      <!-- 頭部 -->
+      <div class="generator-header">
+        <div class="generator-title" data-lang-key="practice">練習</div>
+        <div class="history-icon">
+          <i class="fas fa-history"></i>
+        </div>
+      </div>
+      
+      <!-- 介紹 -->
+      <div class="generator-intro">
+        <div class="intro-title">
+          <i class="fas fa-pencil-alt"></i>
+          <span data-lang-key="ai_practice_generator">AI智能練習</span>
+        </div>
+        <div class="intro-desc" data-lang-key="ai_practice_desc">
+          基於你的學習情況，智能生成針對性練習題，幫助你鞏固知識點，提高解題能力。
+        </div>
+      </div>
+      
+      <!-- 表單 -->
+      <div class="generator-form">
+        <div class="form-title" data-lang-key="customize_practice">定制你的練習</div>
+        
+        <!-- 科目選擇 -->
+        <div class="form-group">
+          <div class="form-label" data-lang-key="select_subject">選擇科目</div>
+          <div class="subject-options">
+            <div class="subject-option selected" data-subject="math" data-lang-key="math">數學</div>
+            <div class="subject-option" data-subject="physics" data-lang-key="physics">物理</div>
+            <div class="subject-option" data-subject="chemistry" data-lang-key="chemistry">化學</div>
+            <div class="subject-option" data-subject="english" data-lang-key="english">英語</div>
+            <div class="subject-option" data-subject="chinese" data-lang-key="chinese">語文</div>
+            <div class="subject-option" data-subject="biology" data-lang-key="biology">生物</div>
+            <div class="subject-option" data-subject="general" data-lang-key="general">常識</div>
+          </div>
+        </div>
+        
+        <!-- 難度選擇 -->
+        <div class="form-group">
+          <div class="form-label" data-lang-key="difficulty_level">難度級別</div>
+          <input type="range" min="1" max="3" value="2" class="difficulty-slider" id="difficulty-slider">
+          <div class="difficulty-labels">
+            <div data-lang-key="easy">簡單</div>
+            <div data-lang-key="medium">中等</div>
+            <div data-lang-key="difficult">困難</div>
+          </div>
+        </div>
+        
+        <!-- 題目數量 -->
+        <div class="form-group">
+          <div class="form-label" data-lang-key="question_count">題目數量</div>
+          <div class="count-selector">
+            <div class="count-option selected" data-count="5">5題</div>
+            <div class="count-option" data-count="10">10題</div>
+            <div class="count-option" data-count="15">15題</div>
+            <div class="count-option" data-count="20">20題</div>
+          </div>
+        </div>
+        
+        <!-- 時間設置 -->
+        <div class="form-group">
+          <div class="form-label">答題時間</div>
+          <div class="time-selector">
+            <div class="time-option" data-time="10">10分鐘</div>
+            <div class="time-option selected" data-time="30">30分鐘</div>
+            <div class="time-option" data-time="45">45分鐘</div>
+            <div class="time-option" data-time="60">60分鐘</div>
+          </div>
+        </div>
+        
+        <!-- 題目來源 -->
+        <div class="form-group">
+          <div class="form-label" data-lang-key="question_source">題目來源</div>
+          <div class="source-options">
+            <div class="source-option" data-source="mistakes">
+              <div class="source-radio selected"></div>
+              <div>
+                <div class="source-label" data-lang-key="learning_records">學習記錄</div>
+                <div class="source-desc" data-lang-key="learning_records_desc">基於你的學習記錄生成相似題目</div>
+              </div>
+            </div>
+            <div class="source-option" data-source="textbook">
+              <div class="source-radio"></div>
+              <div>
+                <div class="source-label" data-lang-key="textbook">教材</div>
+                <div class="source-desc" data-lang-key="textbook_desc">從當前學習的教材章節中生成題目</div>
+              </div>
+            </div>
+            <div class="source-option" data-source="exam">
+              <div class="source-radio"></div>
+              <div>
+                <div class="source-label" data-lang-key="exam_papers">試卷</div>
+                <div class="source-desc" data-lang-key="exam_papers_desc">從歷年考試試卷中選取題目</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 生成按鈕 -->
+        <button class="btn btn-primary w-full generate-btn" data-lang-key="generate_quiz">生成練習</button>
+      </div>
+      
+      <!-- 最近練習 -->
+      <div class="recent-quizzes">
+        <div class="recent-title" data-lang-key="recent_quizzes">最近練習</div>
+        
+        <div class="quiz-item">
+          <div class="quiz-header">
+            <div class="quiz-name" data-lang-key="math_practice">數學練習</div>
+            <div class="quiz-date">2023-06-15</div>
+          </div>
+          <div class="quiz-meta">
+            <div class="quiz-subjects">
+              <div class="quiz-subject" data-lang-key="math">數學</div>
+            </div>
+            <div class="quiz-score">8/10</div>
+          </div>
+        </div>
+        
+        <div class="quiz-item">
+          <div class="quiz-header">
+            <div class="quiz-name" data-lang-key="physics_chemistry_practice">物理化學練習</div>
+            <div class="quiz-date">2023-06-10</div>
+          </div>
+          <div class="quiz-meta">
+            <div class="quiz-subjects">
+              <div class="quiz-subject" data-lang-key="physics">物理</div>
+              <div class="quiz-subject" data-lang-key="chemistry">化學</div>
+            </div>
+            <div class="quiz-score">15/20</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 底部標籤欄 -->
+    <div class="tab-bar">
+      <div class="tab-item" id="tab-home">
+        <i class="fas fa-home"></i>
+        <span data-lang-key="home">首頁</span>
+      </div>
+      <div class="tab-item" id="tab-ai">
+        <i class="fas fa-robot"></i>
+        <span data-lang-key="ai_tutor">AI助教</span>
+      </div>
+      <div class="tab-item" id="tab-scan">
+        <div class="scan-button">
+          <i class="fas fa-camera"></i>
+        </div>
+        <span style="visibility: hidden;">掃描</span>
+      </div>
+      <div class="tab-item active" id="tab-practice">
+        <i class="fas fa-book-open"></i>
+        <span data-lang-key="practice">練習</span>
+      </div>
+      <div class="tab-item" id="tab-profile">
+        <i class="fas fa-user"></i>
+        <span data-lang-key="profile">我的</span>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // 多語言支持
+    const translations = {
+      'zh-TW': {
+        'practice': '練習',
+        'ai_practice_generator': 'AI智能練習',
+        'ai_practice_desc': '基於你的學習情況，智能生成針對性練習題，幫助你鞏固知識點，提高解題能力。',
+        'customize_practice': '定制你的練習',
+        'select_subject': '選擇科目',
+        'math': '數學',
+        'physics': '物理',
+        'chemistry': '化學',
+        'english': '英語',
+        'chinese': '語文',
+        'biology': '生物',
+        'general': '常識',
+        'difficulty_level': '難度級別',
+        'easy': '簡單',
+        'medium': '中等',
+        'difficult': '困難',
+        'question_count': '題目數量',
+        'set_question_count': '設置題目數量',
+        'question_source': '題目來源',
+        'learning_records': '學習記錄',
+        'learning_records_desc': '基於你的學習記錄生成相似題目',
+        'textbook': '教材',
+        'textbook_desc': '從當前學習的教材章節中生成題目',
+        'exam_papers': '試卷',
+        'exam_papers_desc': '從歷年考試試卷中選取題目',
+        'generate_quiz': '生成練習',
+        'recent_quizzes': '最近練習',
+        'math_practice': '數學練習',
+        'physics_chemistry_practice': '物理化學練習',
+        'home': '首頁',
+        'ai_tutor': 'AI助教',
+        'practice': '練習',
+        'profile': '我的'
+      },
+      'zh-CN': {
+        'practice': '練習',
+        'ai_practice_generator': 'AI智能練習',
+        'ai_practice_desc': '基于你的学习情况，智能生成针对性练习题，帮助你巩固知识点，提高解题能力。',
+        'customize_practice': '定制你的练习',
+        'select_subject': '选择科目',
+        'math': '数学',
+        'physics': '物理',
+        'chemistry': '化学',
+        'english': '英语',
+        'chinese': '语文',
+        'biology': '生物',
+        'general': '常识',
+        'difficulty_level': '难度级别',
+        'easy': '简单',
+        'medium': '中等',
+        'difficult': '困难',
+        'question_count': '题目数量',
+        'set_question_count': '设置题目数量',
+        'question_source': '题目来源',
+        'learning_records': '学习记录',
+        'learning_records_desc': '基于你的学习记录生成相似题目',
+        'textbook': '教材',
+        'textbook_desc': '从当前学习的教材章节中生成题目',
+        'exam_papers': '试卷',
+        'exam_papers_desc': '从历年考试试卷中选取题目',
+        'generate_quiz': '生成练习',
+        'recent_quizzes': '最近练习',
+        'math_practice': '数学练习',
+        'physics_chemistry_practice': '物理化学练习',
+        'home': '首页',
+        'ai_tutor': 'AI助教',
+        'practice': '練習',
+        'profile': '我的'
+      },
+      'en': {
+        'practice': 'Practice',
+        'ai_practice_generator': 'AI Practice Generator',
+        'ai_practice_desc': 'Based on your learning progress, the system generates targeted practice questions to help you reinforce knowledge points and improve problem-solving skills.',
+        'customize_practice': 'Customize Your Practice',
+        'select_subject': 'Select Subject',
+        'math': 'Math',
+        'physics': 'Physics',
+        'chemistry': 'Chemistry',
+        'english': 'English',
+        'chinese': 'Chinese',
+        'biology': 'Biology',
+        'general': 'General',
+        'difficulty_level': 'Difficulty Level',
+        'easy': 'Easy',
+        'medium': 'Medium',
+        'difficult': 'Difficult',
+        'question_count': 'Question Count',
+        'set_question_count': 'Set Question Count',
+        'question_source': 'Question Source',
+        'learning_records': 'Learning Records',
+        'learning_records_desc': 'Generate similar questions based on your learning records',
+        'textbook': 'Textbook',
+        'textbook_desc': 'Generate questions from current textbook chapters',
+        'exam_papers': 'Exam Papers',
+        'exam_papers_desc': 'Select questions from past exam papers',
+        'generate_quiz': 'Generate Quiz',
+        'recent_quizzes': 'Recent Quizzes',
+        'math_practice': 'Math Practice',
+        'physics_chemistry_practice': 'Physics & Chemistry Practice',
+        'home': 'Home',
+        'ai_tutor': 'AI Tutor',
+        'practice': 'Practice',
+        'profile': 'Profile'
+      }
+    };
+    
+    // 當前語言
+    let currentLang = 'zh-TW';
+    
+    // 更新頁面語言
+    function updatePageLanguage(lang) {
+      // 更新所有帶有data-lang-key屬性的元素
+      document.querySelectorAll('[data-lang-key]').forEach(el => {
+        const key = el.getAttribute('data-lang-key');
+        if (translations[lang] && translations[lang][key]) {
+          el.textContent = translations[lang][key];
+        }
+      });
+      
+      // 更新語言顯示器的活動狀態
+      document.querySelectorAll('.language-option').forEach(option => {
+        if (option.getAttribute('data-lang') === lang) {
+          option.classList.add('active');
+        } else {
+          option.classList.remove('active');
+        }
+      });
+    }
+    
+    // 應用語言設置到整個應用的函數
+    function applyLanguageSetting(langType) {
+      const htmlElement = document.documentElement;
+      
+      // 轉換語言類型為語言代碼
+      let langCode = 'zh-TW';
+      if (langType === 'simplified') {
+        langCode = 'zh-CN';
+      } else if (langType === 'traditional') {
+        langCode = 'zh-TW';
+      } else if (langType === 'english') {
+        langCode = 'en';
+      }
+      
+      // 設置HTML語言屬性
+      htmlElement.setAttribute('lang', langCode);
+      
+      // 設置當前語言屬性
+      htmlElement.setAttribute('data-current-lang', langType);
+      currentLang = langCode;
+      
+      // 更新頁面上的文本
+      updatePageLanguage(langCode);
+    }
+    
+    // 初始化頁面
+    document.addEventListener('DOMContentLoaded', function() {
+      // 檢查本地存儲中的語言設置
+      const savedLang = localStorage.getItem('systemLang') || 'traditional';
+      
+      // 應用語言設置
+      applyLanguageSetting(savedLang);
+      
+      // 監聽存儲變更事件
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'systemLang') {
+          const newLang = e.newValue || 'traditional';
+          applyLanguageSetting(newLang);
+          console.log('Language updated from system settings: ' + newLang);
+        }
+      });
+      
+      // 定期檢查語言設置
+      setInterval(() => {
+        const currentSavedLang = localStorage.getItem('systemLang') || 'traditional';
+        if (currentSavedLang !== document.documentElement.getAttribute('data-current-lang')) {
+          applyLanguageSetting(currentSavedLang);
+        }
+      }, 1000);
+      
+      // 初始化科目選項
+      initSubjectOptions();
+      
+      // 科目選擇
+      document.querySelectorAll('.subject-option').forEach(option => {
+        option.addEventListener('click', function() {
+          document.querySelectorAll('.subject-option').forEach(opt => {
+            opt.classList.remove('selected');
+          });
+          this.classList.add('selected');
+        });
+      });
+      
+      // 數量選擇
+      document.querySelectorAll('.count-option').forEach(option => {
+        option.addEventListener('click', function() {
+          document.querySelectorAll('.count-option').forEach(opt => {
+            opt.classList.remove('selected');
+          });
+          this.classList.add('selected');
+        });
+      });
+      
+      // 時間選擇
+      document.querySelectorAll('.time-option').forEach(option => {
+        option.addEventListener('click', function() {
+          document.querySelectorAll('.time-option').forEach(opt => {
+            opt.classList.remove('selected');
+          });
+          this.classList.add('selected');
+        });
+      });
+      
+      // 監聽存儲變更事件
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'activeSubjects') {
+          // 科目設置變更時更新科目選項
+          initSubjectOptions();
+        }
+      });
+      
+      // 底部標籤欄點擊事件
+      document.getElementById('tab-home').addEventListener('click', function() {
+        navigateWithAnimation('home.html', 'slide-in-left');
+      });
+      
+      document.getElementById('tab-ai').addEventListener('click', function() {
+        navigateWithAnimation('ai_tutor.html', 'slide-in-right');
+      });
+      
+      document.getElementById('tab-scan').addEventListener('click', function() {
+        navigateWithAnimation('scan.html', 'slide-in-right');
+      });
+      
+      document.getElementById('tab-profile').addEventListener('click', function() {
+        navigateWithAnimation('settings.html', 'slide-in-right');
+      });
+      
+      document.querySelector('.scan-button').addEventListener('click', function() {
+        navigateWithAnimation('scan.html', 'slide-in-right');
+      });
+      
+      // 返回按鈕點擊事件（如果有的話）
+      const backButton = document.querySelector('.back-button');
+      if (backButton) {
+        backButton.addEventListener('click', function() {
+          navigateWithAnimation('home.html', 'slide-in-left');
+        });
+      }
+    });
+    
+    // 初始化科目選項
+    function initSubjectOptions() {
+      // 從本地存儲獲取科目設置
+      const savedSubjects = JSON.parse(localStorage.getItem('activeSubjects') || '{}');
+      
+      // 設置默認值
+      const defaultSubjects = {
+        'math': true,
+        'chinese': true,
+        'english': true,
+        'general': true,
+        'physics': false,
+        'chemistry': false,
+        'chinese_history': false,
+        'chinese_literature': false,
+        'western_history': false,
+        'economics': false,
+        'accounting': false,
+        'biology': false
+      };
+      
+      // 合併默認值和保存的值
+      const subjects = {...defaultSubjects, ...savedSubjects};
+      
+      // 檢查是否有任何科目被選中
+      let hasVisibleSubject = false;
+      document.querySelectorAll('.subject-option').forEach(option => {
+        const subject = option.getAttribute('data-subject');
+        if (subjects[subject]) {
+          hasVisibleSubject = true;
+        }
+      });
+      
+      // 如果沒有科目被選中，強制顯示默認科目
+      if (!hasVisibleSubject) {
+        subjects['math'] = true;
+        subjects['chinese'] = true;
+        subjects['english'] = true;
+        subjects['general'] = true;
+        // 保存更新後的科目設置
+        localStorage.setItem('activeSubjects', JSON.stringify(subjects));
+      }
+      
+      // 更新科目選項顯示
+      let selectedOptionStillVisible = false;
+      document.querySelectorAll('.subject-option').forEach(option => {
+        const subject = option.getAttribute('data-subject');
+        
+        // 根據科目設置顯示或隱藏
+        if (subjects[subject]) {
+          option.style.display = '';
+          if (option.classList.contains('selected')) {
+            selectedOptionStillVisible = true;
+          }
+        } else {
+          option.style.display = 'none';
+          // 如果當前選中的科目被隱藏，取消其選中狀態
+          if (option.classList.contains('selected')) {
+            option.classList.remove('selected');
+          }
+        }
+      });
+      
+      // 如果當前選中的科目被隱藏，選擇第一個可見的科目
+      if (!selectedOptionStillVisible) {
+        const firstVisibleOption = document.querySelector('.subject-option[style="display: "]') || 
+                                  document.querySelector('.subject-option:not([style="display: none"])');
+        if (firstVisibleOption) {
+          firstVisibleOption.classList.add('selected');
+        }
+      }
+      
+      // 確保至少有一個科目被選中
+      if (!document.querySelector('.subject-option.selected')) {
+        const firstVisibleOption = document.querySelector('.subject-option[style="display: "]') || 
+                                  document.querySelector('.subject-option:not([style="display: none"])');
+        if (firstVisibleOption) {
+          firstVisibleOption.classList.add('selected');
+        }
+      }
+    }
+    
+    // 題目數量控制
+    const countValue = document.getElementById('question-count');
+    const decreaseBtn = document.getElementById('decrease-count');
+    const increaseBtn = document.getElementById('increase-count');
+    
+    decreaseBtn.addEventListener('click', function() {
+      let count = parseInt(countValue.textContent);
+      if (count > 1) {
+        countValue.textContent = count - 1;
+      }
+    });
+    
+    increaseBtn.addEventListener('click', function() {
+      let count = parseInt(countValue.textContent);
+      if (count < 50) {
+        countValue.textContent = count + 1;
+      }
+    });
+    
+    // 題目來源選擇
+    document.querySelectorAll('.source-option').forEach(option => {
+      option.addEventListener('click', function() {
+        document.querySelectorAll('.source-radio').forEach(radio => {
+          radio.classList.remove('selected');
+        });
+        this.querySelector('.source-radio').classList.add('selected');
+      });
+    });
+    
+    // 生成練習按鈕
+    document.querySelector('.generate-btn').addEventListener('click', function() {
+      // 獲取選中的科目
+      const selectedSubject = document.querySelector('.subject-option.selected')?.textContent.trim() || '數學';
+      
+      // 獲取選中的題目數量
+      const selectedCountOption = document.querySelector('.count-option.selected');
+      const questionCount = selectedCountOption ? selectedCountOption.getAttribute('data-count') : '10';
+      
+      // 獲取選中的時間
+      const selectedTimeOption = document.querySelector('.time-option.selected');
+      const timeCount = selectedTimeOption ? selectedTimeOption.getAttribute('data-time') : '30';
+      
+      // 獲取選中的來源
+      let source = '教材';
+      document.querySelectorAll('.source-option').forEach(option => {
+        if (option.querySelector('.source-radio').classList.contains('selected')) {
+          source = option.querySelector('.source-title').textContent.trim();
+        }
+      });
+      
+      // 獲取URL參數
+      const params = getUrlParams();
+      
+      // 構建導航URL
+      const navigationUrl = 'quiz_content.html?subject=' + selectedSubject + 
+                           '&count=' + questionCount + 
+                           '&time=' + timeCount +
+                           '&source=' + source +
+                           (params.source ? '&from_mistakes=true' : '');
+      
+      // 直接導航到測驗答題頁面，使用Smart Animate過渡效果
+      navigateWithAnimation(navigationUrl, 'smart-animate');
+    });
+    
+    // 頁面過渡動畫函數
+    function navigateWithAnimation(url, animationType) {
+      // 獲取當前頁面內容
+      const appContent = document.querySelector('.app-content');
+      
+      // 添加退出動畫
+      if (animationType === 'slide-in-right') {
+        appContent.classList.add('slide-out-left');
+      } else if (animationType === 'slide-in-left') {
+        appContent.classList.add('slide-out-right');
+      } else if (animationType === 'scale-in') {
+        appContent.classList.add('scale-out');
+      } else if (animationType === 'smart-animate') {
+        // 智能動畫效果
+        appContent.classList.add('zoom-fade-out');
+      } else {
+        appContent.classList.add('fade-out');
+      }
+      
+      // 動畫結束後跳轉頁面
+      setTimeout(function() {
+        // 儲存轉場類型到會話存儲中
+        sessionStorage.setItem('transitionType', animationType);
+        window.location.href = url;
+      }, 300); // 動畫持續時間
+    }
+    
+    // 更新時間
+    function updateTime() {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      document.querySelector('.time').textContent = `${hours}:${minutes}`;
+    }
+    
+    // 初始化時間並設置定時器
+    updateTime();
+    setInterval(updateTime, 60000);
+    
+    // 檢查URL參數
+    function getUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        source: params.get('source'),
+        subject: params.get('subject')
+      };
+    }
+    
+    // 頁面初始化函數
+    function setupPageFromParams() {
+      // 獲取URL參數
+      const params = getUrlParams();
+      
+      // 如果有來源參數
+      if (params.source) {
+        // 設置來源選項
+        if (params.source === 'mistake_book' || params.source === 'mistake_review' || params.source === 'batch_review') {
+          // 選中"錯題本"選項
+          document.querySelectorAll('.source-radio').forEach(radio => {
+            radio.classList.remove('selected');
+          });
+          document.querySelectorAll('.source-option').forEach(option => {
+            if (option.querySelector('.source-title').textContent.includes('錯題本')) {
+              option.querySelector('.source-radio').classList.add('selected');
+            }
+          });
+          
+          // 如果來源是錯題本，則隱藏科目選擇區塊
+          if (params.source === 'mistake_book' || params.source === 'mistake_review') {
+            // 隱藏科目選擇區塊
+            const subjectSection = document.querySelector('.section-item:first-child');
+            if (subjectSection) {
+              subjectSection.style.display = 'none';
+            }
+          }
+          
+          // 如果有科目參數，選中對應科目
+          if (params.subject) {
+            document.querySelectorAll('.subject-option').forEach(option => {
+              option.classList.remove('selected');
+              if (option.textContent.trim() === params.subject) {
+                option.classList.add('selected');
+              }
+            });
+          }
+          
+          // 修改介紹文字
+          document.querySelector('.intro-title').innerHTML = '<i class="fas fa-magic"></i> 從錯題本生成練習';
+          document.querySelector('.intro-desc').textContent = '系統將根據您的錯題記錄，生成類似的題目進行練習，幫助您鞏固知識點。';
+          
+          // 自動滾動到生成按鈕
+          setTimeout(() => {
+            document.querySelector('.generate-btn').scrollIntoView({ behavior: 'smooth' });
+          }, 500);
+        }
+      }
+    }
+    
+    // 頁面加載時執行
+    window.addEventListener('load', setupPageFromParams);
+  </script>
+</body>
+</html> 

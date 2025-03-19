@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>快答通 - 设备模板</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="device-container">
+    <!-- 状态栏 -->
+    <div class="status-bar">
+      <div class="signal">
+        <i class="fas fa-signal"></i>
+      </div>
+      <div class="time">14:30</div>
+      <div class="battery">
+        <i class="fas fa-battery-three-quarters mr-1"></i>
+        <span>85%</span>
+      </div>
+    </div>
+    
+    <!-- 应用内容 -->
+    <div class="app-content">
+      <!-- 这里是每个页面的具体内容 -->
+    </div>
+    
+    <!-- 底部标签栏 -->
+    <div class="tab-bar">
+      <div class="tab-item active" id="tab-home">
+        <i class="fas fa-home"></i>
+        <span>首頁</span>
+      </div>
+      <div class="tab-item" id="tab-ai">
+        <i class="fas fa-robot"></i>
+        <span>AI助教</span>
+      </div>
+      <div class="tab-item" id="tab-scan">
+        <div class="scan-button">
+          <i class="fas fa-camera"></i>
+        </div>
+        <span style="visibility: hidden;">掃描</span>
+      </div>
+      <div class="tab-item" id="tab-practice">
+        <i class="fas fa-book-open"></i>
+        <span>練習</span>
+      </div>
+      <div class="tab-item" id="tab-profile">
+        <i class="fas fa-user"></i>
+        <span>我的</span>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      z-index: 100;
+      max-width: 500px;
+      margin: 0 auto;
+      animation: slideUp 0.5s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      height: 100%;
+      color: var(--text-secondary);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .tab-item i {
+      font-size: 20px;
+      margin-bottom: 4px;
+      transition: transform 0.2s ease, color 0.3s ease;
+    }
+    
+    .tab-item:hover i {
+      transform: translateY(-2px);
+    }
+    
+    .tab-item.active {
+      color: var(--primary-color);
+    }
+    
+    .tab-item.active i {
+      transform: translateY(-2px);
+    }
+    
+    .scan-button {
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+      background-color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: -20px;
+      box-shadow: 0 4px 10px rgba(74, 107, 255, 0.3);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .scan-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(74, 107, 255, 0.4);
+    }
+    
+    .scan-button:active {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(74, 107, 255, 0.3);
+    }
+    
+    .scan-button i {
+      font-size: 20px;
+      color: white;
+    }
+  </style>
+
+  <script>
+    // 更新時間
+    function updateTime() {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      document.querySelector('.time').textContent = `${hours}:${minutes}`;
+    }
+    
+    // 初始化時間並設置定時器
+    updateTime();
+    setInterval(updateTime, 60000);
+    
+    // 底部標籤欄點擊事件
+    document.getElementById('tab-home').addEventListener('click', function() {
+      window.location.href = 'home.html';
+    });
+    
+    document.getElementById('tab-ai').addEventListener('click', function() {
+      window.location.href = 'ai_tutor.html';
+    });
+    
+    document.getElementById('tab-scan').addEventListener('click', function() {
+      window.location.href = 'scan.html';
+    });
+    
+    document.querySelector('.scan-button').addEventListener('click', function() {
+      window.location.href = 'scan.html';
+    });
+    
+    document.getElementById('tab-practice').addEventListener('click', function() {
+      window.location.href = 'quiz_generator.html';
+    });
+    
+    document.getElementById('tab-profile').addEventListener('click', function() {
+      window.location.href = 'settings.html';
+    });
+  </script>
+</body>
+</html> 

@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>快答通 - 掃描題目</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #FFC124;
+      --text-primary: #333333;
+      --text-secondary: #666666;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'PingFang TC', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-color: #000;
+      color: #fff;
+    }
+    
+    .device-container {
+      max-width: 400px;
+      margin: 0 auto;
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #000;
+    }
+    
+    .camera-view {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      overflow: hidden;
+    }
+    
+    .camera-preview {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    /* 網格輔助線 - 九宮格 */
+    .grid-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      display: none;
+    }
+    
+    .grid-overlay.active {
+      display: block;
+    }
+    
+    .grid-line-horizontal-1, .grid-line-horizontal-2 {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .grid-line-horizontal-1 {
+      top: 33.33%;
+    }
+    
+    .grid-line-horizontal-2 {
+      top: 66.66%;
+    }
+    
+    .grid-line-vertical-1, .grid-line-vertical-2 {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 1px;
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .grid-line-vertical-1 {
+      left: 33.33%;
+    }
+    
+    .grid-line-vertical-2 {
+      left: 66.66%;
+    }
+    
+    /* 單題模式框架 */
+    .scan-frame {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 75%;
+      height: 40%;
+      display: none;
+    }
+    
+    .scan-frame.active {
+      display: block;
+    }
+    
+    /* 四角框線設計 */
+    .frame-corner {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-color: #ffffff;
+      border-style: solid;
+    }
+    
+    .top-left {
+      top: 0;
+      left: 0;
+      border-width: 2px 0 0 2px;
+    }
+    
+    .top-right {
+      top: 0;
+      right: 0;
+      border-width: 2px 2px 0 0;
+    }
+    
+    .bottom-left {
+      bottom: 0;
+      left: 0;
+      border-width: 0 0 2px 2px;
+    }
+    
+    .bottom-right {
+      bottom: 0;
+      right: 0;
+      border-width: 0 2px 2px 0;
+    }
+    
+    /* 掃描線動畫 */
+    .scan-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--primary-color);
+      box-shadow: 0 0 8px var(--primary-color);
+      animation: scanAnimation 2s linear infinite;
+    }
+    
+    @keyframes scanAnimation {
+      0% {
+        top: 0;
+      }
+      50% {
+        top: 100%;
+      }
+      100% {
+        top: 0;
+      }
+    }
+    
+    /* 提示文字 */
+    .scan-page-title {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size: 14px;
+      font-weight: 500;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+      transform: translateY(-25px);
+    }
+    
+    .scan-page-subtitle {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size: 14px;
+      font-weight: normal;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+      transform: translateY(5px);
+    }
+    
+    /* 返回按鈕 */
+    .back-button {
+      position: absolute;
+      top: 60px;
+      left: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      background-color: rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    
+    .back-button i {
+      font-size: 18px;
+      color: white;
+    }
+    
+    /* 頂部圖標 */
+    .top-icons {
+      position: absolute;
+      top: 60px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+    }
+    
+    .top-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      background-color: rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .top-icon i {
+      font-size: 20px;
+      color: white;
+    }
+    
+    .top-icon.active {
+      background-color: rgba(255, 193, 36, 0.7);
+    }
+    
+    /* 示例按鈕 */
+    .example-button {
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      height: 40px;
+      border-radius: 20px;
+      background-color: rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 15px;
+    }
+    
+    .example-button i {
+      font-size: 16px;
+      color: white;
+      margin-right: 5px;
+    }
+    
+    /* 底部控制面板 */
+    .action-panel {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    /* 模式切換 */
+    .mode-toggle {
+      display: flex;
+      margin-bottom: 20px;
+      background-color: #1E1E1E;
+      border-radius: 15px;
+      width: 150px;
+      height: 30px;
+      position: relative;
+    }
+    
+    .mode-toggle-option {
+      flex: 1;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 15px;
+      transition: all 0.3s;
+    }
+    
+    .mode-toggle-option.active {
+      background-color: white;
+      color: black;
+    }
+    
+    /* 閃光燈按鈕 - 底部 (隱藏) */
+    .flash-button {
+      display: none;
+      position: absolute;
+      right: -60px;
+      top: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      background-color: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .flash-button i {
+      font-size: 16px;
+      color: white;
+    }
+    
+    .flash-button.active i {
+      color: #FFC124;
+    }
+    
+    /* 底部相機控制 */
+    .bottom-controls {
+      width: 100%;
+      height: 120px;
+      background-color: black;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      box-sizing: border-box;
+    }
+    
+    /* 相簿按鈕 */
+    .gallery-button {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .gallery-button img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    /* 拍照按鈕 */
+    .capture-button {
+      width: 64px;
+      height: 64px;
+      border-radius: 32px;
+      background-color: white;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .capture-button-inner {
+      width: 54px;
+      height: 54px;
+      border-radius: 27px;
+      background-color: white;
+    }
+    
+    /* 右側空白佔位 */
+    .placeholder {
+      width: 40px;
+    }
+    
+    /* 狀態欄 */
+    .status-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background-color: transparent;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 15px;
+      z-index: 1000;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    
+    .time {
+      font-weight: 500;
+      font-size: 14px;
+    }
+    
+    .signal,
+    .battery {
+      display: flex;
+      align-items: center;
+    }
+    
+    /* 動畫類 */
+    .fade-out {
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .slide-out-left {
+      transform: translateX(-100%);
+      opacity: 0;
+      transition: all 0.3s;
+    }
+    
+    .slide-out-right {
+      transform: translateX(100%);
+      opacity: 0;
+      transition: all 0.3s;
+    }
+    
+    .scale-out {
+      transform: scale(0.8);
+      opacity: 0;
+      transition: all 0.3s;
+    }
+    
+    .zoom-fade-out {
+      transform: scale(1.1);
+      opacity: 0;
+      transition: all 0.3s;
+    }
+    
+    /* 閃光燈按鈕 - 頂部 */
+    .flash-top-button {
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 34px;
+      height: 34px;
+      border-radius: 17px;
+      background-color: rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .flash-top-button i {
+      font-size: 18px;
+      color: white;
+    }
+    
+    .flash-top-button.active i {
+      color: #FFC124;
+    }
+  </style>
+</head>
+<body>
+  <div class="device-container">
+    <!-- 狀態欄 -->
+    <div class="status-bar">
+      <div class="time">12:55</div>
+      <div class="right-items" style="display: flex; align-items: center; gap: 10px;">
+        <div class="signal">
+          <i class="fas fa-signal"></i>
+        </div>
+        <div class="wifi">
+          <i class="fas fa-wifi"></i>
+        </div>
+        <div class="battery">
+          <span>89%</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 相機視圖 -->
+    <div class="camera-view">
+      <img src="https://source.unsplash.com/random/375x812/?classroom" alt="相機預覽" class="camera-preview">
+      
+      <!-- 返回按鈕 -->
+      <div class="back-button">
+        <i class="fas fa-chevron-left"></i>
+      </div>
+      
+      <!-- 頂部圖標 -->
+      <div class="top-icons">
+        <div class="top-icon camera-icon active">
+          <i class="fas fa-camera"></i>
+        </div>
+        <div class="top-icon keyboard-icon">
+          <i class="fas fa-keyboard"></i>
+        </div>
+      </div>
+      
+      <!-- 示例按鈕 -->
+      <div class="example-button">
+        <i class="fas fa-play"></i>
+        <span>示例</span>
+      </div>
+      
+      <!-- 網格輔助線 - 九宮格 (拍整頁模式) -->
+      <div class="grid-overlay active" id="grid-overlay">
+        <div class="grid-line-horizontal-1"></div>
+        <div class="grid-line-horizontal-2"></div>
+        <div class="grid-line-vertical-1"></div>
+        <div class="grid-line-vertical-2"></div>
+      </div>
+      
+      <!-- 單題框架 (拍單題模式) -->
+      <div class="scan-frame" id="scan-frame">
+        <div class="frame-corner top-left"></div>
+        <div class="frame-corner top-right"></div>
+        <div class="frame-corner bottom-left"></div>
+        <div class="frame-corner bottom-right"></div>
+        <div class="scan-line"></div>
+      </div>
+      
+      <!-- 提示文字 - 九宮格模式 -->
+      <div class="scan-page-title" id="page-mode-title">
+        撫平書頁
+      </div>
+      
+      <div class="scan-page-subtitle" id="page-mode-subtitle">
+        題目與參考線平行
+      </div>
+      
+      <!-- 閃光燈按鈕 - 頂部 -->
+      <div class="flash-top-button" id="flash-top-button">
+        <i class="fas fa-lightbulb"></i>
+      </div>
+      
+      <!-- 底部控制面板 -->
+      <div class="action-panel">
+        <!-- 模式切換 -->
+        <div class="mode-toggle" id="mode-toggle">
+          <div class="mode-toggle-option" id="single-mode">拍單題</div>
+          <div class="mode-toggle-option active" id="page-mode">拍整頁</div>
+          <div class="flash-button" id="flash-button">
+            <i class="fas fa-bolt"></i>
+          </div>
+        </div>
+        
+        <!-- 底部相機控制 -->
+        <div class="bottom-controls">
+          <div class="gallery-button">
+            <img src="https://source.unsplash.com/random/80x80/?document" alt="相簿">
+          </div>
+          
+          <div class="capture-button" id="capture-button">
+            <div class="capture-button-inner"></div>
+          </div>
+          
+          <div class="placeholder"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // 多語言支持
+    const translations = {
+      'zh-TW': {
+        'scan_question': '掃描題目',
+        'align_question': '將題目對準框內',
+        'processing': '處理中...',
+        'home': '首頁',
+        'ai_tutor': 'AI助教',
+        'practice': '練習',
+        'profile': '我的',
+        'single_mode_title': '將題目放置框內拍攝',
+        'single_mode_subtitle': '解題更準確',
+        'page_mode_title': '撫平書頁',
+        'page_mode_subtitle': '題目與參考線平行'
+      },
+      'zh-CN': {
+        'scan_question': '扫描题目',
+        'align_question': '将题目对准框内',
+        'processing': '处理中...',
+        'home': '首页',
+        'ai_tutor': 'AI助教',
+        'practice': '练习',
+        'profile': '我的',
+        'single_mode_title': '将题目放置框内拍摄',
+        'single_mode_subtitle': '解题更准确',
+        'page_mode_title': '抚平书页',
+        'page_mode_subtitle': '题目与参考线平行'
+      },
+      'en': {
+        'scan_question': 'Scan Question',
+        'align_question': 'Align question within the frame',
+        'processing': 'Processing...',
+        'home': 'Home',
+        'ai_tutor': 'AI Tutor',
+        'practice': 'Practice',
+        'profile': 'Profile',
+        'single_mode_title': 'Place question in frame',
+        'single_mode_subtitle': 'For better accuracy',
+        'page_mode_title': 'Flatten the page',
+        'page_mode_subtitle': 'Align with reference lines'
+      }
+    };
+    
+    // 當前語言
+    let currentLang = 'zh-TW';
+    
+    // 當前模式
+    let currentMode = 'page'; // 'page' or 'single'
+    
+    // 閃光燈狀態
+    let flashEnabled = false;
+    
+    // 更新頁面語言
+    function updatePageLanguage(lang) {
+      document.querySelectorAll('[data-lang-key]').forEach(el => {
+        const key = el.getAttribute('data-lang-key');
+        if (translations[lang] && translations[lang][key]) {
+          el.textContent = translations[lang][key];
+        }
+      });
+      
+      // 更新模式相關文字
+      updateModeText();
+    }
+    
+    // 更新模式文字
+    function updateModeText() {
+      const titleEl = document.getElementById('page-mode-title');
+      const subtitleEl = document.getElementById('page-mode-subtitle');
+      
+      if (currentMode === 'single') {
+        titleEl.textContent = translations[currentLang]['single_mode_title'] || '將題目放置框內拍攝';
+        subtitleEl.textContent = translations[currentLang]['single_mode_subtitle'] || '解題更準確';
+      } else {
+        titleEl.textContent = translations[currentLang]['page_mode_title'] || '撫平書頁';
+        subtitleEl.textContent = translations[currentLang]['page_mode_subtitle'] || '題目與參考線平行';
+      }
+    }
+    
+    // 切換相機模式
+    function switchCameraMode(mode) {
+      currentMode = mode;
+      
+      // 更新模式文字
+      updateModeText();
+      
+      // 更新 UI 元素
+      const singleModeBtn = document.getElementById('single-mode');
+      const pageModeBtn = document.getElementById('page-mode');
+      const gridOverlay = document.getElementById('grid-overlay');
+      const scanFrame = document.getElementById('scan-frame');
+      
+      if (mode === 'single') {
+        singleModeBtn.classList.add('active');
+        pageModeBtn.classList.remove('active');
+        gridOverlay.classList.remove('active');
+        scanFrame.classList.add('active');
+      } else {
+        singleModeBtn.classList.remove('active');
+        pageModeBtn.classList.add('active');
+        gridOverlay.classList.add('active');
+        scanFrame.classList.remove('active');
+      }
+    }
+    
+    // 切換閃光燈
+    function toggleFlash() {
+      flashEnabled = !flashEnabled;
+      const flashButton = document.getElementById('flash-button');
+      const flashTopButton = document.getElementById('flash-top-button');
+      
+      if (flashEnabled) {
+        flashButton.classList.add('active');
+        flashTopButton.classList.add('active');
+      } else {
+        flashButton.classList.remove('active');
+        flashTopButton.classList.remove('active');
+      }
+    }
+    
+    // 初始化頁面
+    document.addEventListener('DOMContentLoaded', function() {
+      // 檢查本地存儲中的語言設置
+      const savedLang = localStorage.getItem('systemLang') || 'traditional';
+      
+      // 轉換語言類型為語言代碼
+      let langCode = 'zh-TW';
+      if (savedLang === 'simplified') {
+        langCode = 'zh-CN';
+      } else if (savedLang === 'traditional') {
+        langCode = 'zh-TW';
+      } else if (savedLang === 'english') {
+        langCode = 'en';
+      }
+      
+      // 設置當前語言
+      currentLang = langCode;
+      
+      // 更新頁面語言
+      updatePageLanguage(langCode);
+      
+      // 監聽語言變更
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'systemLang') {
+          const newLang = e.newValue || 'traditional';
+          
+          // 轉換語言類型為語言代碼
+          let newLangCode = 'zh-TW';
+          if (newLang === 'simplified') {
+            newLangCode = 'zh-CN';
+          } else if (newLang === 'traditional') {
+            newLangCode = 'zh-TW';
+          } else if (newLang === 'english') {
+            newLangCode = 'en';
+          }
+          
+          // 更新當前語言
+          currentLang = newLangCode;
+          
+          // 更新頁面語言
+          updatePageLanguage(newLangCode);
+        }
+      });
+      
+      // 設置初始相機模式
+      switchCameraMode('page');
+      
+      // 拍單題模式按鈕點擊事件
+      document.getElementById('single-mode').addEventListener('click', function() {
+        switchCameraMode('single');
+      });
+      
+      // 拍整頁模式按鈕點擊事件
+      document.getElementById('page-mode').addEventListener('click', function() {
+        switchCameraMode('page');
+      });
+      
+      // 閃光燈按鈕點擊事件 - 頂部版本
+      document.getElementById('flash-top-button').addEventListener('click', function() {
+        toggleFlash();
+      });
+      
+      // 拍照按鈕點擊事件
+      const captureButton = document.getElementById('capture-button');
+      captureButton.addEventListener('click', function() {
+        // 視覺反饋
+        captureButton.style.transform = 'scale(0.9)';
+        setTimeout(() => captureButton.style.transform = 'scale(1)', 150);
+        
+        // 模擬處理時間後，導航到 AI 解答界面
+        setTimeout(() => {
+          // 使用 Smart Animate 過渡效果
+          navigateWithAnimation('ai_answer.html', 'smart-animate');
+        }, 500);
+      });
+      
+      // 返回按鈕點擊事件
+      document.querySelector('.back-button').addEventListener('click', function() {
+        window.location.href = 'home.html';
+      });
+      
+      // 相機圖標點擊事件
+      document.querySelector('.camera-icon').addEventListener('click', function() {
+        document.querySelector('.camera-icon').classList.add('active');
+        document.querySelector('.keyboard-icon').classList.remove('active');
+      });
+      
+      // 鍵盤圖標點擊事件
+      document.querySelector('.keyboard-icon').addEventListener('click', function() {
+        document.querySelector('.keyboard-icon').classList.add('active');
+        document.querySelector('.camera-icon').classList.remove('active');
+        // 導航至 AI 鍵盤頁面
+        setTimeout(() => {
+          window.location.href = 'ai_keyboard.html';
+        }, 300);
+      });
+    });
+    
+    // 頁面過渡動畫函數
+    function navigateWithAnimation(url, animationType) {
+      // 獲取當前頁面內容
+      const appContent = document.querySelector('.camera-view');
+      
+      // 添加退出動畫
+      if (animationType === 'slide-in-right') {
+        appContent.classList.add('slide-out-left');
+      } else if (animationType === 'slide-in-left') {
+        appContent.classList.add('slide-out-right');
+      } else if (animationType === 'scale-in') {
+        appContent.classList.add('scale-out');
+      } else if (animationType === 'smart-animate') {
+        // 智能動畫效果
+        appContent.classList.add('zoom-fade-out');
+      } else {
+        appContent.classList.add('fade-out');
+      }
+      
+      // 動畫結束後跳轉頁面
+      setTimeout(function() {
+        // 儲存轉場類型到會話存儲中
+        sessionStorage.setItem('transitionType', animationType);
+        window.location.href = url;
+      }, 300); // 動畫持續時間
+    }
+  </script>
+</body>
+</html> 

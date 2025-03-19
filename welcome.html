@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>快答通 - 有问必答</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .welcome-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+    
+    .logo-container {
+      text-align: center;
+      margin-top: 60px;
+    }
+    
+    .logo {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+    }
+    
+    .app-name {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+    
+    .app-slogan {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+    }
+    
+    .auth-container {
+      margin-bottom: 40px;
+    }
+    
+    .auth-options {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    
+    .auth-option {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+      background-color: white;
+      margin: 0 10px;
+      box-shadow: var(--shadow);
+    }
+    
+    .auth-option i {
+      font-size: 24px;
+    }
+    
+    .google {
+      color: #DB4437;
+    }
+    
+    .apple {
+      color: #000000;
+    }
+    
+    .email {
+      color: #4285F4;
+    }
+    
+    .login-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 16px;
+      background-color: white;
+      border-radius: var(--border-radius);
+      margin-bottom: 15px;
+      box-shadow: var(--shadow);
+    }
+    
+    .login-btn i {
+      margin-right: 12px;
+      font-size: 20px;
+    }
+    
+    .login-btn-text {
+      font-size: 16px;
+      font-weight: 500;
+      flex: 1;
+      text-align: center;
+    }
+    
+    .google-btn {
+      border: 1px solid #DB4437;
+    }
+    
+    .google-btn i {
+      color: #DB4437;
+    }
+    
+    .apple-btn {
+      border: 1px solid #000000;
+    }
+    
+    .apple-btn i {
+      color: #000000;
+    }
+    
+    .email-btn {
+      border: 1px solid #4285F4;
+    }
+    
+    .email-btn i {
+      color: #4285F4;
+    }
+    
+    .phone-btn {
+      border: 1px solid var(--primary-color);
+    }
+    
+    .phone-btn i {
+      color: var(--primary-color);
+    }
+  </style>
+</head>
+<body>
+  <div class="device-container">
+    <!-- 状态栏 -->
+    <div class="status-bar">
+      <div class="signal">
+        <i class="fas fa-signal"></i>
+      </div>
+      <div class="time">14:30</div>
+      <div class="battery">
+        <i class="fas fa-battery-three-quarters mr-1"></i>
+        <span>85%</span>
+      </div>
+    </div>
+    
+    <!-- 欢迎内容 -->
+    <div class="welcome-container">
+      <div class="logo-container">
+        <img src="https://via.placeholder.com/120/4a6bff/ffffff?text=快答通" alt="快答通" class="logo">
+        <h1 class="app-name">快答通</h1>
+        <p class="app-slogan">有问必答的智能学习助手</p>
+      </div>
+      
+      <div class="auth-container">
+        <div class="login-btn google-btn">
+          <i class="fab fa-google"></i>
+          <div class="login-btn-text">使用Google账号登录</div>
+        </div>
+        
+        <div class="login-btn apple-btn">
+          <i class="fab fa-apple"></i>
+          <div class="login-btn-text">使用Apple账号登录</div>
+        </div>
+        
+        <div class="login-btn email-btn">
+          <i class="fas fa-envelope"></i>
+          <div class="login-btn-text">使用Email登录</div>
+        </div>
+        
+        <div class="login-btn phone-btn">
+          <i class="fas fa-mobile-alt"></i>
+          <div class="login-btn-text">使用电话号码登录</div>
+        </div>
+        
+        <div class="text-center mt-4 mb-3 text-gray">
+          <span>或者</span>
+        </div>
+        
+        <button class="btn btn-outline btn-large w-full">
+          <i class="fas fa-user btn-icon"></i>
+          游客模式
+        </button>
+      </div>
+      
+      <div class="text-center text-sm text-gray">
+        登录即表示您同意我们的
+        <a href="#" class="text-primary">服务条款</a>
+        和
+        <a href="#" class="text-primary">隐私政策</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html> 

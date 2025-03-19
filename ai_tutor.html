@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>快答通 - AI助教</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="js/common.js"></script>
+  <style>
+    .tutor-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    
+    .tutor-title {
+      font-size: 22px;
+      font-weight: 600;
+    }
+    
+    .tutor-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    
+    .tutor-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .tutor-intro {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+    }
+    
+    .tutor-robot {
+      width: 60px;
+      height: 60px;
+      border-radius: 30px;
+      background-color: rgba(74, 107, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      flex-shrink: 0;
+    }
+    
+    .tutor-robot i {
+      font-size: 30px;
+      color: var(--primary-color);
+    }
+    
+    .tutor-info {
+      flex: 1;
+    }
+    
+    .tutor-name {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    .tutor-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+    
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      z-index: 100;
+      max-width: 500px;
+      margin: 0 auto;
+      animation: slideUp 0.5s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      height: 100%;
+      color: var(--text-secondary);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .tab-item i {
+      font-size: 20px;
+      margin-bottom: 4px;
+      transition: transform 0.2s ease, color 0.3s ease;
+    }
+    
+    .tab-item:hover i {
+      transform: translateY(-2px);
+    }
+    
+    .tab-item.active {
+      color: var(--primary-color);
+    }
+    
+    .tab-item.active i {
+      transform: translateY(-2px);
+    }
+    
+    .scan-button {
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+      background-color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: -20px;
+      box-shadow: 0 4px 10px rgba(74, 107, 255, 0.3);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .scan-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(74, 107, 255, 0.4);
+    }
+    
+    .scan-button:active {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(74, 107, 255, 0.3);
+    }
+    
+    .scan-button i {
+      font-size: 20px;
+      color: white;
+    }
+    
+    .grade-selector {
+      display: flex;
+      overflow-x: auto;
+      margin-bottom: 20px;
+      padding-bottom: 5px;
+    }
+    
+    .grade-selector::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .grade-item {
+      padding: 8px 16px;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 20px;
+      margin-right: 10px;
+      font-size: 14px;
+      white-space: nowrap;
+      color: var(--text-secondary);
+    }
+    
+    .grade-item.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .subject-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    
+    .subject-card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .subject-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+    
+    .subject-icon i {
+      font-size: 24px;
+      color: white;
+    }
+    
+    .subject-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    .subject-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .math-subject {
+      background: linear-gradient(135deg, var(--primary-color), #6c5ce7);
+    }
+    
+    .chinese-subject {
+      background: linear-gradient(135deg, var(--secondary-color), #fd79a8);
+    }
+    
+    .english-subject {
+      background: linear-gradient(135deg, var(--accent-color), #0984e3);
+    }
+    
+    .general-subject {
+      background: linear-gradient(135deg, var(--success-color), #00b894);
+    }
+    
+    .recent-section {
+      margin-bottom: 20px;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .view-all {
+      font-size: 14px;
+      color: var(--primary-color);
+    }
+    
+    .topic-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .topic-item {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 15px;
+      box-shadow: var(--shadow);
+    }
+    
+    .topic-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .topic-subject {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .topic-math {
+      background-color: rgba(74, 107, 255, 0.1);
+      color: var(--primary-color);
+    }
+    
+    .topic-chinese {
+      background-color: rgba(255, 159, 67, 0.1);
+      color: var(--secondary-color);
+    }
+    
+    .topic-english {
+      background-color: rgba(0, 210, 211, 0.1);
+      color: var(--accent-color);
+    }
+    
+    .topic-general {
+      background-color: rgba(46, 204, 113, 0.1);
+      color: var(--success-color);
+    }
+    
+    .topic-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .topic-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    
+    .topic-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .topic-grade {
+      display: flex;
+      align-items: center;
+    }
+    
+    .topic-grade i {
+      margin-right: 5px;
+    }
+    
+    .topic-actions {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .topic-action {
+      display: flex;
+      align-items: center;
+    }
+    
+    .topic-action i {
+      margin-right: 5px;
+    }
+    
+    .curriculum-section {
+      margin-bottom: 20px;
+    }
+    
+    .curriculum-card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 15px;
+    }
+    
+    .curriculum-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .curriculum-title {
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+    
+    .curriculum-title i {
+      margin-right: 8px;
+      color: var(--primary-color);
+    }
+    
+    .curriculum-toggle {
+      font-size: 18px;
+      color: var(--text-secondary);
+    }
+    
+    .curriculum-content {
+      display: none;
+    }
+    
+    .curriculum-content.active {
+      display: block;
+    }
+    
+    .topic-list-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .topic-list-item:last-child {
+      border-bottom: none;
+    }
+    
+    .topic-number {
+      width: 24px;
+      height: 24px;
+      border-radius: 12px;
+      background-color: rgba(74, 107, 255, 0.1);
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      margin-right: 10px;
+    }
+    
+    .topic-list-title {
+      flex: 1;
+      font-size: 14px;
+    }
+    
+    .topic-status {
+      width: 20px;
+      height: 20px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      margin-left: 10px;
+    }
+    
+    .status-completed {
+      background-color: var(--success-color);
+      color: white;
+    }
+    
+    .status-locked {
+      background-color: rgba(0, 0, 0, 0.1);
+      color: var(--text-secondary);
+    }
+    
+    /* 語言切換器樣式 */
+    .language-switcher {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      padding: 5px 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      display: none; /* 隱藏語言切換器 */
+    }
+    
+    .language-option {
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 0 3px;
+      transition: all 0.3s ease;
+    }
+    
+    .language-option.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    /* 確保圖標字體在不同語言模式下正確顯示 */
+    html[lang="zh-TW"] i.fas,
+    html[lang="zh-TW"] i.far,
+    html[lang="zh-TW"] i.fab {
+      font-family: "Font Awesome 6 Free", "微軟正黑體", "Microsoft JhengHei", sans-serif !important;
+    }
+    
+    html[lang="en"] i.fas,
+    html[lang="en"] i.far,
+    html[lang="en"] i.fab {
+      font-family: "Font Awesome 6 Free", "Arial", sans-serif !important;
+    }
+    
+    /* 確保所有文本元素在不同語言模式下正確顯示 */
+    html[lang="zh-TW"] {
+      font-family: "微軟正黑體", "Microsoft JhengHei", sans-serif;
+    }
+    
+    html[lang="en"] {
+      font-family: "Arial", "Helvetica", sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div class="device-container">
+    <!-- 狀態欄 -->
+    <div class="status-bar">
+      <div class="signal">
+        <i class="fas fa-signal"></i>
+      </div>
+      <div class="time">14:30</div>
+      <div class="battery">
+        <i class="fas fa-battery-three-quarters mr-1"></i>
+        <span>85%</span>
+      </div>
+    </div>
+    
+    <!-- 語言切換器 -->
+    <!-- 已隱藏語言切換器
+    <div class="language-switcher">
+      <div class="language-option active" data-lang="zh-TW">繁</div>
+      <div class="language-option" data-lang="zh-CN">简</div>
+      <div class="language-option" data-lang="en">EN</div>
+    </div>
+    -->
+    
+    <!-- 應用內容 -->
+    <div class="app-content">
+      <!-- 頭部 -->
+      <div class="tutor-header">
+        <div class="tutor-title" data-lang-key="ai_tutor">AI助教</div>
+        <div class="tutor-avatar">
+          <img src="https://source.unsplash.com/random/80x80/?portrait" alt="用戶頭像">
+        </div>
+      </div>
+      
+      <!-- 助教介紹 -->
+      <div class="tutor-intro">
+        <div class="tutor-robot">
+          <i class="fas fa-robot"></i>
+        </div>
+        <div class="tutor-info">
+          <div class="tutor-name" data-lang-key="smart_teacher">智慧老師</div>
+          <div class="tutor-desc" data-lang-key="tutor_intro">
+            你好，小明！我是你的AI助教，可以幫助你學習香港小學課程的各個科目。選擇你想學習的年級和科目，開始學習吧！
+          </div>
+        </div>
+      </div>
+      
+      <!-- 年級選擇器 -->
+      <div class="grade-selector">
+        <div class="grade-item" data-lang-key="primary_1">小學一年級</div>
+        <div class="grade-item" data-lang-key="primary_2">小學二年級</div>
+        <div class="grade-item active" data-lang-key="primary_3">小學三年級</div>
+        <div class="grade-item" data-lang-key="primary_4">小學四年級</div>
+        <div class="grade-item" data-lang-key="primary_5">小學五年級</div>
+        <div class="grade-item" data-lang-key="primary_6">小學六年級</div>
+      </div>
+      
+      <!-- 科目選擇 -->
+      <div class="subject-grid">
+        <div class="subject-card">
+          <div class="subject-icon math-subject">
+            <i class="fas fa-calculator"></i>
+          </div>
+          <div class="subject-title" data-lang-key="math">數學</div>
+          <div class="subject-desc" data-lang-key="math_desc">數字、計算與幾何</div>
+        </div>
+        
+        <div class="subject-card">
+          <div class="subject-icon chinese-subject">
+            <i class="fas fa-book"></i>
+          </div>
+          <div class="subject-title" data-lang-key="chinese">中文</div>
+          <div class="subject-desc" data-lang-key="chinese_desc">閱讀與寫作</div>
+        </div>
+        
+        <div class="subject-card">
+          <div class="subject-icon english-subject">
+            <i class="fas fa-language"></i>
+          </div>
+          <div class="subject-title" data-lang-key="english">英文</div>
+          <div class="subject-desc" data-lang-key="english_desc">詞彙與語法</div>
+        </div>
+        
+        <div class="subject-card">
+          <div class="subject-icon general-subject">
+            <i class="fas fa-globe-asia"></i>
+          </div>
+          <div class="subject-title" data-lang-key="general">常識</div>
+          <div class="subject-desc" data-lang-key="general_desc">自然與社會</div>
+        </div>
+      </div>
+      
+      <!-- 課程大綱 -->
+      <div class="curriculum-section">
+        <div class="section-header">
+          <div class="section-title" data-lang-key="math_curriculum">數學課程大綱</div>
+          <div class="view-all" data-lang-key="switch_subject">切換科目</div>
+        </div>
+        
+        <div class="curriculum-card">
+          <div class="curriculum-header">
+            <div class="curriculum-title">
+              <i class="fas fa-book"></i>
+              <span data-lang-key="primary_1_first_term">小學一年級上學期</span>
+            </div>
+            <div class="curriculum-toggle">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+          
+          <div class="curriculum-content active">
+            <div class="topic-list-item">
+              <div class="topic-number">1</div>
+              <div class="topic-list-title" data-lang-key="counting_1_10">數數（1 - 10）</div>
+              <div class="topic-status status-completed">
+                <i class="fas fa-check"></i>
+              </div>
+            </div>
+            
+            <div class="topic-list-item">
+              <div class="topic-number">2</div>
+              <div class="topic-list-title" data-lang-key="forward_backward_counting">順數和倒數（1 - 10）</div>
+              <div class="topic-status status-completed">
+                <i class="fas fa-check"></i>
+              </div>
+            </div>
+            
+            <div class="topic-list-item">
+              <div class="topic-number">3</div>
+              <div class="topic-list-title" data-lang-key="odd_even_numbers">單數和雙數（1 - 10）</div>
+              <div class="topic-status status-completed">
+                <i class="fas fa-check"></i>
+              </div>
+            </div>
+            
+            <div class="topic-list-item">
+              <div class="topic-number">4</div>
+              <div class="topic-list-title" data-lang-key="basic_combinations_1_5">1 - 5 的基本組合</div>
+              <div class="topic-status status-completed">
+                <i class="fas fa-check"></i>
+              </div>
+            </div>
+            
+            <div class="topic-list-item">
+              <div class="topic-number">5</div>
+              <div class="topic-list-title" data-lang-key="basic_combinations_6_10">6 - 10 的基本組合</div>
+              <div class="topic-status status-locked">
+                <i class="fas fa-lock"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="curriculum-card">
+          <div class="curriculum-header">
+            <div class="curriculum-title">
+              <i class="fas fa-book"></i>
+              <span data-lang-key="primary_1_second_term">小學一年級下學期</span>
+            </div>
+            <div class="curriculum-toggle">
+              <i class="fas fa-chevron-right"></i>
+            </div>
+          </div>
+          
+          <div class="curriculum-content">
+            <!-- 內容會在點擊後顯示 -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- 推薦學習 -->
+      <div class="recent-section">
+        <div class="section-header">
+          <div class="section-title" data-lang-key="recommended_learning">推薦學習</div>
+          <div class="view-all" data-lang-key="view_all">查看全部</div>
+        </div>
+        
+        <div class="topic-list">
+          <div class="topic-item">
+            <div class="topic-header">
+              <div class="topic-subject topic-math" data-lang-key="math">數學</div>
+            </div>
+            <div class="topic-title" data-lang-key="counting_1_10">數數（1 - 10）</div>
+            <div class="topic-desc" data-lang-key="counting_desc">
+              學習如何數數從1到10，認識這些數字，並學會正確書寫。
+            </div>
+            <div class="topic-meta">
+              <div class="topic-grade">
+                <i class="fas fa-graduation-cap"></i>
+                <span data-lang-key="primary_1">小學一年級</span>
+              </div>
+              <div class="topic-actions">
+                <div class="topic-action">
+                  <i class="fas fa-play-circle"></i>
+                  <span data-lang-key="start_learning">開始學習</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="topic-item">
+            <div class="topic-header">
+              <div class="topic-subject topic-chinese" data-lang-key="chinese">中文</div>
+            </div>
+            <div class="topic-title" data-lang-key="learn_characters">認識漢字</div>
+            <div class="topic-desc" data-lang-key="characters_desc">
+              學習基礎漢字的結構和書寫方法，掌握常用漢字。
+            </div>
+            <div class="topic-meta">
+              <div class="topic-grade">
+                <i class="fas fa-graduation-cap"></i>
+                <span data-lang-key="primary_1">小學一年級</span>
+              </div>
+              <div class="topic-actions">
+                <div class="topic-action">
+                  <i class="fas fa-play-circle"></i>
+                  <span data-lang-key="start_learning">開始學習</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="topic-item">
+            <div class="topic-header">
+              <div class="topic-subject topic-english" data-lang-key="english">英文</div>
+            </div>
+            <div class="topic-title" data-lang-key="alphabet">字母表</div>
+            <div class="topic-desc" data-lang-key="alphabet_desc">
+              學習英文字母表，掌握字母的發音和書寫。
+            </div>
+            <div class="topic-meta">
+              <div class="topic-grade">
+                <i class="fas fa-graduation-cap"></i>
+                <span data-lang-key="primary_1">小學一年級</span>
+              </div>
+              <div class="topic-actions">
+                <div class="topic-action">
+                  <i class="fas fa-play-circle"></i>
+                  <span data-lang-key="start_learning">開始學習</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 底部標籤欄 -->
+    <div class="tab-bar">
+      <div class="tab-item" id="tab-home">
+        <i class="fas fa-home"></i>
+        <span data-lang-key="home">首頁</span>
+      </div>
+      <div class="tab-item active" id="tab-ai">
+        <i class="fas fa-robot"></i>
+        <span data-lang-key="ai_tutor">AI助教</span>
+      </div>
+      <div class="tab-item" id="tab-scan">
+        <div class="scan-button">
+          <i class="fas fa-camera"></i>
+        </div>
+        <span style="visibility: hidden;">掃描</span>
+      </div>
+      <div class="tab-item" id="tab-practice">
+        <i class="fas fa-book-open"></i>
+        <span data-lang-key="practice">練習</span>
+      </div>
+      <div class="tab-item" id="tab-profile">
+        <i class="fas fa-user"></i>
+        <span data-lang-key="profile">我的</span>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // 多語言支持
+    const translations = {
+      'zh-TW': {
+        'ai_tutor': 'AI助教',
+        'ai_tutor_intro': '你的智能學習助手',
+        'ai_tutor_desc': '我可以解答你的學習問題，提供個性化輔導，幫助你更好地理解知識點。',
+        'select_grade': '選擇年級',
+        'primary_1': '小學一年級',
+        'primary_2': '小學二年級',
+        'primary_3': '小學三年級',
+        'primary_4': '小學四年級',
+        'primary_5': '小學五年級',
+        'primary_6': '小學六年級',
+        'junior_1': '初中一年級',
+        'junior_2': '初中二年級',
+        'junior_3': '初中三年級',
+        'senior_1': '高中一年級',
+        'senior_2': '高中二年級',
+        'senior_3': '高中三年級',
+        'ask_question': '向AI助教提問',
+        'question_placeholder': '輸入你的問題...',
+        'send': '發送',
+        'common_questions': '常見問題',
+        'math_question': '如何解二次方程？',
+        'physics_question': '牛頓第三定律是什麼？',
+        'english_question': '如何提高英語口語？',
+        'history_question': '鴉片戰爭的影響是什麼？',
+        'home': '首頁',
+        'mistakes': '錯題本',
+        'ai_tutor': 'AI助教',
+        'practice': '練習',
+        'profile': '我的'
+      },
+      'zh-CN': {
+        'ai_tutor': 'AI助教',
+        'ai_tutor_intro': '你的智能学习助手',
+        'ai_tutor_desc': '我可以解答你的学习问题，提供个性化辅导，帮助你更好地理解知识点。',
+        'select_grade': '选择年级',
+        'primary_1': '小学一年级',
+        'primary_2': '小学二年级',
+        'primary_3': '小学三年级',
+        'primary_4': '小学四年级',
+        'primary_5': '小学五年级',
+        'primary_6': '小学六年级',
+        'junior_1': '初中一年级',
+        'junior_2': '初中二年级',
+        'junior_3': '初中三年级',
+        'senior_1': '高中一年级',
+        'senior_2': '高中二年级',
+        'senior_3': '高中三年级',
+        'ask_question': '向AI助教提问',
+        'question_placeholder': '输入你的问题...',
+        'send': '发送',
+        'common_questions': '常见问题',
+        'math_question': '如何解二次方程？',
+        'physics_question': '牛顿第三定律是什么？',
+        'english_question': '如何提高英语口语？',
+        'history_question': '鸦片战争的影响是什么？',
+        'home': '首页',
+        'mistakes': '错题本',
+        'ai_tutor': 'AI助教',
+        'practice': '练习',
+        'profile': '我的'
+      },
+      'en': {
+        'ai_tutor': 'AI Tutor',
+        'ai_tutor_intro': 'Your Smart Learning Assistant',
+        'ai_tutor_desc': 'I can answer your learning questions, provide personalized tutoring, and help you better understand knowledge points.',
+        'select_grade': 'Select Grade',
+        'primary_1': 'Primary 1',
+        'primary_2': 'Primary 2',
+        'primary_3': 'Primary 3',
+        'primary_4': 'Primary 4',
+        'primary_5': 'Primary 5',
+        'primary_6': 'Primary 6',
+        'junior_1': 'Junior 1',
+        'junior_2': 'Junior 2',
+        'junior_3': 'Junior 3',
+        'senior_1': 'Senior 1',
+        'senior_2': 'Senior 2',
+        'senior_3': 'Senior 3',
+        'ask_question': 'Ask AI Tutor',
+        'question_placeholder': 'Enter your question...',
+        'send': 'Send',
+        'common_questions': 'Common Questions',
+        'math_question': 'How to solve quadratic equations?',
+        'physics_question': 'What is Newton\'s Third Law?',
+        'english_question': 'How to improve English speaking?',
+        'history_question': 'What were the impacts of the Opium Wars?',
+        'home': 'Home',
+        'mistakes': 'Mistakes',
+        'ai_tutor': 'AI Tutor',
+        'practice': 'Practice',
+        'profile': 'Profile'
+      }
+    };
+    
+    // 當前語言
+    let currentLang = 'zh-TW';
+    
+    // 更新頁面語言
+    function updatePageLanguage(lang) {
+      // 更新所有帶有data-lang-key屬性的元素
+      document.querySelectorAll('[data-lang-key]').forEach(el => {
+        const key = el.getAttribute('data-lang-key');
+        if (translations[lang] && translations[lang][key]) {
+          el.textContent = translations[lang][key];
+        }
+      });
+      
+      // 更新placeholder
+      document.querySelectorAll('[data-lang-key-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-lang-key-placeholder');
+        if (translations[lang] && translations[lang][key]) {
+          el.setAttribute('placeholder', translations[lang][key]);
+        }
+      });
+    }
+    
+    // 初始化頁面
+    document.addEventListener('DOMContentLoaded', function() {
+      // 檢查本地存儲中的語言設置
+      const savedLang = localStorage.getItem('systemLang') || 'traditional';
+      
+      // 轉換語言類型為語言代碼
+      let langCode = 'zh-TW';
+      if (savedLang === 'simplified') {
+        langCode = 'zh-CN';
+      } else if (savedLang === 'traditional') {
+        langCode = 'zh-TW';
+      } else if (savedLang === 'english') {
+        langCode = 'en';
+      }
+      
+      // 設置當前語言
+      currentLang = langCode;
+      
+      // 更新頁面語言
+      updatePageLanguage(langCode);
+      
+      // 監聽存儲變更事件
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'systemLang') {
+          const newLang = e.newValue || 'traditional';
+          
+          // 轉換語言類型為語言代碼
+          let newLangCode = 'zh-TW';
+          if (newLang === 'simplified') {
+            newLangCode = 'zh-CN';
+          } else if (newLang === 'traditional') {
+            newLangCode = 'zh-TW';
+          } else if (newLang === 'english') {
+            newLangCode = 'en';
+          }
+          
+          // 更新當前語言
+          currentLang = newLangCode;
+          
+          // 更新頁面語言
+          updatePageLanguage(newLangCode);
+        }
+      });
+      
+      // 底部標籤欄點擊事件
+      document.getElementById('tab-home').addEventListener('click', function() {
+        navigateWithAnimation('home.html', 'slide-in-left');
+      });
+      
+      document.getElementById('tab-practice').addEventListener('click', function() {
+        navigateWithAnimation('quiz_generator.html', 'slide-in-right');
+      });
+      
+      document.getElementById('tab-scan').addEventListener('click', function() {
+        navigateWithAnimation('scan.html', 'slide-in-right');
+      });
+      
+      document.querySelector('.scan-button').addEventListener('click', function() {
+        navigateWithAnimation('scan.html', 'slide-in-right');
+      });
+      
+      document.getElementById('tab-profile').addEventListener('click', function() {
+        navigateWithAnimation('settings.html', 'slide-in-right');
+      });
+    });
+    
+    // 頁面過渡動畫函數
+    function navigateWithAnimation(url, animationType) {
+      // 獲取當前頁面內容
+      const appContent = document.querySelector('.app-content');
+      
+      // 添加退出動畫
+      if (animationType === 'slide-in-right') {
+        appContent.classList.add('slide-out-left');
+      } else if (animationType === 'slide-in-left') {
+        appContent.classList.add('slide-out-right');
+      } else if (animationType === 'scale-in') {
+        appContent.classList.add('scale-out');
+      } else {
+        appContent.classList.add('fade-out');
+      }
+      
+      // 動畫結束後跳轉頁面
+      setTimeout(function() {
+        window.location.href = url;
+      }, 300); // 動畫持續時間
+    }
+    
+    // 發送按鈕點擊事件
+    document.querySelector('.send-btn').addEventListener('click', function() {
+      const questionInput = document.querySelector('.question-input');
+      const question = questionInput.value.trim();
+      
+      if (question) {
+        // 這裡可以添加發送問題的邏輯
+        alert('問題已發送：' + question);
+        questionInput.value = '';
+      }
+    });
+    
+    // 常見問題點擊事件
+    document.querySelectorAll('.common-question').forEach(item => {
+      item.addEventListener('click', function() {
+        const question = this.textContent.trim();
+        document.querySelector('.question-input').value = question;
+      });
+    });
+  </script>
+</body>
+</html> 

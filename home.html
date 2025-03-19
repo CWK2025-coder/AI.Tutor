@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>快答通 - 首頁</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/transitions.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="js/font-size-handler.js"></script>
+  <style>
+    .home-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    
+    .user-greeting {
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    .notification-icon {
+      position: relative;
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 16px;
+      height: 16px;
+      background-color: var(--error-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: white;
+      font-weight: 600;
+    }
+    
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 20px;
+      padding: 10px 15px;
+      margin-bottom: 20px;
+    }
+    
+    .search-bar i {
+      color: var(--text-secondary);
+      margin-right: 10px;
+    }
+    
+    .search-input {
+      border: none;
+      background: transparent;
+      flex: 1;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+    
+    .search-input::placeholder {
+      color: var(--text-secondary);
+    }
+    
+    .search-input:focus {
+      outline: none;
+    }
+    
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    
+    .feature-card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .feature-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+    
+    .feature-icon i {
+      font-size: 24px;
+      color: white;
+    }
+    
+    .feature-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    .feature-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .scan-feature {
+      background: linear-gradient(135deg, var(--primary-color), #6c5ce7);
+    }
+    
+    .mistake-feature {
+      background: linear-gradient(135deg, var(--secondary-color), #fd79a8);
+    }
+    
+    .quiz-feature {
+      background: linear-gradient(135deg, var(--accent-color), #0984e3);
+    }
+    
+    .ai-feature {
+      background: linear-gradient(135deg, var(--success-color), #00b894);
+    }
+    
+    .recent-section {
+      margin-bottom: 20px;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .view-all {
+      font-size: 14px;
+      color: var(--primary-color);
+    }
+    
+    .recent-item {
+      display: flex;
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: var(--shadow);
+    }
+    
+    .recent-item-content {
+      flex: 1;
+    }
+    
+    .recent-item-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 5px;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .recent-item-meta {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .recent-item-subject {
+      margin-right: 15px;
+    }
+    
+    .recent-item-time {
+      display: flex;
+      align-items: center;
+    }
+    
+    .recent-item-time i {
+      margin-right: 5px;
+    }
+    
+    .recent-item-icon {
+      margin-left: 15px;
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      background-color: rgba(74, 107, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .recent-item-icon i {
+      color: var(--primary-color);
+      font-size: 20px;
+    }
+    
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      z-index: 100;
+      max-width: 500px;
+      margin: 0 auto;
+      animation: slideUp 0.5s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      height: 100%;
+      color: var(--text-secondary);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .tab-item i {
+      font-size: 20px;
+      margin-bottom: 4px;
+      transition: transform 0.2s ease, color 0.3s ease;
+    }
+    
+    .tab-item:hover i {
+      transform: translateY(-2px);
+    }
+    
+    .tab-item.active {
+      color: var(--primary-color);
+    }
+    
+    .tab-item.active i {
+      transform: translateY(-2px);
+    }
+    
+    .scan-button {
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+      background-color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: -20px;
+      box-shadow: 0 4px 10px rgba(74, 107, 255, 0.3);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .scan-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(74, 107, 255, 0.4);
+    }
+    
+    .scan-button:active {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(74, 107, 255, 0.3);
+    }
+    
+    .scan-button i {
+      font-size: 20px;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="device-container">
+    <!-- 狀態欄 -->
+    <div class="status-bar">
+      <div class="signal">
+        <i class="fas fa-signal"></i>
+      </div>
+      <div class="time">14:30</div>
+      <div class="battery">
+        <i class="fas fa-battery-three-quarters mr-1"></i>
+        <span>85%</span>
+      </div>
+    </div>
+    
+    <!-- 應用內容 -->
+    <div class="app-content">
+      <!-- 頭部 -->
+      <div class="home-header">
+        <div class="user-greeting" data-lang-key="greeting">你好，小明同學</div>
+        <div class="notification-icon">
+          <i class="fas fa-bell fa-lg"></i>
+          <div class="notification-badge">3</div>
+        </div>
+      </div>
+      
+      <!-- 搜索欄 -->
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" class="search-input" placeholder="搜索題目或知識點" data-lang-key-placeholder="search_placeholder">
+      </div>
+      
+      <!-- 功能區 -->
+      <div class="feature-grid">
+        <div class="feature-card" id="scan-feature">
+          <div class="feature-icon scan-feature">
+            <i class="fas fa-camera"></i>
+          </div>
+          <div class="feature-title" data-lang-key="scan_question">掃描題目</div>
+          <div class="feature-desc" data-lang-key="scan_desc">拍照或上傳題目獲取解答</div>
+        </div>
+        
+        <div class="feature-card" id="mistake-feature">
+          <div class="feature-icon mistake-feature">
+            <i class="fas fa-book"></i>
+          </div>
+          <div class="feature-title" data-lang-key="mistakes">錯題本</div>
+          <div class="feature-desc" data-lang-key="mistakes_desc">查看和複習已保存的錯題</div>
+        </div>
+        
+        <div class="feature-card" id="quiz-feature">
+          <div class="feature-icon quiz-feature">
+            <i class="fas fa-lightbulb"></i>
+          </div>
+          <div class="feature-title" data-lang-key="quiz">智能出題</div>
+          <div class="feature-desc" data-lang-key="quiz_desc">根據錯題生成練習題</div>
+        </div>
+        
+        <div class="feature-card" id="ai-feature">
+          <div class="feature-icon ai-feature">
+            <i class="fas fa-robot"></i>
+          </div>
+          <div class="feature-title" data-lang-key="ai_tutor">AI助教</div>
+          <div class="feature-desc" data-lang-key="ai_tutor_desc">智能解答學習問題</div>
+        </div>
+      </div>
+      
+      <!-- 最近掃描 -->
+      <div class="recent-section">
+        <div class="section-header">
+          <div class="section-title" data-lang-key="recent_scans">最近掃描</div>
+          <div class="view-all" data-lang-key="view_all">查看全部</div>
+        </div>
+        
+        <div class="recent-item">
+          <div class="recent-item-content">
+            <div class="recent-item-title">已知函數f(x)=ln(x+1)，求f'(x)的值</div>
+            <div class="recent-item-meta">
+              <div class="recent-item-subject" data-lang-key="math">數學</div>
+              <div class="recent-item-time">
+                <i class="far fa-clock"></i>
+                <span data-lang-key="minutes_ago">10分鐘前</span>
+              </div>
+            </div>
+          </div>
+          <div class="recent-item-icon">
+            <i class="fas fa-calculator"></i>
+          </div>
+        </div>
+        
+        <div class="recent-item">
+          <div class="recent-item-content">
+            <div class="recent-item-title">If 3x + 4y = 10, what is the value of y when x = 2?</div>
+            <div class="recent-item-meta">
+              <div class="recent-item-subject" data-lang-key="english">英語</div>
+              <div class="recent-item-time">
+                <i class="far fa-clock"></i>
+                <span data-lang-key="yesterday">昨天</span>
+              </div>
+            </div>
+          </div>
+          <div class="recent-item-icon">
+            <i class="fas fa-language"></i>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 學習進度 -->
+      <div class="recent-section">
+        <div class="section-header">
+          <div class="section-title" data-lang-key="learning_progress">學習進度</div>
+          <div class="view-all" data-lang-key="details">詳情</div>
+        </div>
+        
+        <div class="card">
+          <div class="flex justify-between mb-2">
+            <div class="font-medium" data-lang-key="weekly_study">本週已學習</div>
+            <div class="text-primary font-bold">4.5小時</div>
+          </div>
+          
+          <div class="flex justify-between mb-2">
+            <div class="font-medium" data-lang-key="solved_questions">已解決題目</div>
+            <div class="text-primary font-bold">32題</div>
+          </div>
+          
+          <div class="flex justify-between">
+            <div class="font-medium" data-lang-key="streak">連續學習</div>
+            <div class="text-primary font-bold">5天</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 底部標籤欄 -->
+    <div class="tab-bar">
+      <div class="tab-item active">
+        <i class="fas fa-home"></i>
+        <span data-lang-key="home">首頁</span>
+      </div>
+      <div class="tab-item" id="tab-ai">
+        <i class="fas fa-robot"></i>
+        <span data-lang-key="ai_tutor">AI助教</span>
+      </div>
+      <div class="tab-item" id="tab-scan">
+        <div class="scan-button">
+          <i class="fas fa-camera"></i>
+        </div>
+        <span style="visibility: hidden;">掃描</span>
+      </div>
+      <div class="tab-item" id="tab-practice">
+        <i class="fas fa-book-open"></i>
+        <span data-lang-key="practice">練習</span>
+      </div>
+      <div class="tab-item" id="tab-profile">
+        <i class="fas fa-user"></i>
+        <span data-lang-key="profile">我的</span>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // 多語言支持
+    const translations = {
+      'simplified': {
+        'greeting': '你好，小明同学',
+        'search_placeholder': '搜索题目或知识点',
+        'scan_question': '扫描题目',
+        'scan_desc': '拍照或上传题目获取解答',
+        'mistakes': '错题本',
+        'mistakes_desc': '查看和复习已保存的错题',
+        'quiz': '智能出题',
+        'quiz_desc': '根据错题生成练习题',
+        'ai_tutor': 'AI助教',
+        'ai_tutor_desc': '智能解答学习问题',
+        'practice': '练习',
+        'recent_scans': '最近扫描',
+        'view_all': '查看全部',
+        'math': '数学',
+        'english': '英语',
+        'minutes_ago': '10分钟前',
+        'yesterday': '昨天',
+        'learning_progress': '学习进度',
+        'details': '详情',
+        'weekly_study': '本周已学习',
+        'solved_questions': '已解决题目',
+        'streak': '连续学习',
+        'home': '首页',
+        'profile': '我的'
+      },
+      'traditional': {
+        'greeting': '你好，小明同學',
+        'search_placeholder': '搜索題目或知識點',
+        'scan_question': '掃描題目',
+        'scan_desc': '拍照或上傳題目獲取解答',
+        'mistakes': '錯題本',
+        'mistakes_desc': '查看和複習已保存的錯題',
+        'quiz': '智能出題',
+        'quiz_desc': '根據錯題生成練習題',
+        'ai_tutor': 'AI助教',
+        'ai_tutor_desc': '智能解答學習問題',
+        'practice': '練習',
+        'recent_scans': '最近掃描',
+        'view_all': '查看全部',
+        'math': '數學',
+        'english': '英語',
+        'minutes_ago': '10分鐘前',
+        'yesterday': '昨天',
+        'learning_progress': '學習進度',
+        'details': '詳情',
+        'weekly_study': '本週已學習',
+        'solved_questions': '已解決題目',
+        'streak': '連續學習',
+        'home': '首頁',
+        'profile': '我的'
+      },
+      'english': {
+        'greeting': 'Hello, Xiaoming',
+        'search_placeholder': 'Search questions or knowledge points',
+        'scan_question': 'Scan Question',
+        'scan_desc': 'Take photo or upload to get answers',
+        'mistakes': 'Mistakes',
+        'mistakes_desc': 'View and review saved mistakes',
+        'quiz': 'Quiz',
+        'quiz_desc': 'Generate practice based on mistakes',
+        'ai_tutor': 'AI Tutor',
+        'ai_tutor_desc': 'Smart learning assistance',
+        'practice': 'Practice',
+        'recent_scans': 'Recent Scans',
+        'view_all': 'View All',
+        'math': 'Math',
+        'english': 'English',
+        'minutes_ago': '10 mins ago',
+        'yesterday': 'Yesterday',
+        'learning_progress': 'Learning Progress',
+        'details': 'Details',
+        'weekly_study': 'This week',
+        'solved_questions': 'Questions solved',
+        'streak': 'Learning streak',
+        'home': 'Home',
+        'profile': 'Profile'
+      }
+    };
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      // 檢查本地存儲中的語言設置
+      const savedLang = localStorage.getItem('systemLang') || 'traditional';
+      
+      // 應用語言設置
+      applyLanguageSetting(savedLang);
+      
+      // 監聽語言變更事件
+      window.addEventListener('fontChange', function(e) {
+        applyLanguageSetting(e.detail.font);
+        // 更新本地存儲
+        localStorage.setItem('systemLang', e.detail.font);
+      });
+      
+      // 監聽存儲變更事件
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'systemLang') {
+          const newLang = e.newValue || 'traditional';
+          applyLanguageSetting(newLang);
+        }
+      });
+      
+      // 應用語言設置到整個應用的函數
+      function applyLanguageSetting(langType) {
+        const htmlElement = document.documentElement;
+        
+        if (langType === 'simplified') {
+          htmlElement.setAttribute('lang', 'zh-CN');
+        } else if (langType === 'traditional') {
+          htmlElement.setAttribute('lang', 'zh-TW');
+        } else if (langType === 'english') {
+          htmlElement.setAttribute('lang', 'en');
+        }
+        
+        // 設置當前語言屬性
+        htmlElement.setAttribute('data-current-lang', langType);
+        
+        // 更新頁面上的文本
+        updatePageLanguage(langType);
+      }
+      
+      // 更新頁面語言
+      function updatePageLanguage(lang) {
+        const elements = document.querySelectorAll('[data-lang-key]');
+        elements.forEach(element => {
+          const key = element.getAttribute('data-lang-key');
+          if (translations[lang] && translations[lang][key]) {
+            element.textContent = translations[lang][key];
+          }
+        });
+        
+        // 更新placeholder
+        const placeholders = document.querySelectorAll('[data-lang-key-placeholder]');
+        placeholders.forEach(element => {
+          const key = element.getAttribute('data-lang-key-placeholder');
+          if (translations[lang] && translations[lang][key]) {
+            element.setAttribute('placeholder', translations[lang][key]);
+          }
+        });
+      }
+      
+      // 定期檢查語言設置
+      setInterval(() => {
+        const currentLang = localStorage.getItem('systemLang') || 'traditional';
+        if (currentLang !== document.documentElement.getAttribute('data-current-lang')) {
+          applyLanguageSetting(currentLang);
+        }
+      }, 1000);
+      
+      // 將函數暴露給全局作用域，以便父窗口可以直接調用
+      window.updatePageLanguage = updatePageLanguage;
+      window.applyLanguageSetting = applyLanguageSetting;
+
+      // 添加頁面交互功能
+      // 智能出題按鈕點擊事件
+      document.getElementById('quiz-feature').addEventListener('click', function() {
+        navigateWithAnimation('quiz_generator.html', 'slide-in-right');
+      });
+      
+      // 錯題本按鈕點擊事件
+      document.getElementById('mistake-feature').addEventListener('click', function() {
+        navigateWithAnimation('mistakes.html', 'slide-in-right');
+      });
+      
+      // 掃描題目按鈕點擊事件
+      document.getElementById('scan-feature').addEventListener('click', function() {
+        navigateWithAnimation('scan.html', 'slide-in-right');
+      });
+      
+      // AI助教按鈕點擊事件
+      document.getElementById('ai-feature').addEventListener('click', function() {
+        navigateWithAnimation('ai_tutor.html', 'slide-in-right');
+      });
+      
+      // 底部標籤欄點擊事件
+      document.getElementById('tab-ai').addEventListener('click', function() {
+        navigateWithAnimation('ai_tutor.html', 'slide-in-right');
+      });
+      
+      document.getElementById('tab-scan').addEventListener('click', function() {
+        navigateWithAnimation('scan.html', 'slide-in-right');
+      });
+      
+      document.querySelector('.scan-button').addEventListener('click', function() {
+        navigateWithAnimation('scan.html', 'slide-in-right');
+      });
+      
+      document.getElementById('tab-practice').addEventListener('click', function() {
+        navigateWithAnimation('quiz_generator.html', 'slide-in-right');
+      });
+      
+      document.getElementById('tab-profile').addEventListener('click', function() {
+        navigateWithAnimation('settings.html', 'slide-in-right');
+      });
+      
+      // 頁面過渡動畫函數
+      function navigateWithAnimation(url, animationType) {
+        // 獲取當前頁面內容
+        const appContent = document.querySelector('.app-content');
+        
+        // 添加退出動畫
+        if (animationType === 'slide-in-right') {
+          appContent.classList.add('slide-out-left');
+        } else if (animationType === 'slide-in-left') {
+          appContent.classList.add('slide-out-right');
+        } else if (animationType === 'scale-in') {
+          appContent.classList.add('scale-out');
+        } else {
+          appContent.classList.add('fade-out');
+        }
+        
+        // 動畫結束後跳轉頁面
+        setTimeout(function() {
+          window.location.href = url;
+        }, 300); // 動畫持續時間
+      }
+    });
+  </script>
+</body>
+</html> 

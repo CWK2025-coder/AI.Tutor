@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>快答通 - 課程學習</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="js/common.js"></script>
+  <style>
+    .lesson-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .back-button {
+      margin-right: 15px;
+      font-size: 20px;
+    }
+    
+    .lesson-title {
+      font-size: 18px;
+      font-weight: 600;
+      flex: 1;
+    }
+    
+    .action-buttons {
+      display: flex;
+    }
+    
+    .action-button {
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+      background-color: rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 10px;
+    }
+    
+    .progress-container {
+      margin-bottom: 20px;
+    }
+    
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    
+    .progress-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    
+    .progress-bar {
+      height: 6px;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background-color: var(--primary-color);
+      border-radius: 3px;
+      width: 30%;
+    }
+    
+    .lesson-card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    
+    .lesson-section-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .lesson-section-title i {
+      margin-right: 8px;
+      color: var(--primary-color);
+    }
+    
+    .lesson-content {
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+    
+    .number-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .number-item {
+      background-color: rgba(74, 107, 255, 0.1);
+      border-radius: 8px;
+      padding: 15px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .number-value {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 5px;
+    }
+    
+    .number-text {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .example-container {
+      margin-bottom: 20px;
+    }
+    
+    .example-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .example-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      background-color: rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+    }
+    
+    .example-image img {
+      width: 80%;
+      height: 80%;
+      object-fit: contain;
+    }
+    
+    .example-text {
+      flex: 1;
+      font-size: 14px;
+    }
+    
+    .video-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 比例 */
+      margin-bottom: 20px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .video-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .video-play {
+      width: 60px;
+      height: 60px;
+      border-radius: 30px;
+      background-color: rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    
+    .video-play i {
+      font-size: 24px;
+      color: var(--primary-color);
+    }
+    
+    .video-text {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.7);
+    }
+    
+    .practice-section {
+      margin-bottom: 20px;
+    }
+    
+    .practice-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+    
+    .practice-question {
+      font-size: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .practice-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .practice-option {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      border: 2px solid rgba(0, 0, 0, 0.1);
+      border-radius: var(--border-radius);
+      transition: all 0.3s ease;
+    }
+    
+    .practice-option.selected {
+      border-color: var(--primary-color);
+      background-color: rgba(74, 107, 255, 0.05);
+    }
+    
+    .option-marker {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .practice-option.selected .option-marker {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      color: white;
+    }
+    
+    .option-text {
+      font-size: 15px;
+      flex: 1;
+    }
+    
+    .chat-container {
+      margin-top: 30px;
+    }
+    
+    .chat-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .chat-title {
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+    
+    .chat-title i {
+      margin-right: 8px;
+      color: var(--primary-color);
+    }
+    
+    .chat-messages {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .message {
+      display: flex;
+      max-width: 80%;
+    }
+    
+    .message.user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+    
+    .message-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+      overflow: hidden;
+      margin-right: 10px;
+    }
+    
+    .message.user .message-avatar {
+      margin-right: 0;
+      margin-left: 10px;
+    }
+    
+    .message-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .message-content {
+      background-color: rgba(0, 0, 0, 0.05);
+      padding: 12px 15px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    
+    .message.user .message-content {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .chat-input {
+      display: flex;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 24px;
+      padding: 8px 15px;
+    }
+    
+    .chat-input input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 8px 0;
+      font-size: 14px;
+    }
+    
+    .chat-input input:focus {
+      outline: none;
+    }
+    
+    .chat-input button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 10px;
+    }
+    
+    .navigation-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+    
+    .nav-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 20px;
+      border-radius: var(--border-radius);
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .prev-button {
+      background-color: rgba(0, 0, 0, 0.05);
+      color: var(--text-secondary);
+    }
+    
+    .next-button {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .nav-button i {
+      margin-right: 8px;
+    }
+    
+    .next-button i {
+      margin-right: 0;
+      margin-left: 8px;
+    }
+    
+    /* 語言切換器樣式 */
+    .language-switcher {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      padding: 5px 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      display: none; /* 隱藏語言切換器 */
+    }
+    
+    .language-option {
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 0 3px;
+      transition: all 0.3s ease;
+    }
+    
+    .language-option.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    /* 確保圖標字體在不同語言模式下正確顯示 */
+    html[lang="zh-TW"] i.fas,
+    html[lang="zh-TW"] i.far,
+    html[lang="zh-TW"] i.fab {
+      font-family: "Font Awesome 6 Free", "微軟正黑體", "Microsoft JhengHei", sans-serif !important;
+    }
+    
+    html[lang="en"] i.fas,
+    html[lang="en"] i.far,
+    html[lang="en"] i.fab {
+      font-family: "Font Awesome 6 Free", "Arial", sans-serif !important;
+    }
+    
+    /* 確保所有文本元素在不同語言模式下正確顯示 */
+    html[lang="zh-TW"] {
+      font-family: "微軟正黑體", "Microsoft JhengHei", sans-serif;
+    }
+    
+    html[lang="en"] {
+      font-family: "Arial", "Helvetica", sans-serif;
+    }
+    
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      z-index: 100;
+      max-width: 500px;
+      margin: 0 auto;
+      animation: slideUp 0.5s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      height: 100%;
+      color: var(--text-secondary);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .tab-item i {
+      font-size: 20px;
+      margin-bottom: 4px;
+      transition: transform 0.2s ease, color 0.3s ease;
+    }
+    
+    .tab-item:hover i {
+      transform: translateY(-2px);
+    }
+    
+    .tab-item.active {
+      color: var(--primary-color);
+    }
+    
+    .tab-item.active i {
+      transform: translateY(-2px);
+    }
+    
+    .scan-button {
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+      background-color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: -20px;
+      box-shadow: 0 4px 10px rgba(74, 107, 255, 0.3);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .scan-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(74, 107, 255, 0.4);
+    }
+    
+    .scan-button:active {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(74, 107, 255, 0.3);
+    }
+    
+    .scan-button i {
+      font-size: 20px;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="device-container">
+    <!-- 狀態欄 -->
+    <div class="status-bar">
+      <div class="signal">
+        <i class="fas fa-signal"></i>
+      </div>
+      <div class="time">14:30</div>
+      <div class="battery">
+        <i class="fas fa-battery-three-quarters mr-1"></i>
+        <span>85%</span>
+      </div>
+    </div>
+    
+    <!-- 語言切換器 -->
+    <!-- 已隱藏語言切換器
+    <div class="language-switcher">
+      <div class="language-option active" data-lang="zh-TW">繁</div>
+      <div class="language-option" data-lang="zh-CN">简</div>
+      <div class="language-option" data-lang="en">EN</div>
+    </div>
+    -->
+    
+    <!-- 應用內容 -->
+    <div class="app-content">
+      <!-- 頭部 -->
+      <div class="lesson-header">
+        <div class="back-button">
+          <i class="fas fa-arrow-left"></i>
+        </div>
+        <div class="lesson-title" data-lang-key="counting_lesson">數數（1 - 10）</div>
+        <div class="action-buttons">
+          <div class="action-button">
+            <i class="fas fa-share-alt"></i>
+          </div>
+          <div class="action-button">
+            <i class="fas fa-bookmark"></i>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 進度條 -->
+      <div class="progress-container">
+        <div class="progress-info">
+          <div class="progress-text" data-lang-key="lesson_progress">課程進度：30%</div>
+          <div class="progress-text" data-lang-key="time_remaining">剩餘時間：約15分鐘</div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+      </div>
+      
+      <!-- 課程卡片 -->
+      <div class="lesson-card">
+        <div class="lesson-section-title">
+          <i class="fas fa-book"></i>
+          <span data-lang-key="learning_objectives">學習目標</span>
+        </div>
+        
+        <div class="lesson-content" data-lang-key="objectives_content">
+          在這節課中，我們將學習：
+          <ul>
+            <li>認識數字1到10</li>
+            <li>學會正確書寫數字</li>
+            <li>理解數字代表的數量</li>
+            <li>學會數物體的數量</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- 數字網格 -->
+      <div class="lesson-card">
+        <div class="lesson-section-title">
+          <i class="fas fa-th"></i>
+          <span data-lang-key="recognize_numbers">認識數字</span>
+        </div>
+        
+        <div class="lesson-content" data-lang-key="numbers_intro">
+          讓我們來認識數字1到10。每個數字都有自己的形狀和代表的數量。
+        </div>
+        
+        <div class="number-grid">
+          <div class="number-item">
+            <div class="number-display">1</div>
+            <div class="number-name" data-lang-key="number_1">一</div>
+          </div>
+          
+          <div class="number-item">
+            <div class="number-display">2</div>
+            <div class="number-name" data-lang-key="number_2">二</div>
+          </div>
+          
+          <div class="number-item">
+            <div class="number-display">3</div>
+            <div class="number-name" data-lang-key="number_3">三</div>
+          </div>
+          
+          <div class="number-item">
+            <div class="number-display">4</div>
+            <div class="number-name" data-lang-key="number_4">四</div>
+          </div>
+          
+          <div class="number-item">
+            <div class="number-display">5</div>
+            <div class="number-name" data-lang-key="number_5">五</div>
+          </div>
+          
+          <div class="number-item">
+            <div class="number-display">6</div>
+            <div class="number-name" data-lang-key="number_6">六</div>
+          </div>
+          
+          <div class="number-item">
+            <div class="number-display">7</div>
+            <div class="number-name" data-lang-key="number_7">七</div>
+          </div>
+          
+          <div class="number-item">
+            <div class="number-display">8</div>
+            <div class="number-name" data-lang-key="number_8">八</div>
+          </div>
+          
+          <div class="number-item">
+            <div class="number-display">9</div>
+            <div class="number-name" data-lang-key="number_9">九</div>
+          </div>
+          
+          <div class="number-item">
+            <div class="number-display">10</div>
+            <div class="number-name" data-lang-key="number_10">十</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 視頻教學 -->
+      <div class="lesson-card">
+        <div class="lesson-section-title">
+          <i class="fas fa-play-circle"></i>
+          <span data-lang-key="video_tutorial">視頻教學</span>
+        </div>
+        
+        <div class="video-container">
+          <img src="https://via.placeholder.com/600x340/e0e0e0/808080?text=數數視頻" alt="數數視頻" class="video-placeholder">
+          <div class="video-play-button">
+            <i class="fas fa-play"></i>
+          </div>
+        </div>
+        
+        <div class="video-info">
+          <div class="video-title" data-lang-key="video_title">如何數數1到10</div>
+          <div class="video-meta">
+            <span data-lang-key="video_duration">時長：3:45</span>
+            <span data-lang-key="video_views">觀看次數：1,234</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 互動練習 -->
+      <div class="lesson-card">
+        <div class="lesson-section-title">
+          <i class="fas fa-pencil-alt"></i>
+          <span data-lang-key="interactive_practice">互動練習</span>
+        </div>
+        
+        <div class="practice-container">
+          <div class="practice-question" data-lang-key="practice_question_1">
+            1. 數一數下面有多少個蘋果？
+          </div>
+          
+          <div class="practice-image">
+            <img src="https://via.placeholder.com/600x200/e0e0e0/808080?text=5個蘋果" alt="蘋果圖片" class="practice-img">
+          </div>
+          
+          <div class="practice-options">
+            <div class="practice-option">
+              <div class="option-marker">A</div>
+              <div class="option-text">4</div>
+            </div>
+            
+            <div class="practice-option selected">
+              <div class="option-marker">B</div>
+              <div class="option-text">5</div>
+            </div>
+            
+            <div class="practice-option">
+              <div class="option-marker">C</div>
+              <div class="option-text">6</div>
+            </div>
+          </div>
+          
+          <div class="practice-feedback correct">
+            <i class="fas fa-check-circle"></i>
+            <span data-lang-key="correct_answer">正確！有5個蘋果。</span>
+          </div>
+          
+          <div class="practice-question" data-lang-key="practice_question_2">
+            2. 哪個數字是"七"？
+          </div>
+          
+          <div class="practice-options">
+            <div class="practice-option">
+              <div class="option-marker">A</div>
+              <div class="option-text">6</div>
+            </div>
+            
+            <div class="practice-option selected">
+              <div class="option-marker">B</div>
+              <div class="option-text">7</div>
+            </div>
+            
+            <div class="practice-option">
+              <div class="option-marker">C</div>
+              <div class="option-text">8</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="lesson-card">
+        <div class="chat-container">
+          <div class="chat-header">
+            <div class="chat-title">
+              <i class="fas fa-comment-dots"></i>
+              <span data-lang-key="ask_ai_tutor">有問題？問問AI助教</span>
+            </div>
+          </div>
+          
+          <div class="chat-messages">
+            <div class="message">
+              <div class="message-avatar">
+                <img src="https://via.placeholder.com/36/4a6bff/ffffff?text=AI" alt="AI助教">
+              </div>
+              <div class="message-content" data-lang-key="ai_greeting">
+                你好！有關於數數的問題嗎？我可以幫你解答。
+              </div>
+            </div>
+            
+            <div class="message user">
+              <div class="message-avatar">
+                <img src="https://source.unsplash.com/random/36x36/?portrait" alt="用戶頭像">
+              </div>
+              <div class="message-content" data-lang-key="user_question">
+                為什麼10是兩個數字組成的？
+              </div>
+            </div>
+            
+            <div class="message">
+              <div class="message-avatar">
+                <img src="https://via.placeholder.com/36/4a6bff/ffffff?text=AI" alt="AI助教">
+              </div>
+              <div class="message-content" data-lang-key="ai_answer">
+                很好的問題！10是由1和0兩個數字組成的，因為它是第一個兩位數。在我們的數字系統中，當我們數到9之後，下一個數就是10，表示一個十和零個一。這就像是一捆十根棒子和零根單獨的棒子。
+              </div>
+            </div>
+          </div>
+          
+          <div class="chat-input">
+            <input type="text" placeholder="輸入你的問題..." data-lang-key="input_placeholder">
+            <button>
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 導航按鈕 -->
+      <div class="navigation-buttons">
+        <button class="btn btn-outline w-full mb-3" data-lang-key="previous_lesson">
+          <i class="fas fa-arrow-left mr-2"></i>
+          上一課
+        </button>
+        
+        <button class="btn w-full" data-lang-key="next_lesson">
+          下一課
+          <i class="fas fa-arrow-right ml-2"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- 底部標籤欄 -->
+    <div class="tab-bar">
+      <div class="tab-item" id="tab-home">
+        <i class="fas fa-home"></i>
+        <span data-lang-key="home">首頁</span>
+      </div>
+      <div class="tab-item" id="tab-mistakes">
+        <i class="fas fa-book"></i>
+        <span data-lang-key="mistakes">錯題本</span>
+      </div>
+      <div class="tab-item" id="tab-scan">
+        <div class="scan-button">
+          <i class="fas fa-camera"></i>
+        </div>
+        <span style="visibility: hidden;">掃描</span>
+      </div>
+      <div class="tab-item active" id="tab-ai">
+        <i class="fas fa-graduation-cap"></i>
+        <span data-lang-key="ai_tutor">AI助教</span>
+      </div>
+      <div class="tab-item" id="tab-profile">
+        <i class="fas fa-user"></i>
+        <span data-lang-key="profile">我的</span>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // 多語言支持
+    const translations = {
+      'zh-TW': {
+        'counting_lesson': '數數（1 - 10）',
+        'lesson_progress': '課程進度：30%',
+        'time_remaining': '剩餘時間：約15分鐘',
+        'learning_objectives': '學習目標',
+        'objectives_content': '在這節課中，我們將學習：<ul><li>認識數字1到10</li><li>學會正確書寫數字</li><li>理解數字代表的數量</li><li>學會數物體的數量</li></ul>',
+        'recognize_numbers': '認識數字',
+        'numbers_intro': '讓我們來認識數字1到10。每個數字都有自己的形狀和代表的數量。',
+        'number_1': '一',
+        'number_2': '二',
+        'number_3': '三',
+        'number_4': '四',
+        'number_5': '五',
+        'number_6': '六',
+        'number_7': '七',
+        'number_8': '八',
+        'number_9': '九',
+        'number_10': '十',
+        'video_tutorial': '視頻教學',
+        'video_title': '如何數數1到10',
+        'video_duration': '時長：3:45',
+        'video_views': '觀看次數：1,234',
+        'interactive_practice': '互動練習',
+        'practice_question_1': '1. 數一數下面有多少個蘋果？',
+        'practice_question_2': '2. 哪個數字是"七"？',
+        'correct_answer': '正確！有5個蘋果。',
+        'ask_ai_tutor': '有問題？問問AI助教',
+        'ai_greeting': '你好！有關於數數的問題嗎？我可以幫你解答。',
+        'user_question': '為什麼10是兩個數字組成的？',
+        'ai_answer': '很好的問題！10是由1和0兩個數字組成的，因為它是第一個兩位數。在我們的數字系統中，當我們數到9之後，下一個數就是10，表示一個十和零個一。這就像是一捆十根棒子和零根單獨的棒子。',
+        'input_placeholder': '輸入你的問題...',
+        'previous_lesson': '上一課',
+        'next_lesson': '下一課',
+        'home': '首頁',
+        'mistakes': '錯題本',
+        'ai_tutor': 'AI助教',
+        'profile': '我的'
+      },
+      'zh-CN': {
+        'numbers_lesson': '数字与计算',
+        'back': '返回',
+        'lesson_progress': '课程进度',
+        'objectives': '学习目标',
+        'objectives_content': '<li>理解数字的基本概念</li><li>掌握加法和减法运算</li><li>学习简单的数学问题解决方法</li>',
+        'numbers_intro': '数字是数学的基础。在这节课中，我们将学习如何识别数字、进行简单计算，以及解决与数字相关的问题。',
+        'numbers_section': '数字基础',
+        'numbers_content': '数字是表示数量的符号。我们使用的数字系统是十进制系统，包括数字0-9。通过组合这些数字，我们可以表示任何数量。',
+        'addition_section': '加法',
+        'addition_content': '加法是将两个或多个数字合并得到它们的总和的过程。例如，3 + 4 = 7。',
+        'subtraction_section': '减法',
+        'subtraction_content': '减法是从一个数中取出另一个数的过程。例如，7 - 3 = 4。',
+        'practice_quiz': '练习测验',
+        'start_quiz': '开始测验',
+        'related_lessons': '相关课程',
+        'fractions_lesson': '分数入门',
+        'geometry_lesson': '基础几何',
+        'home': '首页',
+        'lessons': '课程',
+        'mistakes': '错题本',
+        'ai_tutor': 'AI助教',
+        'profile': '我的'
+      },
+      'en': {
+        'counting_lesson': 'Counting (1 - 10)',
+        'lesson_progress': 'Progress: 30%',
+        'time_remaining': 'Time remaining: about 15 minutes',
+        'learning_objectives': 'Learning Objectives',
+        'objectives_content': 'In this lesson, we will learn:<ul><li>Recognize numbers 1 to 10</li><li>Learn to write numbers correctly</li><li>Understand the quantities represented by numbers</li><li>Learn to count objects</li></ul>',
+        'recognize_numbers': 'Recognize Numbers',
+        'numbers_intro': 'Let\'s learn about numbers 1 to 10. Each number has its own shape and represents a quantity.',
+        'number_1': 'One',
+        'number_2': 'Two',
+        'number_3': 'Three',
+        'number_4': 'Four',
+        'number_5': 'Five',
+        'number_6': 'Six',
+        'number_7': 'Seven',
+        'number_8': 'Eight',
+        'number_9': 'Nine',
+        'number_10': 'Ten',
+        'video_tutorial': 'Video Tutorial',
+        'video_title': 'How to Count from 1 to 10',
+        'video_duration': 'Duration: 3:45',
+        'video_views': 'Views: 1,234',
+        'interactive_practice': 'Interactive Practice',
+        'practice_question_1': '1. Count how many apples are below?',
+        'practice_question_2': '2. Which number is "Seven"?',
+        'correct_answer': 'Correct! There are 5 apples.',
+        'ask_ai_tutor': 'Questions? Ask AI Tutor',
+        'ai_greeting': 'Hello! Do you have any questions about counting? I can help you.',
+        'user_question': 'Why is 10 made up of two digits?',
+        'ai_answer': 'Great question! 10 is made up of the digits 1 and 0 because it\'s the first two-digit number. In our number system, after we count to 9, the next number is 10, representing one ten and zero ones. It\'s like having one bundle of ten sticks and zero individual sticks.',
+        'input_placeholder': 'Type your question...',
+        'previous_lesson': 'Previous Lesson',
+        'next_lesson': 'Next Lesson',
+        'home': 'Home',
+        'mistakes': 'Mistakes',
+        'ai_tutor': 'AI Tutor',
+        'profile': 'Profile'
+      }
+    };
+    
+    // 當前語言
+    let currentLang = 'zh-TW';
+    
+    // 更新頁面語言
+    function updatePageLanguage(lang) {
+      // 更新所有帶有data-lang-key屬性的元素
+      document.querySelectorAll('[data-lang-key]').forEach(el => {
+        const key = el.getAttribute('data-lang-key');
+        if (translations[lang] && translations[lang][key]) {
+          if (el.tagName === 'INPUT' && el.hasAttribute('placeholder')) {
+            el.placeholder = translations[lang][key];
+          } else if (key === 'objectives_content' || key === 'numbers_intro') {
+            el.innerHTML = translations[lang][key];
+          } else {
+            el.textContent = translations[lang][key];
+          }
+        }
+      });
+      
+      // 更新語言切換器的活動狀態
+      document.querySelectorAll('.language-option').forEach(option => {
+        if (option.getAttribute('data-lang') === lang) {
+          option.classList.add('active');
+        } else {
+          option.classList.remove('active');
+        }
+      });
+    }
+    
+    // 應用語言設置到整個應用的函數
+    function applyLanguageSetting(langType) {
+      const htmlElement = document.documentElement;
+      
+      // 轉換語言類型為語言代碼
+      let langCode = 'zh-TW';
+      if (langType === 'simplified') {
+        langCode = 'zh-CN';
+      } else if (langType === 'traditional') {
+        langCode = 'zh-TW';
+      } else if (langType === 'english') {
+        langCode = 'en';
+      }
+      
+      // 設置HTML語言屬性
+      htmlElement.setAttribute('lang', langCode);
+      
+      // 設置當前語言屬性
+      htmlElement.setAttribute('data-current-lang', langType);
+      currentLang = langCode;
+      
+      // 更新頁面上的文本
+      updatePageLanguage(langCode);
+    }
+    
+    // 初始化頁面
+    document.addEventListener('DOMContentLoaded', function() {
+      // 檢查本地存儲中的語言設置
+      const savedLang = localStorage.getItem('systemLang') || 'traditional';
+      
+      // 應用語言設置
+      applyLanguageSetting(savedLang);
+      
+      // 監聽存儲變更事件
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'systemLang') {
+          const newLang = e.newValue || 'traditional';
+          applyLanguageSetting(newLang);
+          console.log('Language updated from system settings: ' + newLang);
+        }
+      });
+      
+      // 底部標籤欄點擊事件
+      document.getElementById('tab-home').addEventListener('click', function() {
+        window.location.href = 'home.html';
+      });
+      
+      document.getElementById('tab-mistakes').addEventListener('click', function() {
+        window.location.href = 'mistakes.html';
+      });
+      
+      document.getElementById('tab-scan').addEventListener('click', function() {
+        window.location.href = 'scan.html';
+      });
+      
+      document.querySelector('.scan-button').addEventListener('click', function() {
+        window.location.href = 'scan.html';
+      });
+      
+      document.getElementById('tab-ai').addEventListener('click', function() {
+        window.location.href = 'ai_tutor.html';
+      });
+      
+      document.getElementById('tab-profile').addEventListener('click', function() {
+        window.location.href = 'settings.html';
+      });
+      
+      // 進度條動畫
+      setTimeout(function() {
+        document.querySelector('.progress-bar-fill').style.width = '35%';
+      }, 500);
+    });
+  </script>
+</body>
+</html> 

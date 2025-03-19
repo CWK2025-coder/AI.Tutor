@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+mq
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>快答通 - 有問必答</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #f0f2f5;
+      padding: 20px;
+      font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+    }
+    
+    .prototype-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+    
+    .prototype-title {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+    
+    .prototype-title h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    
+    .prototype-title p {
+      font-size: 16px;
+      color: #666;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .screen-label {
+      text-align: center;
+      margin-top: 10px;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .language-selector {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .language-btn {
+      padding: 8px 16px;
+      margin: 0 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: #f8f9fa;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .language-btn.active {
+      background-color: #4a6bff;
+      color: white;
+      border-color: #4a6bff;
+    }
+  </style>
+</head>
+<body>
+  <div class="prototype-title">
+    <h1 data-lang-key="app_title">快答通 - 有問必答原型</h1>
+    <p data-lang-key="app_description">以下是應用的高保真原型界面，展示了主要功能和用戶流程。每個界面都遵循iOS設計規範，使用現代UI元素和交互模式。</p>
+  </div>
+  
+  <div class="language-selector">
+    <button class="language-btn" data-lang="traditional">繁體中文</button>
+    <button class="language-btn" data-lang="simplified">简体中文</button>
+    <button class="language-btn" data-lang="english">English</button>
+  </div>
+  
+  <div class="prototype-container">
+    <!-- 歡迎/登錄界面 -->
+    <div>
+      <div class="screen-label" data-lang-key="welcome_login">歡迎/登錄界面</div>
+      <iframe src="welcome.html" width="375" height="812" frameborder="0"></iframe>
+    </div>
+    
+    <!-- 主頁 -->
+    <div>
+      <div class="screen-label" data-lang-key="home">主頁</div>
+      <iframe src="home.html" width="375" height="812" frameborder="0"></iframe>
+    </div>
+    
+    <!-- 掃描界面 -->
+    <div>
+      <div class="screen-label" data-lang-key="scan">掃描界面</div>
+      <iframe src="scan.html" width="375" height="812" frameborder="0"></iframe>
+    </div>
+    
+    <!-- AI解答界面 -->
+    <div>
+      <div class="screen-label" data-lang-key="ai_answer">AI解答界面</div>
+      <iframe src="answer.html" width="375" height="812" frameborder="0"></iframe>
+    </div>
+    
+    <!-- 錯題本界面 -->
+    <div>
+      <div class="screen-label" data-lang-key="mistakes">錯題本</div>
+      <iframe src="mistakes.html" width="375" height="812" frameborder="0"></iframe>
+    </div>
+    
+    <!-- 智能出題界面 -->
+    <div>
+      <div class="screen-label" data-lang-key="quiz_generator">智能出題</div>
+      <iframe src="quiz_generator.html" width="375" height="812" frameborder="0"></iframe>
+    </div>
+    
+    <!-- 測驗答題界面 -->
+    <div>
+      <div class="screen-label" data-lang-key="quiz">測驗答題</div>
+      <iframe src="quiz.html" width="375" height="812" frameborder="0"></iframe>
+    </div>
+    
+    <!-- AI助教界面 -->
+    <div>
+      <div class="screen-label" data-lang-key="ai_tutor">AI助教</div>
+      <iframe src="ai_tutor.html" width="375" height="812" frameborder="0"></iframe>
+    </div>
+    
+    <!-- 課程學習界面 -->
+    <div>
+      <div class="screen-label" data-lang-key="lesson">課程學習</div>
+      <iframe src="lesson.html" width="375" height="812" frameborder="0"></iframe>
+    </div>
+    
+    <!-- 設置界面 -->
+    <div>
+      <div class="screen-label" data-lang-key="settings">設置</div>
+      <iframe src="settings.html" width="375" height="812" frameborder="0"></iframe>
+    </div>
+  </div>
+  
+  <script>
+    // 多語言支持
+    const translations = {
+      'simplified': {
+        'app_title': '快答通 - 有问必答原型',
+        'app_description': '以下是应用的高保真原型界面，展示了主要功能和用户流程。每个界面都遵循iOS设计规范，使用现代UI元素和交互模式。',
+        'welcome_login': '欢迎/登录界面',
+        'home': '主页',
+        'scan': '扫描界面',
+        'ai_answer': 'AI解答界面',
+        'mistakes': '错题本',
+        'quiz_generator': '智能出题',
+        'quiz': '测验答题',
+        'ai_tutor': 'AI助教',
+        'lesson': '课程学习',
+        'settings': '设置'
+      },
+      'traditional': {
+        'app_title': '快答通 - 有問必答原型',
+        'app_description': '以下是應用的高保真原型界面，展示了主要功能和用戶流程。每個界面都遵循iOS設計規範，使用現代UI元素和交互模式。',
+        'welcome_login': '歡迎/登錄界面',
+        'home': '主頁',
+        'scan': '掃描界面',
+        'ai_answer': 'AI解答界面',
+        'mistakes': '錯題本',
+        'quiz_generator': '智能出題',
+        'quiz': '測驗答題',
+        'ai_tutor': 'AI助教',
+        'lesson': '課程學習',
+        'settings': '設置'
+      },
+      'english': {
+        'app_title': 'QuickAnswer - Prototype',
+        'app_description': 'Below are the high-fidelity prototype interfaces of the application, showcasing the main features and user flows. Each interface follows iOS design guidelines, using modern UI elements and interaction patterns.',
+        'welcome_login': 'Welcome/Login',
+        'home': 'Home',
+        'scan': 'Scan',
+        'ai_answer': 'AI Answer',
+        'mistakes': 'Mistakes',
+        'quiz_generator': 'Quiz Generator',
+        'quiz': 'Quiz',
+        'ai_tutor': 'AI Tutor',
+        'lesson': 'Lesson',
+        'settings': 'Settings'
+      }
+    };
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      // 獲取語言按鈕
+      const langButtons = document.querySelectorAll('.language-btn');
+      const iframes = document.querySelectorAll('iframe');
+      
+      // 檢查本地存儲中的語言設置
+      const savedLang = localStorage.getItem('systemLang') || 'traditional';
+      
+      // 設置活動按鈕
+      langButtons.forEach(button => {
+        if (button.getAttribute('data-lang') === savedLang) {
+          button.classList.add('active');
+        }
+        
+        // 添加點擊事件
+        button.addEventListener('click', function() {
+          const lang = this.getAttribute('data-lang');
+          
+          // 更新活動按鈕
+          langButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          
+          // 保存語言設置到本地存儲
+          localStorage.setItem('systemLang', lang);
+          
+          // 更新頁面語言
+          updatePageLanguage(lang);
+          
+          // 更新 HTML 語言屬性
+          document.documentElement.setAttribute('lang', lang === 'simplified' ? 'zh-CN' : (lang === 'traditional' ? 'zh-TW' : 'en'));
+          
+          // 通知所有 iframe 更新語言
+          notifyAllIframes(lang);
+        });
+      });
+      
+      // 初始化頁面語言
+      updatePageLanguage(savedLang);
+      
+      // 為每個 iframe 添加加載事件
+      iframes.forEach(iframe => {
+        iframe.addEventListener('load', function() {
+          // iframe 加載完成後，同步當前語言設置
+          try {
+            const langChangeEvent = new CustomEvent('fontChange', { 
+              detail: { font: savedLang } 
+            });
+            this.contentWindow.dispatchEvent(langChangeEvent);
+            
+            // 直接設置 localStorage
+            this.contentWindow.localStorage.setItem('systemLang', savedLang);
+            
+            // 同步字體大小設置
+            const savedFontSize = localStorage.getItem('appFontSize') || 'medium';
+            const fontSizeChangeEvent = new CustomEvent('fontSizeChange', { 
+              detail: { size: savedFontSize } 
+            });
+            this.contentWindow.dispatchEvent(fontSizeChangeEvent);
+            this.contentWindow.localStorage.setItem('appFontSize', savedFontSize);
+          } catch (e) {
+            console.error('無法向 iframe 發送事件:', e);
+          }
+        });
+      });
+      
+      // 監聽字體大小變更事件
+      window.addEventListener('fontSizeChange', function(e) {
+        const newSize = e.detail.size;
+        // 保存到本地存儲
+        localStorage.setItem('appFontSize', newSize);
+        // 通知所有 iframe
+        notifyAllIframesForFontSize(newSize);
+      });
+      
+      // 監聽存儲變更事件
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'appFontSize') {
+          const newSize = e.newValue || 'medium';
+          notifyAllIframesForFontSize(newSize);
+        }
+      });
+      
+      // 通知所有 iframe 更新語言的函數
+      function notifyAllIframes(lang) {
+        iframes.forEach(iframe => {
+          try {
+            if (iframe.contentWindow) {
+              // 發送自定義事件
+              const langChangeEvent = new CustomEvent('fontChange', { 
+                detail: { font: lang } 
+              });
+              iframe.contentWindow.dispatchEvent(langChangeEvent);
+              
+              // 直接設置 localStorage
+              iframe.contentWindow.localStorage.setItem('systemLang', lang);
+              
+              // 如果 iframe 有自己的 iframe，也需要通知它們
+              if (iframe.contentWindow.document.querySelectorAll('iframe').length > 0) {
+                const nestedIframes = iframe.contentWindow.document.querySelectorAll('iframe');
+                nestedIframes.forEach(nestedIframe => {
+                  try {
+                    if (nestedIframe.contentWindow) {
+                      nestedIframe.contentWindow.dispatchEvent(langChangeEvent);
+                      nestedIframe.contentWindow.localStorage.setItem('systemLang', lang);
+                    }
+                  } catch (e) {
+                    console.error('無法向嵌套 iframe 發送事件:', e);
+                  }
+                });
+              }
+              
+              // 嘗試直接調用 iframe 中的更新函數
+              if (iframe.contentWindow.updatePageLanguage) {
+                iframe.contentWindow.updatePageLanguage(lang);
+              }
+              
+              // 嘗試直接調用 iframe 中的 applyFontSetting 函數
+              if (iframe.contentWindow.applyFontSetting) {
+                iframe.contentWindow.applyFontSetting(lang);
+              }
+            }
+          } catch (e) {
+            console.error('無法向 iframe 發送事件:', e);
+          }
+        });
+      }
+      
+      // 通知所有 iframe 更新字體大小的函數
+      function notifyAllIframesForFontSize(size) {
+        iframes.forEach(iframe => {
+          try {
+            if (iframe.contentWindow) {
+              // 發送自定義事件
+              const fontSizeChangeEvent = new CustomEvent('fontSizeChange', { 
+                detail: { size: size } 
+              });
+              iframe.contentWindow.dispatchEvent(fontSizeChangeEvent);
+              
+              // 直接設置 localStorage
+              iframe.contentWindow.localStorage.setItem('appFontSize', size);
+              
+              // 如果 iframe 有自己的 iframe，也需要通知它們
+              if (iframe.contentWindow.document.querySelectorAll('iframe').length > 0) {
+                const nestedIframes = iframe.contentWindow.document.querySelectorAll('iframe');
+                nestedIframes.forEach(nestedIframe => {
+                  try {
+                    if (nestedIframe.contentWindow) {
+                      nestedIframe.contentWindow.dispatchEvent(fontSizeChangeEvent);
+                      nestedIframe.contentWindow.localStorage.setItem('appFontSize', size);
+                    }
+                  } catch (e) {
+                    console.error('無法向嵌套 iframe 發送字體大小變更事件:', e);
+                  }
+                });
+              }
+              
+              // 嘗試直接調用 iframe 中的更新函數
+              if (iframe.contentWindow.applyFontSize) {
+                iframe.contentWindow.applyFontSize(size);
+              }
+            }
+          } catch (e) {
+            console.error('無法向 iframe 發送字體大小變更事件:', e);
+          }
+        });
+      }
+      
+      // 更新頁面語言
+      function updatePageLanguage(lang) {
+        const elements = document.querySelectorAll('[data-lang-key]');
+        elements.forEach(element => {
+          const key = element.getAttribute('data-lang-key');
+          if (translations[lang] && translations[lang][key]) {
+            element.textContent = translations[lang][key];
+          }
+        });
+      }
+      
+      // 監聽子頁面語言變更事件
+      window.addEventListener('childFontChange', function(e) {
+        const newLang = e.detail.font;
+        // 更新活動按鈕
+        langButtons.forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-lang') === newLang);
+        });
+        // 更新本地存儲
+        localStorage.setItem('systemLang', newLang);
+        // 更新頁面語言
+        updatePageLanguage(newLang);
+        // 通知其他 iframe
+        notifyAllIframes(newLang);
+      });
+      
+      // 定期檢查語言設置
+      setInterval(() => {
+        const currentLang = localStorage.getItem('systemLang') || 'traditional';
+        if (currentLang !== document.documentElement.getAttribute('data-lang')) {
+          // 更新活動按鈕
+          langButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('data-lang') === currentLang);
+          });
+          // 更新頁面語言
+          updatePageLanguage(currentLang);
+          // 更新 HTML 語言屬性
+          document.documentElement.setAttribute('lang', currentLang === 'simplified' ? 'zh-CN' : (currentLang === 'traditional' ? 'zh-TW' : 'en'));
+        }
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

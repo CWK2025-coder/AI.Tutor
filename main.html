@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>快答通 - 主頁</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/transitions.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="js/font-size-handler.js"></script>
+  <style>
+    .main-container {
+      padding: 20px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .header {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    
+    .app-title {
+      font-size: 28px;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+    
+    .app-subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+    
+    .main-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 40px;
+    }
+    
+    .main-button {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .main-button:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .button-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 20px;
+      flex-shrink: 0;
+    }
+    
+    .quiz-icon {
+      background: linear-gradient(135deg, var(--accent-color), #0984e3);
+    }
+    
+    .mistake-icon {
+      background: linear-gradient(135deg, var(--secondary-color), #fd79a8);
+    }
+    
+    .button-icon i {
+      font-size: 28px;
+      color: white;
+    }
+    
+    .button-content {
+      flex: 1;
+    }
+    
+    .button-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    .button-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    
+    .footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 20px 0;
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+    
+    /* 頁面容器 */
+    .page-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 1000;
+    }
+    
+    .page-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 90%;
+      background-color: var(--bg-color);
+      border-radius: 20px 20px 0 0;
+      overflow: hidden;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+    
+    .page-container.active {
+      display: block;
+    }
+    
+    .page-container.active .page-content {
+      transform: translateY(0);
+    }
+    
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .page-title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    .close-button {
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+      background-color: rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .close-button i {
+      font-size: 18px;
+      color: var(--text-secondary);
+    }
+    
+    .page-body {
+      padding: 20px;
+      height: calc(100% - 77px);
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="device-container">
+    <!-- 狀態欄 -->
+    <div class="status-bar">
+      <div class="signal">
+        <i class="fas fa-signal"></i>
+      </div>
+      <div class="time">14:30</div>
+      <div class="battery">
+        <i class="fas fa-battery-three-quarters mr-1"></i>
+        <span>85%</span>
+      </div>
+    </div>
+    
+    <!-- 主頁內容 -->
+    <div class="main-container">
+      <div class="header">
+        <div class="app-title">快答通</div>
+        <div class="app-subtitle">你的智能學習助手</div>
+      </div>
+      
+      <div class="main-buttons">
+        <div class="main-button" id="quiz-button">
+          <div class="button-icon quiz-icon">
+            <i class="fas fa-lightbulb"></i>
+          </div>
+          <div class="button-content">
+            <div class="button-title">智能出題</div>
+            <div class="button-desc">根據你的學習情況，智能生成針對性練習題</div>
+          </div>
+        </div>
+        
+        <div class="main-button" id="mistake-button">
+          <div class="button-icon mistake-icon">
+            <i class="fas fa-book"></i>
+          </div>
+          <div class="button-content">
+            <div class="button-title">錯題本</div>
+            <div class="button-desc">查看和複習已保存的錯題，鞏固知識點</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer">
+        © 2023 快答通 - 版權所有
+      </div>
+    </div>
+    
+    <!-- 智能出題頁面 -->
+    <div class="page-container" id="quiz-page">
+      <div class="page-content">
+        <div class="page-header">
+          <div class="page-title">智能出題</div>
+          <div class="close-button" id="close-quiz">
+            <i class="fas fa-times"></i>
+          </div>
+        </div>
+        <div class="page-body">
+          <iframe src="quiz_generator.html" width="100%" height="100%" frameborder="0"></iframe>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 錯題本頁面 -->
+    <div class="page-container" id="mistake-page">
+      <div class="page-content">
+        <div class="page-header">
+          <div class="page-title">錯題本</div>
+          <div class="close-button" id="close-mistake">
+            <i class="fas fa-times"></i>
+          </div>
+        </div>
+        <div class="page-body">
+          <iframe src="mistakes.html" width="100%" height="100%" frameborder="0"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // 智能出題按鈕點擊事件
+    document.getElementById('quiz-button').addEventListener('click', function() {
+      document.getElementById('quiz-page').classList.add('active');
+    });
+    
+    // 錯題本按鈕點擊事件
+    document.getElementById('mistake-button').addEventListener('click', function() {
+      document.getElementById('mistake-page').classList.add('active');
+    });
+    
+    // 關閉智能出題頁面
+    document.getElementById('close-quiz').addEventListener('click', function() {
+      document.getElementById('quiz-page').classList.remove('active');
+    });
+    
+    // 關閉錯題本頁面
+    document.getElementById('close-mistake').addEventListener('click', function() {
+      document.getElementById('mistake-page').classList.remove('active');
+    });
+    
+    // 點擊頁面容器背景關閉頁面
+    document.querySelectorAll('.page-container').forEach(container => {
+      container.addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.classList.remove('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html> 

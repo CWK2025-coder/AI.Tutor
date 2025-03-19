@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>錯題複習</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/transitions.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="js/font-size-handler.js"></script>
+  <style>
+    :root {
+      --bg-color: #f8f9fa;
+    }
+    
+    body {
+      background-color: var(--bg-color);
+      padding: 0;
+      margin: 0;
+      font-family: "微軟正黑體", "Microsoft JhengHei", sans-serif;
+      height: 100%;
+      overflow-x: hidden;
+    }
+    
+    .device-container {
+      width: 100%;
+      height: 100vh;
+      max-width: 500px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      background-color: var(--bg-color);
+    }
+    
+    .status-bar {
+      height: 30px;
+      background-color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 15px;
+      font-size: 12px;
+      position: relative;
+      z-index: 10;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    .review-container {
+      padding: 20px;
+      height: calc(100% - 30px);
+      overflow-y: auto;
+      padding-bottom: 150px;
+      box-sizing: border-box;
+    }
+    
+    .review-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .back-button {
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+      background-color: rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      cursor: pointer;
+    }
+    
+    .back-button i {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+    
+    .review-title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    .question-card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .question-subject {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary-color);
+      padding: 4px 8px;
+      background-color: rgba(74, 107, 255, 0.1);
+      border-radius: 12px;
+    }
+    
+    .question-date {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .question-text {
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .option {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      border-radius: var(--border-radius);
+      background-color: rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .option.correct {
+      background-color: rgba(46, 213, 115, 0.1);
+      border: 1px solid #2ed573;
+    }
+    
+    .option.incorrect {
+      background-color: rgba(255, 71, 87, 0.1);
+      border: 1px solid #ff4757;
+    }
+    
+    .option-label {
+      width: 24px;
+      height: 24px;
+      border-radius: 12px;
+      background-color: rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      margin-right: 12px;
+    }
+    
+    .option.correct .option-label {
+      background-color: #2ed573;
+      color: white;
+    }
+    
+    .option.incorrect .option-label {
+      background-color: #ff4757;
+      color: white;
+    }
+    
+    .option-text {
+      font-size: 14px;
+      flex: 1;
+    }
+    
+    .explanation-container {
+      background-color: rgba(74, 107, 255, 0.05);
+      border-radius: var(--border-radius);
+      padding: 15px;
+      margin-bottom: 20px;
+      overflow-wrap: break-word;
+    }
+    
+    .explanation-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--primary-color);
+    }
+    
+    .explanation-content {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .fixed-buttons {
+      position: fixed;
+      bottom: 80px;
+      left: 20px;
+      right: 20px;
+      background-color: var(--bg-color);
+      padding: 10px 0;
+      z-index: 10;
+      display: flex;
+      gap: 10px;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .action-button {
+      flex: 1;
+      padding: 12px;
+      border-radius: var(--border-radius);
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+    }
+    
+    .next-btn {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .mark-btn {
+      background-color: rgba(0, 0, 0, 0.05);
+      color: var(--text-secondary);
+    }
+    
+    .generate-btn {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+    
+    .progress-bar {
+      height: 4px;
+      background-color: rgba(0, 0, 0, 0.1);
+      border-radius: 2px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background-color: var(--primary-color);
+      width: 33%;
+    }
+    
+    .related-questions {
+      margin-top: 20px;
+      margin-bottom: 100px;
+    }
+    
+    .related-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+    
+    .related-item {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 15px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+    
+    .related-subject {
+      font-size: 12px;
+      color: var(--primary-color);
+      margin-bottom: 5px;
+    }
+    
+    .related-text {
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+    
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      z-index: 100;
+      max-width: 500px;
+      margin: 0 auto;
+      animation: slideUp 0.5s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      height: 100%;
+      color: var(--text-secondary);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .tab-item i {
+      font-size: 20px;
+      margin-bottom: 4px;
+      transition: transform 0.2s ease, color 0.3s ease;
+    }
+    
+    .tab-item:hover i {
+      transform: translateY(-2px);
+    }
+    
+    .tab-item.active {
+      color: var(--primary-color);
+    }
+    
+    .tab-item.active i {
+      transform: translateY(-2px);
+    }
+    
+    .scan-button {
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+      background-color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: -20px;
+      box-shadow: 0 4px 10px rgba(74, 107, 255, 0.3);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .scan-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(74, 107, 255, 0.4);
+    }
+    
+    .scan-button:active {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(74, 107, 255, 0.3);
+    }
+    
+    .scan-button i {
+      font-size: 20px;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="device-container">
+    <!-- 狀態欄 -->
+    <div class="status-bar">
+      <div class="signal">
+        <i class="fas fa-signal"></i>
+      </div>
+      <div class="time">14:30</div>
+      <div class="battery">
+        <i class="fas fa-battery-three-quarters mr-1"></i>
+        <span>85%</span>
+      </div>
+    </div>
+    
+    <!-- 複習內容 -->
+    <div class="review-container">
+      <div class="review-header">
+        <div class="back-button" id="back-button">
+          <i class="fas fa-arrow-left"></i>
+        </div>
+        <div class="review-title">錯題複習</div>
+      </div>
+      
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+      
+      <div class="question-card">
+        <div class="question-header">
+          <div class="question-subject">數學</div>
+          <div class="question-date">2023-06-15</div>
+        </div>
+        
+        <div class="question-text">
+          已知函數 f(x) = 2x² - 3x + 1，求 f'(x) 的值。
+        </div>
+        
+        <div class="options-container">
+          <div class="option correct">
+            <div class="option-label">A</div>
+            <div class="option-text">f'(x) = 4x - 3</div>
+          </div>
+          
+          <div class="option">
+            <div class="option-label">B</div>
+            <div class="option-text">f'(x) = 4x² - 3</div>
+          </div>
+          
+          <div class="option incorrect">
+            <div class="option-label">C</div>
+            <div class="option-text">f'(x) = 2x - 3</div>
+          </div>
+          
+          <div class="option">
+            <div class="option-label">D</div>
+            <div class="option-text">f'(x) = 4x + 3</div>
+          </div>
+        </div>
+        
+        <div class="explanation-container">
+          <div class="explanation-title">解析</div>
+          <div class="explanation-content">
+            函數 f(x) = 2x² - 3x + 1 的導數為 f'(x) = 4x - 3。
+            <br><br>
+            解析：對於函數 f(x) = 2x² - 3x + 1，我們可以使用導數公式：
+            <br>
+            - 對於項 2x²，導數為 4x（冪的導數：nx^(n-1)）
+            <br>
+            - 對於項 -3x，導數為 -3（一次項的導數為係數）
+            <br>
+            - 對於常數項 1，導數為 0
+            <br><br>
+            因此，f'(x) = 4x - 3
+          </div>
+        </div>
+      </div>
+      
+      <div class="related-questions">
+        <div class="related-title">相關題目</div>
+        
+        <div class="related-item">
+          <div class="related-subject">數學</div>
+          <div class="related-text">已知函數 g(x) = x³ - 2x² + x - 1，求 g'(x) 的值。</div>
+        </div>
+        
+        <div class="related-item">
+          <div class="related-subject">數學</div>
+          <div class="related-text">如果 h(x) = e^x + ln(x)，求 h'(x) 的值。</div>
+        </div>
+      </div>
+      
+      <div class="action-buttons">
+        <div class="action-button generate-btn">生成更多類似題目</div>
+      </div>
+    </div>
+    
+    <div class="fixed-buttons">
+      <div class="action-button mark-btn">標記為已掌握</div>
+      <div class="action-button next-btn">下一題</div>
+    </div>
+    
+    <!-- 底部導航欄 -->
+    <div class="tab-bar">
+      <div class="tab-item" id="tab-home">
+        <i class="fas fa-home"></i>
+        <span>首頁</span>
+      </div>
+      <div class="tab-item" id="tab-ai">
+        <i class="fas fa-robot"></i>
+        <span>AI助教</span>
+      </div>
+      <div class="tab-item" id="tab-scan">
+        <div class="scan-button">
+          <i class="fas fa-camera"></i>
+        </div>
+        <span style="visibility: hidden;">掃描</span>
+      </div>
+      <div class="tab-item active" id="tab-practice">
+        <i class="fas fa-book-open"></i>
+        <span>練習</span>
+      </div>
+      <div class="tab-item" id="tab-profile">
+        <i class="fas fa-user"></i>
+        <span>我的</span>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // 更新時間
+    function updateTime() {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      document.querySelector('.time').textContent = `${hours}:${minutes}`;
+    }
+    
+    // 初始化時間並設置定時器
+    updateTime();
+    setInterval(updateTime, 60000);
+    
+    // 返回按鈕點擊事件
+    document.getElementById('back-button').addEventListener('click', function() {
+      window.history.back();
+    });
+    
+    // 標記按鈕點擊事件
+    document.querySelector('.mark-btn').addEventListener('click', function() {
+      this.textContent = '已標記為掌握';
+      this.style.backgroundColor = 'rgba(46, 213, 115, 0.1)';
+      this.style.color = '#2ed573';
+    });
+    
+    // 下一題按鈕點擊事件
+    document.querySelector('.next-btn').addEventListener('click', function() {
+      // 更新進度條
+      document.querySelector('.progress-fill').style.width = '66%';
+      
+      // 更新題目（這裡只是示例）
+      document.querySelector('.question-text').textContent = '一個物體從靜止開始做勻加速直線運動，5秒內通過的路程為50米，則它的加速度為多少？';
+      
+      // 更新選項
+      const options = document.querySelectorAll('.option-text');
+      options[0].textContent = 'a = 2 m/s²';
+      options[1].textContent = 'a = 4 m/s²';
+      options[2].textContent = 'a = 5 m/s²';
+      options[3].textContent = 'a = 10 m/s²';
+      
+      // 更新正確和錯誤選項
+      document.querySelectorAll('.option').forEach(option => {
+        option.classList.remove('correct', 'incorrect');
+      });
+      
+      document.querySelectorAll('.option')[1].classList.add('correct');
+      document.querySelectorAll('.option')[2].classList.add('incorrect');
+      
+      // 更新解析
+      document.querySelector('.explanation-content').innerHTML = `
+        正確答案：a = 4 m/s²
+        <br><br>
+        解析：根據勻加速直線運動的位移公式：
+        <br>
+        s = v₀t + (1/2)at²
+        <br>
+        其中，s 是位移，v₀ 是初速度，a 是加速度，t 是時間。
+        <br><br>
+        已知物體從靜止開始運動，所以 v₀ = 0，
+        <br>
+        s = 50 m，t = 5 s
+        <br><br>
+        代入公式：50 = 0 + (1/2)a·5²
+        <br>
+        50 = (1/2)a·25
+        <br>
+        50 = 12.5a
+        <br>
+        a = 50/12.5 = 4 m/s²
+      `;
+      
+      // 更新科目
+      document.querySelector('.question-subject').textContent = '物理';
+      
+      // 更新相關題目
+      const relatedItems = document.querySelectorAll('.related-item');
+      relatedItems[0].querySelector('.related-subject').textContent = '物理';
+      relatedItems[0].querySelector('.related-text').textContent = '一個物體以初速度 10 m/s 沿水平方向拋出，忽略空氣阻力，求 2 秒後物體的速度大小。';
+      
+      relatedItems[1].querySelector('.related-subject').textContent = '物理';
+      relatedItems[1].querySelector('.related-text').textContent = '一個物體在斜面上滑動，斜面與水平面的夾角為 30°，求物體的加速度大小。';
+      
+      // 重置標記按鈕
+      document.querySelector('.mark-btn').textContent = '標記為已掌握';
+      document.querySelector('.mark-btn').style.backgroundColor = 'rgba(0, 0, 0, 0.05)';
+      document.querySelector('.mark-btn').style.color = 'var(--text-secondary)';
+      
+      // 滾動到頂部
+      window.scrollTo(0, 0);
+    });
+    
+    // 相關題目點擊事件
+    document.querySelectorAll('.related-item').forEach(item => {
+      item.addEventListener('click', function() {
+        alert('加載相關題目：' + this.querySelector('.related-text').textContent);
+      });
+    });
+    
+    // 生成更多類似題目按鈕點擊事件
+    document.querySelector('.generate-btn').addEventListener('click', function() {
+      window.location.href = 'quiz_generator.html?source=mistake_review&subject=' + 
+        document.querySelector('.question-subject').textContent;
+    });
+    
+    // 底部標籤欄點擊事件
+    document.getElementById('tab-home').addEventListener('click', function() {
+      window.location.href = 'home.html';
+    });
+    
+    document.getElementById('tab-ai').addEventListener('click', function() {
+      window.location.href = 'ai_tutor.html';
+    });
+    
+    document.getElementById('tab-scan').addEventListener('click', function() {
+      window.location.href = 'scan.html';
+    });
+    
+    document.querySelector('.scan-button').addEventListener('click', function() {
+      window.location.href = 'scan.html';
+    });
+    
+    document.getElementById('tab-practice').addEventListener('click', function() {
+      window.location.href = 'quiz_generator.html?source=mistake_review&subject=' + 
+        document.querySelector('.question-subject').textContent;
+    });
+    
+    document.getElementById('tab-profile').addEventListener('click', function() {
+      window.location.href = 'settings.html';
+    });
+  </script>
+</body>
+</html> 

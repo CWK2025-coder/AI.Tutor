@@ -1,0 +1,2696 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>快答通 - 設置</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .settings-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .back-button {
+      margin-right: 15px;
+      font-size: 20px;
+    }
+    
+    .settings-title {
+      font-size: 22px;
+      font-weight: 600;
+    }
+    
+    .user-profile {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+    }
+    
+    .user-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 35px;
+      object-fit: cover;
+      margin-right: 15px;
+    }
+    
+    .user-info {
+      flex: 1;
+    }
+    
+    .user-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    .user-id {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    
+    .user-level {
+      display: inline-block;
+      padding: 4px 10px;
+      background-color: rgba(74, 107, 255, 0.1);
+      color: var(--primary-color);
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .edit-profile {
+      color: var(--primary-color);
+      font-size: 20px;
+    }
+    
+    .settings-section {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 5px 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      padding: 15px 0 10px 0;
+    }
+    
+    .settings-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .settings-item:last-child {
+      border-bottom: none;
+    }
+    
+    .item-left {
+      display: flex;
+      align-items: center;
+    }
+    
+    .item-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+      background-color: rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+    }
+    
+    .item-icon i {
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+    
+    .item-label {
+      font-size: 16px;
+      color: var(--text-primary);
+    }
+    
+    .item-right {
+      display: flex;
+      align-items: center;
+    }
+    
+    .item-value {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-right: 10px;
+    }
+    
+    .item-arrow {
+      color: var(--text-light);
+    }
+    
+    .toggle {
+      position: relative;
+      width: 50px;
+      height: 28px;
+      border-radius: 14px;
+      background-color: var(--text-light);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .toggle.active {
+      background-color: var(--primary-color);
+    }
+    
+    .toggle:before {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: white;
+      top: 2px;
+      left: 2px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .toggle.active:before {
+      left: 24px;
+    }
+    
+    .logout-button {
+      margin-top: 30px;
+    }
+    
+    .version-info {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 20px;
+    }
+    
+    /* 字體選擇彈窗樣式 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .modal-overlay.active {
+      display: flex;
+    }
+    
+    .modal {
+      width: 85%;
+      max-width: 320px;
+      background-color: white;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .modal-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .modal-close {
+      font-size: 20px;
+      color: var(--text-secondary);
+    }
+    
+    .modal-body {
+      padding: 20px;
+    }
+    
+    .font-option {
+      display: flex;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .font-option:last-child {
+      border-bottom: none;
+    }
+    
+    .font-radio {
+      margin-right: 15px;
+      width: 20px;
+      height: 20px;
+    }
+    
+    .font-label {
+      font-size: 16px;
+    }
+    
+    .modal-footer {
+      padding: 15px 20px;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: flex-end;
+    }
+    
+    .modal-btn {
+      padding: 8px 20px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-left: 10px;
+    }
+    
+    .modal-btn-cancel {
+      background-color: #f1f3f5;
+      color: var(--text-primary);
+    }
+    
+    .modal-btn-confirm {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    /* 個人資料編輯彈窗樣式 */
+    .profile-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    
+    .profile-modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .profile-modal {
+      width: 90%;
+      max-width: 360px;
+      background-color: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      transform: translateY(20px);
+      opacity: 0;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    
+    .profile-modal-overlay.active .profile-modal {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .profile-modal-header {
+      padding: 16px;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .profile-modal-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .profile-modal-close {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      color: #666;
+      font-size: 20px;
+    }
+    
+    .profile-modal-body {
+      padding: 16px;
+    }
+    
+    .avatar-upload {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    
+    .avatar-preview {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid #4a6cf7;
+    }
+    
+    .avatar-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .avatar-upload-btn {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 28px;
+      height: 28px;
+      background-color: #4a6cf7;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      color: white;
+    }
+    
+    .profile-form-group {
+      margin-bottom: 14px;
+    }
+    
+    .profile-form-label {
+      display: block;
+      font-size: 15px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 6px;
+    }
+    
+    .profile-form-input {
+      width: 100%;
+      height: 44px;
+      padding: 0 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 15px;
+      color: #333;
+      background-color: #fff;
+    }
+    
+    .profile-form-select {
+      width: 100%;
+      height: 44px;
+      padding: 0 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 15px;
+      color: #333;
+      background-color: #fff;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 8.825L1.175 4 2.05 3.125 6 7.075 9.95 3.125 10.825 4z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+    }
+    
+    /* 修改表單行的佈局 */
+    .profile-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    
+    .profile-form-row .profile-form-group {
+      width: 100%;
+      margin-bottom: 0;
+    }
+    
+    .profile-modal-footer {
+      padding: 12px 16px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    
+    .profile-modal-btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .profile-modal-btn-cancel {
+      background-color: #f5f5f5;
+      color: #333;
+      border: none;
+    }
+    
+    .profile-modal-btn-save {
+      background-color: #4a6cf7;
+      color: white;
+      border: none;
+    }
+    
+    .profile-modal-btn-cancel:hover {
+      background-color: #eaeaea;
+    }
+    
+    .profile-modal-btn-save:hover {
+      background-color: #3a5ce7;
+    }
+    
+    /* 年齡輸入框樣式 */
+    .profile-age-input {
+      width: 100%;
+      height: 48px;
+      padding: 0 16px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      color: #333;
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+    }
+    
+    .profile-age-input input {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      color: #333;
+    }
+    
+    .profile-age-input .age-spinner {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .profile-age-input .age-spinner-btn {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      color: #666;
+    }
+    
+    /* 年齡選擇器樣式優化 */
+    .profile-age-picker {
+      position: relative;
+      height: 110px;
+      overflow: hidden;
+      border: 1px solid rgba(74, 108, 247, 0.15);
+      border-radius: 12px;
+      background-color: #fff;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .age-picker-wheel {
+      position: absolute;
+      width: 100%;
+      transform: translateY(0);
+      transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+      padding: 35px 0;
+    }
+    
+    .age-picker-wheel.dragging {
+      transition: none;
+    }
+    
+    .age-picker-wheel.with-inertia {
+      transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    
+    .age-picker-item {
+      height: 36px;
+      line-height: 36px;
+      text-align: center;
+      font-size: 15px;
+      color: #999;
+      transition: all 0.2s ease;
+    }
+    
+    .age-picker-item.active {
+      font-size: 18px;
+      font-weight: 600;
+      color: #4a6cf7;
+      transform: scale(1.05);
+    }
+    
+    .age-picker-highlight {
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      width: 80%;
+      height: 36px;
+      transform: translateY(-50%);
+      background-color: rgba(74, 108, 247, 0.08);
+      border-radius: 18px;
+      border-top: none;
+      border-bottom: none;
+      pointer-events: none;
+      box-shadow: 0 0 0 1px rgba(74, 108, 247, 0.15);
+    }
+    
+    /* 修改個人資料模態框中的年齡選擇部分 */
+    .profile-form-row {
+      display: flex;
+      gap: 12px;
+    }
+    
+    @media (max-width: 360px) {
+      .profile-form-row {
+        flex-direction: column;
+      }
+      
+      .profile-age-picker {
+        height: 100px;
+      }
+      
+      .age-picker-item {
+        height: 32px;
+        line-height: 32px;
+        font-size: 14px;
+      }
+      
+      .age-picker-item.active {
+        font-size: 16px;
+      }
+      
+      .age-picker-highlight {
+        height: 32px;
+      }
+    }
+    
+    /* 滑動提示 */
+    .scroll-hint {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 12px;
+      opacity: 0.7;
+      pointer-events: none;
+      animation: fadeInOut 2s infinite;
+    }
+    
+    .scroll-hint-top {
+      top: 5px;
+    }
+    
+    .scroll-hint-bottom {
+      bottom: 5px;
+    }
+    
+    .scroll-hint i {
+      font-size: 14px;
+      margin: 0 5px;
+    }
+    
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.8; }
+    }
+    
+    /* 滑動時的動態效果 */
+    .picker-wheel.dragging .picker-item {
+      transition: none;
+    }
+    
+    /* 滑動慣性效果 */
+    .picker-wheel.with-inertia {
+      transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    
+    /* 確保滑動區域足夠大 */
+    .modal-body {
+      padding: 20px;
+      touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* 確保圖標字體在不同語言模式下正確顯示 */
+    .font-traditional i.fas,
+    .font-traditional i.far,
+    .font-traditional i.fab,
+    html[lang="zh-TW"] i.fas,
+    html[lang="zh-TW"] i.far,
+    html[lang="zh-TW"] i.fab {
+      font-family: "Font Awesome 6 Free", "微軟正黑體", "Microsoft JhengHei", sans-serif !important;
+    }
+    
+    .font-simplified i.fas,
+    .font-simplified i.far,
+    .font-simplified i.fab,
+    html[lang="zh-CN"] i.fas,
+    html[lang="zh-CN"] i.far,
+    html[lang="zh-CN"] i.fab {
+      font-family: "Font Awesome 6 Free", "微软雅黑", "Microsoft YaHei", sans-serif !important;
+    }
+    
+    .font-english i.fas,
+    .font-english i.far,
+    .font-english i.fab,
+    html[lang="en"] i.fas,
+    html[lang="en"] i.far,
+    html[lang="en"] i.fab {
+      font-family: "Font Awesome 6 Free", "Arial", sans-serif !important;
+    }
+    
+    /* 確保所有文本元素在不同語言模式下正確顯示 */
+    html[lang="zh-TW"] {
+      font-family: "微軟正黑體", "Microsoft JhengHei", sans-serif;
+    }
+    
+    html[lang="zh-CN"] {
+      font-family: "微软雅黑", "Microsoft YaHei", sans-serif;
+    }
+    
+    html[lang="en"] {
+      font-family: "Arial", "Helvetica", sans-serif;
+    }
+    
+    /* 確保按鈕和特殊元素的文本也能正確顯示 */
+    button, 
+    .btn, 
+    .tab-item span,
+    .item-label,
+    .item-value,
+    .settings-title,
+    .user-name,
+    .user-level,
+    .section-title {
+      font-family: inherit;
+    }
+    
+    /* 科目管理樣式 */
+    .subject-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 10px 0;
+    }
+    
+    .subject-grid-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 15px;
+      background-color: #f8f8f8;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+    
+    .subject-info {
+      display: flex;
+      align-items: center;
+    }
+    
+    .subject-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .subject-icon i {
+      font-size: 22px;
+      color: white;
+    }
+    
+    .subject-name {
+      font-size: 16px;
+      font-weight: 500;
+    }
+    
+    /* 開關按鈕樣式 */
+    .toggle {
+      position: relative;
+      width: 50px;
+      height: 28px;
+      background-color: #e0e0e0;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .toggle:before {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 24px;
+      height: 24px;
+      background-color: white;
+      border-radius: 50%;
+      transition: transform 0.3s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    
+    .toggle.active {
+      background-color: #4a6cf7;
+    }
+    
+    .toggle.active:before {
+      transform: translateX(22px);
+    }
+    
+    .math-subject {
+      background-color: rgba(74, 107, 255, 0.8);
+    }
+    
+    .chinese-subject {
+      background-color: rgba(255, 107, 107, 0.8);
+    }
+    
+    .english-subject {
+      background-color: rgba(46, 204, 113, 0.8);
+    }
+    
+    .general-subject {
+      background-color: rgba(255, 159, 67, 0.8);
+    }
+    
+    .physics-subject {
+      background-color: rgba(52, 152, 219, 0.8);
+    }
+    
+    .chemistry-subject {
+      background-color: rgba(155, 89, 182, 0.8);
+    }
+    
+    .chinese-history-subject {
+      background-color: rgba(230, 126, 34, 0.8);
+    }
+    
+    .chinese-literature-subject {
+      background-color: rgba(241, 196, 15, 0.8);
+    }
+    
+    .western-history-subject {
+      background-color: rgba(41, 128, 185, 0.8);
+    }
+    
+    .economics-subject {
+      background-color: rgba(39, 174, 96, 0.8);
+    }
+    
+    .accounting-subject {
+      background-color: rgba(142, 68, 173, 0.8);
+    }
+    
+    /* Toast提示樣式 */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    
+    /* 字體大小選擇樣式 */
+    .preview-section {
+      margin-bottom: 30px;
+    }
+    
+    .preview-title {
+      font-size: var(--font-size-subheading);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    
+    .preview-content {
+      padding: 15px;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: var(--border-radius);
+    }
+    
+    .font-size-options-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .font-size-option {
+      flex: 1;
+      padding: 15px 10px;
+      border-radius: var(--border-radius);
+      background-color: rgba(0, 0, 0, 0.05);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .font-size-option.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .font-size-option[data-value="small"] {
+      font-size: var(--font-size-small);
+    }
+    
+    .font-size-option[data-value="medium"] {
+      font-size: var(--font-size-medium);
+    }
+    
+    .font-size-option[data-value="large"] {
+      font-size: var(--font-size-large);
+    }
+    
+    /* 添加響應式樣式，確保在小屏幕設備上正確顯示 */
+    @media (max-width: 360px) {
+      .profile-modal {
+        width: 95%;
+        max-width: 300px;
+      }
+      
+      .profile-modal-body {
+        padding: 12px;
+      }
+      
+      .profile-form-row {
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .avatar-preview {
+        width: 70px;
+        height: 70px;
+      }
+      
+      .profile-form-input,
+      .profile-form-select {
+        padding: 6px 8px;
+        font-size: 13px;
+      }
+      
+      .profile-modal-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+      }
+    }
+    
+    /* 確保輸入框不會超出容器 */
+    input, select, textarea {
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .grade-selector {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .selected-grade {
+      flex: 1;
+    }
+    
+    .grade-selector i {
+      margin-left: 8px;
+      color: #999;
+    }
+    
+    /* 語言選擇器樣式 */
+    .language-picker {
+      position: relative;
+      height: 150px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+    
+    .picker-wheel {
+      position: absolute;
+      width: 100%;
+      transform: translateY(0);
+      transition: transform 0.3s ease;
+    }
+    
+    .picker-item {
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      font-size: 18px;
+      color: #999;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .picker-item.active {
+      color: #333;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    
+    .picker-highlight {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 50px;
+      transform: translateY(-50%);
+      background-color: rgba(0, 0, 0, 0.05);
+      border-top: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+      pointer-events: none;
+    }
+    
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      z-index: 100;
+      max-width: 500px;
+      margin: 0 auto;
+      animation: slideUp 0.5s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      height: 100%;
+      color: var(--text-secondary);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .tab-item i {
+      font-size: 20px;
+      margin-bottom: 4px;
+      transition: transform 0.2s ease, color 0.3s ease;
+    }
+    
+    .tab-item:hover i {
+      transform: translateY(-2px);
+    }
+    
+    .tab-item.active {
+      color: var(--primary-color);
+    }
+    
+    .tab-item.active i {
+      transform: translateY(-2px);
+    }
+    
+    .scan-button {
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+      background-color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: -20px;
+      box-shadow: 0 4px 10px rgba(74, 107, 255, 0.3);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .scan-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(74, 107, 255, 0.4);
+    }
+    
+    .scan-button:active {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(74, 107, 255, 0.3);
+    }
+    
+    .scan-button i {
+      font-size: 20px;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="device-container">
+    <!-- 狀態欄 -->
+    <div class="status-bar">
+      <div class="signal">
+        <i class="fas fa-signal"></i>
+      </div>
+      <div class="time">14:30</div>
+      <div class="battery">
+        <i class="fas fa-battery-three-quarters mr-1"></i>
+        <span>85%</span>
+      </div>
+    </div>
+    
+    <!-- 應用內容 -->
+    <div class="app-content">
+      <!-- 頭部 -->
+      <div class="settings-header">
+        <div class="back-button">
+          <i class="fas fa-arrow-left"></i>
+        </div>
+        <div class="settings-title" data-lang-key="settings">設置</div>
+      </div>
+      
+      <!-- 用戶資料 -->
+      <div class="user-profile" id="edit-profile-btn">
+        <img src="https://source.unsplash.com/random/140x140/?portrait" alt="用戶頭像" class="user-avatar">
+        <div class="user-info">
+          <div class="user-name">小明同學</div>
+          <div class="user-id">ID: 12345678</div>
+          <div class="user-level">小學三年級 | 9歲 | 男</div>
+        </div>
+        <div class="edit-profile">
+          <i class="fas fa-chevron-right"></i>
+        </div>
+      </div>
+      
+      <!-- 通用設置 -->
+      <div class="settings-section">
+        <div class="section-title" data-lang-key="general_settings">通用設置</div>
+        
+        <div class="settings-item">
+          <div class="item-left">
+            <div class="item-icon">
+              <i class="fas fa-bell"></i>
+            </div>
+            <div class="item-label" data-lang-key="notifications">通知提醒</div>
+          </div>
+          <div class="item-right">
+            <div class="toggle active"></div>
+          </div>
+        </div>
+        
+        <div class="settings-item">
+          <div class="item-left">
+            <div class="item-icon">
+              <i class="fas fa-moon"></i>
+            </div>
+            <div class="item-label" data-lang-key="dark_mode">深色模式</div>
+          </div>
+          <div class="item-right">
+            <div class="toggle"></div>
+          </div>
+        </div>
+        
+        <div class="settings-item" id="font-setting">
+          <div class="item-left">
+            <div class="item-icon">
+              <i class="fas fa-globe"></i>
+            </div>
+            <div class="item-label" data-lang-key="language">語言</div>
+          </div>
+          <div class="item-right">
+            <div class="item-value" id="current-font">繁體中文</div>
+            <div class="item-arrow">
+              <i class="fas fa-chevron-right"></i>
+            </div>
+          </div>
+        </div>
+        
+        <div class="settings-item" style="display: none;">
+          <div class="item-left">
+            <div class="item-icon">
+              <i class="fas fa-text-height"></i>
+            </div>
+            <div class="item-label" data-lang-key="font_size">字體大小</div>
+          </div>
+          <div class="item-right">
+            <div class="item-value" id="current-font-size" data-lang-key="medium">中</div>
+            <div class="item-arrow">
+              <i class="fas fa-chevron-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 學習設置 -->
+      <div class="settings-section">
+        <div class="section-title" data-lang-key="learning_settings">學習設置</div>
+        
+        <div class="settings-item">
+          <div class="item-left">
+            <div class="item-icon">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="item-label" data-lang-key="grade">學習年級</div>
+          </div>
+          <div class="item-right">
+            <div class="item-value" data-lang-key="grade_p3">小學三年級</div>
+            <div class="item-arrow">
+              <i class="fas fa-chevron-right"></i>
+            </div>
+          </div>
+        </div>
+        
+        <div class="settings-item">
+          <div class="item-left">
+            <div class="item-icon">
+              <i class="fas fa-robot"></i>
+            </div>
+            <div class="item-label" data-lang-key="ai_tutor_settings">AI助教設置</div>
+          </div>
+          <div class="item-right">
+            <div class="item-arrow">
+              <i class="fas fa-chevron-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 其他設置 -->
+      <div class="settings-section">
+        <div class="section-title" data-lang-key="others">其他</div>
+        
+        <div class="settings-item">
+          <div class="item-left">
+            <div class="item-icon">
+              <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <div class="item-label" data-lang-key="data_sync">數據同步</div>
+          </div>
+          <div class="item-right">
+            <div class="toggle active"></div>
+          </div>
+        </div>
+        
+        <div class="settings-item">
+          <div class="item-left">
+            <div class="item-icon">
+              <i class="fas fa-trash"></i>
+            </div>
+            <div class="item-label" data-lang-key="clear_cache">清除緩存</div>
+          </div>
+          <div class="item-right">
+            <div class="item-value">23.5MB</div>
+            <div class="item-arrow">
+              <i class="fas fa-chevron-right"></i>
+            </div>
+          </div>
+        </div>
+        
+        <div class="settings-item">
+          <div class="item-left">
+            <div class="item-icon">
+              <i class="fas fa-question-circle"></i>
+            </div>
+            <div class="item-label" data-lang-key="help_feedback">幫助與反饋</div>
+          </div>
+          <div class="item-right">
+            <div class="item-arrow">
+              <i class="fas fa-chevron-right"></i>
+            </div>
+          </div>
+        </div>
+        
+        <div class="settings-item">
+          <div class="item-left">
+            <div class="item-icon">
+              <i class="fas fa-info-circle"></i>
+            </div>
+            <div class="item-label" data-lang-key="about_us">關於我們</div>
+          </div>
+          <div class="item-right">
+            <div class="item-arrow">
+              <i class="fas fa-chevron-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 退出登錄 -->
+      <button class="btn btn-outline w-full logout-button">
+        <i class="fas fa-sign-out-alt btn-icon"></i>
+        <span data-lang-key="logout">退出登錄</span>
+      </button>
+      
+      <!-- 版本信息 -->
+      <div class="version-info">
+        快答通 v1.0.0
+      </div>
+    </div>
+    
+    <!-- 底部標籤欄 -->
+    <div class="tab-bar">
+      <div class="tab-item" id="tab-home">
+        <i class="fas fa-home"></i>
+        <span data-lang-key="home">首頁</span>
+      </div>
+      <div class="tab-item" id="tab-ai">
+        <i class="fas fa-robot"></i>
+        <span data-lang-key="ai_tutor">AI助教</span>
+      </div>
+      <div class="tab-item" id="tab-scan">
+        <div class="scan-button">
+          <i class="fas fa-camera"></i>
+        </div>
+        <span style="visibility: hidden;">掃描</span>
+      </div>
+      <div class="tab-item" id="tab-practice">
+        <i class="fas fa-book-open"></i>
+        <span data-lang-key="practice">練習</span>
+      </div>
+      <div class="tab-item active" id="tab-profile">
+        <i class="fas fa-user"></i>
+        <span data-lang-key="profile">我的</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 語言選擇彈窗 -->
+  <div class="modal-overlay" id="language-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" data-lang-key="language_settings">語言設置</div>
+        <div class="modal-close" id="language-modal-close">
+          <i class="fas fa-times"></i>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="language-picker">
+          <div class="picker-wheel" id="language-picker-wheel">
+            <div class="picker-item" data-lang="traditional" data-lang-key="traditional_chinese">繁體中文</div>
+            <div class="picker-item" data-lang="simplified" data-lang-key="simplified_chinese">简体中文</div>
+            <div class="picker-item" data-lang="english" data-lang-key="english">English</div>
+          </div>
+          <div class="picker-highlight"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn modal-btn-cancel" id="modal-cancel" data-lang-key="cancel">取消</button>
+        <button class="modal-btn modal-btn-confirm" id="modal-confirm" data-lang-key="confirm">確定</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 個人資料編輯彈窗 -->
+  <div class="profile-modal-overlay" id="profile-modal">
+    <div class="profile-modal">
+      <div class="profile-modal-header">
+        <div class="profile-modal-title" data-lang-key="edit_profile">編輯個人資料</div>
+        <div class="profile-modal-close" id="profile-modal-close">
+          <i class="fas fa-times"></i>
+        </div>
+      </div>
+      <div class="profile-modal-body">
+        <div class="avatar-upload">
+          <div class="avatar-preview">
+            <img src="https://source.unsplash.com/random/140x140/?portrait" alt="用戶頭像" id="avatar-preview-img">
+            <div class="avatar-upload-btn">
+              <i class="fas fa-camera"></i>
+            </div>
+          </div>
+          <input type="file" id="avatar-upload-input" style="display: none" accept="image/*">
+        </div>
+        
+        <div class="profile-form-group">
+          <label class="profile-form-label" data-lang-key="name">姓名</label>
+          <input type="text" class="profile-form-input" value="小明同學" placeholder="請輸入姓名" data-lang-key-placeholder="enter_name">
+        </div>
+        
+        <div class="profile-form-row">
+          <div class="profile-form-group">
+            <label class="profile-form-label" data-lang-key="age">年齡</label>
+            <select class="profile-form-select" id="age-select">
+              <option value="" disabled>請選擇年齡</option>
+              <script>
+                // 動態生成1-99歲的選項
+                for(let i = 1; i <= 99; i++) {
+                  document.write(`<option value="${i}">${i}歲</option>`);
+                }
+              </script>
+            </select>
+          </div>
+          
+          <div class="profile-form-group">
+            <label class="profile-form-label" data-lang-key="gender">性別</label>
+            <select class="profile-form-select">
+              <option value="male" selected data-lang-key="male">男</option>
+              <option value="female" data-lang-key="female">女</option>
+              <option value="other" data-lang-key="other">其他</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="profile-form-group">
+          <label class="profile-form-label" data-lang-key="grade">學習年級</label>
+          <div class="profile-form-select grade-selector" id="grade-selector">
+            <span class="selected-grade" data-lang-key="grade_p3">小學三年級</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
+        
+        <div class="profile-form-group">
+          <label class="profile-form-label" data-lang-key="school">學校</label>
+          <input type="text" class="profile-form-input" value="香港培正小學" placeholder="請輸入學校名稱" data-lang-key-placeholder="enter_school">
+        </div>
+      </div>
+      <div class="profile-modal-footer">
+        <button class="profile-modal-btn profile-modal-btn-cancel" id="profile-modal-cancel" data-lang-key="cancel">取消</button>
+        <button class="profile-modal-btn profile-modal-btn-save" id="profile-modal-save" data-lang-key="save">保存</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 年級選擇彈窗 -->
+  <div class="modal-overlay" id="grade-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" data-lang-key="grade_settings">年級設置</div>
+        <div class="modal-close" id="grade-modal-close">
+          <i class="fas fa-times"></i>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="language-picker">
+          <div class="picker-wheel" id="grade-picker-wheel">
+            <div class="picker-item" data-grade="p1" data-lang-key="grade_p1">小學一年級</div>
+            <div class="picker-item" data-grade="p2" data-lang-key="grade_p2">小學二年級</div>
+            <div class="picker-item" data-grade="p3" data-lang-key="grade_p3">小學三年級</div>
+            <div class="picker-item" data-grade="p4" data-lang-key="grade_p4">小學四年級</div>
+            <div class="picker-item" data-grade="p5" data-lang-key="grade_p5">小學五年級</div>
+            <div class="picker-item" data-grade="p6" data-lang-key="grade_p6">小學六年級</div>
+            <div class="picker-item" data-grade="s1" data-lang-key="grade_s1">中學一年級</div>
+            <div class="picker-item" data-grade="s2" data-lang-key="grade_s2">中學二年級</div>
+            <div class="picker-item" data-grade="s3" data-lang-key="grade_s3">中學三年級</div>
+            <div class="picker-item" data-grade="s4" data-lang-key="grade_s4">中學四年級</div>
+            <div class="picker-item" data-grade="s5" data-lang-key="grade_s5">中學五年級</div>
+            <div class="picker-item" data-grade="s6" data-lang-key="grade_s6">中學六年級</div>
+          </div>
+          <div class="picker-highlight"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn modal-btn-cancel" id="grade-modal-cancel" data-lang-key="cancel">取消</button>
+        <button class="modal-btn modal-btn-confirm" id="grade-modal-confirm" data-lang-key="confirm">確定</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 字體大小設置彈窗 -->
+  <div class="modal" id="font-size-modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" data-lang-key="font_size_settings">字體大小設置</div>
+        <div class="modal-close" id="close-font-size-modal">
+          <i class="fas fa-times"></i>
+        </div>
+      </div>
+      
+      <div class="modal-body">
+        <div class="preview-section">
+          <div class="preview-title" data-lang-key="preview">預覽</div>
+          <div class="preview-content">
+            <p data-lang-key="preview_text">這是預覽文本，您可以看到不同字體大小的效果。</p>
+          </div>
+        </div>
+        
+        <div class="font-size-options-container">
+          <div class="font-size-option" data-value="small">
+            <div class="option-label" data-lang-key="small">小</div>
+          </div>
+          <div class="font-size-option active" data-value="medium">
+            <div class="option-label" data-lang-key="medium">中</div>
+          </div>
+          <div class="font-size-option" data-value="large">
+            <div class="option-label" data-lang-key="large">大</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn" id="confirm-font-size" data-lang-key="confirm">確定</button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // 多語言支持
+    const translations = {
+      'simplified': {
+        'settings': '设置',
+        'general_settings': '通用设置',
+        'notifications': '通知提醒',
+        'dark_mode': '深色模式',
+        'language': '语言',
+        'font': '字体',
+        'font_size': '字体大小',
+        'medium': '中',
+        'learning_settings': '学习设置',
+        'grade': '学习年级',
+        'grade_p1': '小学一年级',
+        'grade_p2': '小学二年级',
+        'grade_p3': '小学三年级',
+        'grade_p4': '小学四年级',
+        'grade_p5': '小学五年级',
+        'grade_p6': '小学六年级',
+        'grade_s1': '中学一年级',
+        'grade_s2': '中学二年级',
+        'grade_s3': '中学三年级',
+        'grade_s4': '中学四年级',
+        'grade_s5': '中学五年级',
+        'grade_s6': '中学六年级',
+        'subject_management': '科目管理',
+        'ai_tutor_settings': 'AI助教设置',
+        'others': '其他',
+        'data_sync': '数据同步',
+        'clear_cache': '清除缓存',
+        'help_feedback': '帮助与反馈',
+        'about_us': '关于我们',
+        'logout': '退出登录',
+        'home': '首页',
+        'mistakes': '错题本',
+        'quiz': '智能出题',
+        'profile': '我的',
+        'font_settings': '字体设置',
+        'cancel': '取消',
+        'confirm': '确定',
+        'edit_profile': '编辑个人资料',
+        'name': '姓名',
+        'age': '年龄',
+        'gender': '性别',
+        'male': '男',
+        'female': '女',
+        'other': '其他',
+        'school': '学校',
+        'save': '保存',
+        'traditional_chinese': '繁體中文',
+        'enter_name': '请输入姓名',
+        'enter_age': '年龄',
+        'enter_school': '请输入学校名称',
+        'language_settings': '语言设置',
+        'grade_settings': '年级设置',
+        'scroll_up_hint': '上滑查看更多',
+        'scroll_down_hint': '下滑查看更多',
+        'font_size_settings': '字体大小设置',
+        'small': '小',
+        'large': '大',
+        'xlarge': '特大',
+        'preview': '预览',
+        'preview_text': '这是预览文本，您可以看到不同字体大小的效果。',
+        'subject_management': '科目管理',
+        'math': '数学',
+        'chinese': '中文',
+        'english': '英文',
+        'general': '常识',
+        'physics': '物理',
+        'chemistry': '化学',
+        'chinese_history': '中国历史',
+        'chinese_literature': '中国文学',
+        'western_history': '西方历史',
+        'economics': '经济',
+        'accounting': '会计',
+        'save': '保存',
+        'save_success': '保存成功',
+        'font_size_updated': '字体大小已更新',
+        'personal_settings': '个人设置',
+        'age': '年龄',
+        'age_value': '18岁',
+        'age_settings': '年龄设置'
+      },
+      'traditional': {
+        'settings': '設置',
+        'general_settings': '通用設置',
+        'notifications': '通知提醒',
+        'dark_mode': '深色模式',
+        'language': '語言',
+        'font': '字體',
+        'font_size': '字體大小',
+        'medium': '中',
+        'learning_settings': '學習設置',
+        'grade': '學習年級',
+        'grade_p1': '小學一年級',
+        'grade_p2': '小學二年級',
+        'grade_p3': '小學三年級',
+        'grade_p4': '小學四年級',
+        'grade_p5': '小學五年級',
+        'grade_p6': '小學六年級',
+        'grade_s1': '中學一年級',
+        'grade_s2': '中學二年級',
+        'grade_s3': '中學三年級',
+        'grade_s4': '中學四年級',
+        'grade_s5': '中學五年級',
+        'grade_s6': '中學六年級',
+        'subject_management': '科目管理',
+        'ai_tutor_settings': 'AI助教設置',
+        'others': '其他',
+        'data_sync': '數據同步',
+        'clear_cache': '清除緩存',
+        'help_feedback': '幫助與反饋',
+        'about_us': '關於我們',
+        'logout': '退出登錄',
+        'home': '首頁',
+        'mistakes': '錯題本',
+        'quiz': '智能出題',
+        'profile': '我的',
+        'font_settings': '字體設置',
+        'cancel': '取消',
+        'confirm': '確定',
+        'edit_profile': '編輯個人資料',
+        'name': '姓名',
+        'age': '年齡',
+        'gender': '性別',
+        'male': '男',
+        'female': '女',
+        'other': '其他',
+        'school': '學校',
+        'save': '保存',
+        'traditional_chinese': '繁體中文',
+        'enter_name': '請輸入姓名',
+        'enter_age': '年齡',
+        'enter_school': '請輸入學校名稱',
+        'language_settings': '語言設置',
+        'grade_settings': '年級設置',
+        'scroll_up_hint': '上滑查看更多',
+        'scroll_down_hint': '下滑查看更多',
+        'font_size_settings': '字體大小設置',
+        'small': '小',
+        'large': '大',
+        'xlarge': '特大',
+        'preview': '預覽',
+        'preview_text': '這是預覽文本，您可以看到不同字體大小的效果。',
+        'subject_management': '科目管理',
+        'math': '數學',
+        'chinese': '中文',
+        'english': '英文',
+        'general': '常識',
+        'physics': '物理',
+        'chemistry': '化學',
+        'chinese_history': '中國歷史',
+        'chinese_literature': '中國文學',
+        'western_history': '西方歷史',
+        'economics': '經濟',
+        'accounting': '會計',
+        'save': '保存',
+        'save_success': '保存成功',
+        'font_size_updated': '字體大小已更新',
+        'personal_settings': '個人設置',
+        'age': '年齡',
+        'age_value': '18歲',
+        'age_settings': '年齡設置'
+      },
+      'english': {
+        'settings': 'Settings',
+        'back': 'Back',
+        'profile': 'Profile',
+        'edit_profile': 'Edit Profile',
+        'student_id': 'Student ID',
+        'grade': 'Grade',
+        'account_settings': 'Account Settings',
+        'subjects': 'Subjects',
+        'font_size': 'Font Size',
+        'small': 'Small',
+        'medium': 'Medium',
+        'large': 'Large',
+        'notifications': 'Notifications',
+        'language': 'Language',
+        'traditional': 'Traditional',
+        'simplified': 'Simplified',
+        'english': 'English',
+        'dark_mode': 'Dark Mode',
+        'on': 'On',
+        'off': 'Off',
+        'about': 'About',
+        'version': 'Version',
+        'privacy_policy': 'Privacy Policy',
+        'terms_of_service': 'Terms of Service',
+        'help_feedback': 'Help & Feedback',
+        'faq': 'FAQ',
+        'contact_us': 'Contact Us',
+        'logout': 'Logout',
+        'subject_settings': 'Subject Settings',
+        'select_subjects': 'Select the subjects you want to display',
+        'font_size_settings': 'Font Size Settings',
+        'preview_text': 'This is preview text, you can see the effect of different font sizes.',
+        'confirm': 'Confirm',
+        'cancel': 'Cancel',
+        'save': 'Save',
+        'save_success': 'Saved successfully',
+        'font_size_updated': 'Font size updated',
+        'personal_settings': 'Personal Settings',
+        'age': 'Age',
+        'age_value': '18 years old',
+        'age_settings': 'Age Settings',
+        'enter_name': 'Enter your name',
+        'enter_age': 'Enter your age',
+        'enter_school': 'Enter your school name'
+      }
+    };
+    
+    // 語言設置彈窗交互
+    document.addEventListener('DOMContentLoaded', function() {
+      const languageSetting = document.getElementById('font-setting');
+      const languageModal = document.getElementById('language-modal');
+      const languageModalClose = document.getElementById('language-modal-close');
+      const modalCancel = document.getElementById('modal-cancel');
+      const modalConfirm = document.getElementById('modal-confirm');
+      const currentFont = document.getElementById('current-font');
+      
+      // 語言選擇滑輪
+      const pickerWheel = document.querySelector('#language-picker-wheel');
+      const pickerItems = document.querySelectorAll('#language-picker-wheel .picker-item');
+      let startY = 0;
+      let moveY = 0;
+      let lastMoveY = 0;
+      let startTime = 0;
+      let isScrolling = false;
+      let currentIndex = 1; // 默認選中繁體中文
+      let velocityY = 0;
+      let animationId = null;
+      
+      // 添加滑動提示
+      const languagePickerContainer = languageModal.querySelector('.language-picker');
+      
+      // 移除滑動提示代碼
+      /*
+      const topHint = document.createElement('div');
+      topHint.className = 'scroll-hint scroll-hint-top';
+      topHint.setAttribute('data-lang-key', 'scroll_up_hint');
+      topHint.innerHTML = '<i class="fas fa-chevron-up"></i><span>上滑查看更多</span><i class="fas fa-chevron-up"></i>';
+      
+      const bottomHint = document.createElement('div');
+      bottomHint.className = 'scroll-hint scroll-hint-bottom';
+      bottomHint.setAttribute('data-lang-key', 'scroll_down_hint');
+      bottomHint.innerHTML = '<i class="fas fa-chevron-down"></i><span>下滑查看更多</span><i class="fas fa-chevron-down"></i>';
+      
+      languagePickerContainer.appendChild(topHint);
+      languagePickerContainer.appendChild(bottomHint);
+      */
+      
+      // 檢查本地存儲中的語言設置
+      const savedFont = localStorage.getItem('systemLang') || 'traditional';
+      
+      // 設置初始字體類
+      document.body.classList.add('font-' + savedFont);
+      
+      // 設置HTML語言屬性
+      if (savedFont === 'simplified') {
+        document.documentElement.setAttribute('lang', 'zh-CN');
+      } else if (savedFont === 'traditional') {
+        document.documentElement.setAttribute('lang', 'zh-TW');
+      } else if (savedFont === 'english') {
+        document.documentElement.setAttribute('lang', 'en');
+      }
+      
+      // 更新語言選擇
+      updateLanguageSelection(savedFont);
+      
+      // 應用語言設置到整個應用
+      applyFontSetting(savedFont);
+      
+      // 初始化滑輪位置
+      updatePickerPosition();
+      
+      // 打開彈窗
+      languageSetting.addEventListener('click', function() {
+        console.log('語言設置按鈕被點擊');
+        languageModal.classList.add('active');
+        // 重新檢查當前選擇的語言
+        const currentLang = localStorage.getItem('systemLang') || 'traditional';
+        updateLanguageSelection(currentLang);
+        updatePickerPosition();
+      });
+      
+      // 關閉彈窗
+      languageModalClose.addEventListener('click', function() {
+        languageModal.classList.remove('active');
+      });
+      
+      modalCancel.addEventListener('click', function() {
+        languageModal.classList.remove('active');
+      });
+      
+      // 確認選擇
+      modalConfirm.addEventListener('click', function() {
+        const selectedLang = pickerItems[currentIndex].getAttribute('data-lang');
+        
+        // 更新顯示的語言名稱
+        updateLanguageDisplay(selectedLang);
+        
+        // 保存語言設置到本地存儲
+        localStorage.setItem('systemLang', selectedLang);
+        
+        // 應用語言設置
+        applyFontSetting(selectedLang);
+        
+        // 關閉彈窗
+        languageModal.classList.remove('active');
+      });
+      
+      // 滑輪觸摸事件
+      pickerWheel.addEventListener('touchstart', function(e) {
+        startY = e.touches[0].clientY;
+        startTime = Date.now();
+        lastMoveY = 0;
+        velocityY = 0;
+        isScrolling = true;
+        
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+          animationId = null;
+        }
+        
+        this.classList.add('dragging');
+        this.classList.remove('with-inertia');
+        this.style.transition = 'none';
+      });
+      
+      pickerWheel.addEventListener('touchmove', function(e) {
+        if (!isScrolling) return;
+        
+        e.preventDefault();
+        const currentY = e.touches[0].clientY;
+        moveY = currentY - startY;
+        
+        // 計算速度
+        const now = Date.now();
+        const dt = now - startTime;
+        if (dt > 0) {
+          velocityY = (moveY - lastMoveY) / dt;
+        }
+        
+        lastMoveY = moveY;
+        startTime = now;
+        
+        const currentTranslateY = getPickerTranslateY();
+        const newTranslateY = currentTranslateY + moveY;
+        
+        // 添加阻尼效果，防止過度滑動
+        const maxTranslateY = 50; // 第一個選項居中
+        const minTranslateY = -50; // 最後一個選項居中，限制為三個選項
+        
+        let finalTranslateY = newTranslateY;
+        
+        if (newTranslateY > maxTranslateY) {
+          finalTranslateY = maxTranslateY + (newTranslateY - maxTranslateY) * 0.3;
+        } else if (newTranslateY < minTranslateY) {
+          finalTranslateY = minTranslateY + (newTranslateY - minTranslateY) * 0.3;
+        }
+        
+        this.style.transform = `translateY(${finalTranslateY}px)`;
+        startY = currentY;
+      });
+      
+      pickerWheel.addEventListener('touchend', function() {
+        if (!isScrolling) return;
+        isScrolling = false;
+        
+        this.classList.remove('dragging');
+        
+        // 應用慣性滑動
+        if (Math.abs(velocityY) > 0.1) {
+          this.classList.add('with-inertia');
+          applyInertia(velocityY);
+        } else {
+          this.style.transition = 'transform 0.3s ease';
+          snapToItem();
+        }
+      });
+      
+      // 慣性滑動
+      function applyInertia(velocity) {
+        const deceleration = 0.0015;
+        const direction = velocity > 0 ? 1 : -1;
+        let distance = 0;
+        let duration = Math.abs(velocity / deceleration);
+        
+        // 計算慣性滑動的距離
+        distance = (velocity * velocity) / (2 * deceleration) * direction;
+        
+        const currentTranslateY = getPickerTranslateY();
+        let targetTranslateY = currentTranslateY + distance;
+        
+        // 限制範圍，確保只有三個選項
+        const maxTranslateY = 50;
+        const minTranslateY = -50; // 限制為三個選項
+        
+        if (targetTranslateY > maxTranslateY) {
+          targetTranslateY = maxTranslateY;
+        } else if (targetTranslateY < minTranslateY) {
+          targetTranslateY = minTranslateY;
+        }
+        
+        // 使用CSS動畫實現慣性效果
+        this.style.transition = `transform ${Math.min(duration, 1)}s cubic-bezier(0.23, 1, 0.32, 1)`;
+        this.style.transform = `translateY(${targetTranslateY}px)`;
+        
+        // 動畫結束後對齊到最近的選項
+        setTimeout(() => {
+          this.style.transition = 'transform 0.3s ease';
+          snapToItem();
+        }, Math.min(duration, 1) * 1000);
+      }
+      
+      // 對齊到最近的選項
+      function snapToItem() {
+        const itemHeight = 50;
+        const currentTranslateY = getPickerTranslateY();
+        const targetIndex = Math.round(currentTranslateY / itemHeight) * -1 + 1;
+        
+        // 限制索引範圍在0-2之間，確保只有三個選項
+        currentIndex = Math.max(0, Math.min(pickerItems.length - 1, targetIndex));
+        
+        // 確保不會超出三個選項的範圍
+        if (currentIndex < 0) currentIndex = 0;
+        if (currentIndex > 2) currentIndex = 2;
+        
+        updatePickerPosition();
+      }
+      
+      // 更新語言選擇狀態
+      function updateLanguageSelection(langType) {
+        pickerItems.forEach((item, index) => {
+          if (item.getAttribute('data-lang') === langType) {
+            currentIndex = index;
+          }
+        });
+        updateLanguageDisplay(langType);
+      }
+      
+      // 更新顯示的語言名稱
+      function updateLanguageDisplay(langType) {
+        if (langType === 'simplified' || langType === 'zh-CN') {
+          currentFont.textContent = '简体中文';
+        } else if (langType === 'traditional' || langType === 'zh-TW') {
+          currentFont.textContent = '繁體中文';
+        } else if (langType === 'english' || langType === 'en') {
+          currentFont.textContent = 'English';
+        }
+      }
+      
+      // 應用語言設置到整個應用的函數
+      function applyFontSetting(langType) {
+        const htmlElement = document.documentElement;
+        let langCode = '';
+        
+        if (langType === 'simplified' || langType === 'zh-CN') {
+          htmlElement.setAttribute('lang', 'zh-CN');
+          langCode = 'zh-CN';
+          langType = 'simplified';
+        } else if (langType === 'traditional' || langType === 'zh-TW') {
+          htmlElement.setAttribute('lang', 'zh-TW');
+          langCode = 'zh-TW';
+          langType = 'traditional';
+        } else if (langType === 'english' || langType === 'en') {
+          htmlElement.setAttribute('lang', 'en');
+          langCode = 'en';
+          langType = 'english';
+        }
+        
+        // 設置當前語言屬性
+        htmlElement.setAttribute('data-current-lang', langType);
+        
+        // 保存到systemLang
+        localStorage.setItem('systemLang', langType);
+        
+        // 這裡可以添加更多的語言應用邏輯
+        document.body.classList.remove('font-simplified', 'font-traditional', 'font-english');
+        document.body.classList.add('font-' + langType);
+        
+        // 更新頁面上的文本
+        updatePageLanguage(langType);
+        
+        // 更新圖標字體
+        updateIconFonts(langType);
+      }
+      
+      // 更新圖標字體
+      function updateIconFonts(langType) {
+        // 獲取所有圖標元素
+        const icons = document.querySelectorAll('i.fas, i.far, i.fab');
+        
+        // 根據語言類型設置適當的字體
+        if (langType === 'simplified') {
+          icons.forEach(icon => {
+            icon.style.fontFamily = '"Font Awesome 6 Free", "微软雅黑", "Microsoft YaHei", sans-serif';
+          });
+        } else if (langType === 'traditional') {
+          icons.forEach(icon => {
+            icon.style.fontFamily = '"Font Awesome 6 Free", "微軟正黑體", "Microsoft JhengHei", sans-serif';
+          });
+        } else if (langType === 'english') {
+          icons.forEach(icon => {
+            icon.style.fontFamily = '"Font Awesome 6 Free", "Arial", sans-serif';
+          });
+        }
+      }
+      
+      // 獲取滑輪當前位置
+      function getPickerTranslateY() {
+        const transform = pickerWheel.style.transform;
+        if (!transform || transform === 'none') return 0;
+        const match = transform.match(/translateY\(([^)]+)\)/);
+        return match ? parseFloat(match[1]) : 0;
+      }
+      
+      // 更新滑輪位置
+      function updatePickerPosition() {
+        const itemHeight = 50;
+        const translateY = (1 - currentIndex) * itemHeight;
+        pickerWheel.style.transform = `translateY(${translateY}px)`;
+        
+        // 更新選中項樣式
+        pickerItems.forEach((item, index) => {
+          if (index === currentIndex) {
+            item.classList.add('active');
+          } else {
+            item.classList.remove('active');
+          }
+        });
+      }
+      
+      // 獲取年級滑輪當前位置
+      function getGradePickerTranslateY() {
+        const transform = gradePickerWheel.style.transform;
+        if (!transform || transform === 'none') return 0;
+        const match = transform.match(/translateY\(([^)]+)\)/);
+        return match ? parseFloat(match[1]) : 0;
+      }
+      
+      // 更新頁面語言
+      function updatePageLanguage(lang) {
+        let langKey = lang;
+        
+        // 轉換語言代碼為翻譯鍵
+        if (lang === 'zh-CN') langKey = 'simplified';
+        else if (lang === 'zh-TW') langKey = 'traditional';
+        else if (lang === 'en') langKey = 'english';
+        
+        // 設置當前語言
+        document.documentElement.setAttribute('lang', lang === 'simplified' || lang === 'zh-CN' ? 'zh-CN' : 
+                                                    lang === 'traditional' || lang === 'zh-TW' ? 'zh-TW' : 'en');
+        
+        // 更新所有帶有data-lang-key屬性的元素
+        document.querySelectorAll('[data-lang-key]').forEach(el => {
+          const key = el.getAttribute('data-lang-key');
+          if (translations[langKey] && translations[langKey][key]) {
+            if (el.tagName === 'INPUT' && el.getAttribute('type') === 'text') {
+              el.setAttribute('placeholder', translations[langKey][key]);
+            } else if (el.tagName === 'SPAN' || el.tagName === 'DIV' || el.tagName === 'BUTTON' || el.tagName === 'LABEL' || el.tagName === 'OPTION') {
+              // 對於滑動提示，只更新span部分
+              if (el.classList.contains('scroll-hint')) {
+                const span = el.querySelector('span');
+                if (span) {
+                  span.textContent = translations[langKey][key];
+                }
+              } else {
+                el.textContent = translations[langKey][key];
+              }
+            }
+          }
+        });
+        
+        // 更新年級顯示
+        const savedGrade = localStorage.getItem('appGrade') || 'p3';
+        const gradeKey = `grade_${savedGrade}`;
+        const currentGradeDisplay = document.querySelector('.item-value[data-lang-key^="grade_"]');
+        
+        if (currentGradeDisplay && translations[langKey] && translations[langKey][gradeKey]) {
+          currentGradeDisplay.textContent = translations[langKey][gradeKey];
+          currentGradeDisplay.setAttribute('data-lang-key', gradeKey);
+        }
+        
+        // 更新滑動提示文字
+        document.querySelectorAll('.scroll-hint').forEach(hint => {
+          const key = hint.getAttribute('data-lang-key');
+          if (translations[langKey] && translations[langKey][key]) {
+            const span = hint.querySelector('span');
+            if (span) {
+              span.textContent = translations[langKey][key];
+            }
+          }
+        });
+      }
+      
+      // 監聽字體變更事件
+      window.addEventListener('fontChange', function(e) {
+        const newFont = e.detail.font;
+        // 更新本地存儲
+        localStorage.setItem('systemLang', newFont);
+        // 更新語言選擇
+        updateLanguageSelection(newFont);
+        // 應用新語言設置
+        applyFontSetting(newFont);
+      });
+      
+      // 監聽存儲變更事件
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'systemLang') {
+          const newLang = e.newValue || 'traditional';
+          
+          // 更新語言選擇
+          updateLanguageSelection(newLang);
+          // 應用新語言設置
+          applyFontSetting(newLang);
+        }
+      });
+      
+      // 定期檢查語言設置
+      setInterval(() => {
+        const currentLang = localStorage.getItem('systemLang') || 'traditional';
+        
+        if (currentLang !== document.documentElement.getAttribute('data-current-lang')) {
+          // 更新語言選擇
+          updateLanguageSelection(currentLang);
+          // 應用新語言設置
+          applyFontSetting(currentLang);
+        }
+      }, 1000);
+      
+      // 個人資料編輯彈窗交互
+      const editProfileBtn = document.getElementById('edit-profile-btn');
+      const profileModal = document.getElementById('profile-modal');
+      const profileModalClose = document.getElementById('profile-modal-close');
+      const profileModalCancel = document.getElementById('profile-modal-cancel');
+      const profileModalSave = document.getElementById('profile-modal-save');
+      const avatarUploadBtn = document.querySelector('.avatar-upload-btn');
+      const avatarUploadInput = document.getElementById('avatar-upload-input');
+      const avatarPreviewImg = document.getElementById('avatar-preview-img');
+      
+      // 打開彈窗
+      editProfileBtn.addEventListener('click', function() {
+        console.log('個人資料按鈕被點擊');
+        profileModal.classList.add('active');
+      });
+      
+      // 關閉彈窗
+      profileModalClose.addEventListener('click', function() {
+        profileModal.classList.remove('active');
+      });
+      
+      profileModalCancel.addEventListener('click', function() {
+        profileModal.classList.remove('active');
+      });
+      
+      // 保存設置
+      profileModalSave.addEventListener('click', function() {
+        // 這裡可以添加保存邏輯
+        profileModal.classList.remove('active');
+      });
+      
+      // 頭像上傳
+      avatarUploadBtn.addEventListener('click', function() {
+        avatarUploadInput.click();
+      });
+      
+      avatarUploadInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+          const reader = new FileReader();
+          
+          reader.onload = function(e) {
+            avatarPreviewImg.src = e.target.result;
+          }
+          
+          reader.readAsDataURL(this.files[0]);
+        }
+      });
+      
+      // 初始化頁面語言
+      updatePageLanguage(savedFont);
+      
+      // 年級設置彈窗交互
+      const gradeSetting = document.querySelector('.settings-item:has(.item-label[data-lang-key="grade"])');
+      const gradeModal = document.getElementById('grade-modal');
+      const gradeModalClose = document.getElementById('grade-modal-close');
+      const gradeModalCancel = document.getElementById('grade-modal-cancel');
+      const gradeModalConfirm = document.getElementById('grade-modal-confirm');
+      const currentGradeDisplay = document.querySelector('.item-value[data-lang-key^="grade_"]');
+      
+      // 年級選擇滑輪
+      const gradePickerWheel = document.getElementById('grade-picker-wheel');
+      const gradePickerItems = gradePickerWheel.querySelectorAll('.picker-item');
+      let gradeStartY = 0;
+      let gradeMoveY = 0;
+      let gradeLastMoveY = 0;
+      let gradeStartTime = 0;
+      let isGradeScrolling = false;
+      let currentGradeIndex = 2; // 默認選中小學三年級
+      let gradeVelocityY = 0;
+      let gradeAnimationId = null;
+      
+      // 添加滑動提示
+      const gradePickerContainer = gradeModal.querySelector('.language-picker');
+      
+      // 移除滑動提示代碼
+      /*
+      const gradeTopHint = document.createElement('div');
+      gradeTopHint.className = 'scroll-hint scroll-hint-top';
+      gradeTopHint.setAttribute('data-lang-key', 'scroll_up_hint');
+      gradeTopHint.innerHTML = '<i class="fas fa-chevron-up"></i><span>上滑查看更多</span><i class="fas fa-chevron-up"></i>';
+      
+      const gradeBottomHint = document.createElement('div');
+      gradeBottomHint.className = 'scroll-hint scroll-hint-bottom';
+      gradeBottomHint.setAttribute('data-lang-key', 'scroll_down_hint');
+      gradeBottomHint.innerHTML = '<i class="fas fa-chevron-down"></i><span>下滑查看更多</span><i class="fas fa-chevron-down"></i>';
+      
+      gradePickerContainer.appendChild(gradeTopHint);
+      gradePickerContainer.appendChild(gradeBottomHint);
+      */
+      
+      // 檢查本地存儲中的年級設置
+      const savedGrade = localStorage.getItem('appGrade') || 'p3';
+      updateGradeSelection(savedGrade);
+      
+      // 初始化滑輪位置
+      updateGradePickerPosition();
+      
+      // 打開彈窗
+      gradeSetting.addEventListener('click', function() {
+        gradeModal.classList.add('active');
+        // 重新檢查當前選擇的年級
+        const currentGrade = localStorage.getItem('appGrade') || 'p3';
+        updateGradeSelection(currentGrade);
+        updateGradePickerPosition();
+      });
+      
+      // 關閉彈窗
+      gradeModalClose.addEventListener('click', function() {
+        gradeModal.classList.remove('active');
+      });
+      
+      gradeModalCancel.addEventListener('click', function() {
+        gradeModal.classList.remove('active');
+      });
+      
+      // 確認選擇
+      gradeModalConfirm.addEventListener('click', function() {
+        const selectedGrade = gradePickerItems[currentGradeIndex].getAttribute('data-grade');
+        
+        // 更新顯示的年級
+        updateGradeDisplay(selectedGrade);
+        
+        // 保存年級設置到本地存儲
+        localStorage.setItem('appGrade', selectedGrade);
+        
+        gradeModal.classList.remove('active');
+      });
+      
+      // 滑輪觸摸事件
+      gradePickerWheel.addEventListener('touchstart', function(e) {
+        gradeStartY = e.touches[0].clientY;
+        gradeStartTime = Date.now();
+        gradeLastMoveY = 0;
+        gradeVelocityY = 0;
+        isGradeScrolling = true;
+        
+        if (gradeAnimationId) {
+          cancelAnimationFrame(gradeAnimationId);
+          gradeAnimationId = null;
+        }
+        
+        this.classList.add('dragging');
+        this.classList.remove('with-inertia');
+        this.style.transition = 'none';
+      });
+      
+      gradePickerWheel.addEventListener('touchmove', function(e) {
+        if (!isGradeScrolling) return;
+        
+        e.preventDefault();
+        const currentY = e.touches[0].clientY;
+        gradeMoveY = currentY - gradeStartY;
+        
+        // 計算速度
+        const now = Date.now();
+        const dt = now - gradeStartTime;
+        if (dt > 0) {
+          gradeVelocityY = (gradeMoveY - gradeLastMoveY) / dt;
+        }
+        
+        gradeLastMoveY = gradeMoveY;
+        gradeStartTime = now;
+        
+        const currentTranslateY = getGradePickerTranslateY();
+        const newTranslateY = currentTranslateY + gradeMoveY;
+        
+        // 添加阻尼效果，防止過度滑動
+        const maxTranslateY = 50; // 第一個選項居中
+        const minTranslateY = -((gradePickerItems.length - 1) * 50 - 50); // 最後一個選項居中
+        
+        let finalTranslateY = newTranslateY;
+        
+        if (newTranslateY > maxTranslateY) {
+          finalTranslateY = maxTranslateY + (newTranslateY - maxTranslateY) * 0.3;
+        } else if (newTranslateY < minTranslateY) {
+          finalTranslateY = minTranslateY + (newTranslateY - minTranslateY) * 0.3;
+        }
+        
+        this.style.transform = `translateY(${finalTranslateY}px)`;
+        gradeStartY = currentY;
+      });
+      
+      gradePickerWheel.addEventListener('touchend', function() {
+        if (!isGradeScrolling) return;
+        isGradeScrolling = false;
+        
+        this.classList.remove('dragging');
+        
+        // 應用慣性滑動
+        if (Math.abs(gradeVelocityY) > 0.1) {
+          this.classList.add('with-inertia');
+          applyGradeInertia(gradeVelocityY);
+        } else {
+          this.style.transition = 'transform 0.3s ease';
+          snapToGradeItem();
+        }
+      });
+      
+      // 慣性滑動
+      function applyGradeInertia(velocity) {
+        const deceleration = 0.0015;
+        const direction = velocity > 0 ? 1 : -1;
+        let distance = 0;
+        let duration = Math.abs(velocity / deceleration);
+        
+        // 計算慣性滑動的距離
+        distance = (velocity * velocity) / (2 * deceleration) * direction;
+        
+        const currentTranslateY = getGradePickerTranslateY();
+        let targetTranslateY = currentTranslateY + distance;
+        
+        // 限制範圍
+        const maxTranslateY = 50;
+        const minTranslateY = -((gradePickerItems.length - 1) * 50 - 50);
+        
+        if (targetTranslateY > maxTranslateY) {
+          targetTranslateY = maxTranslateY;
+        } else if (targetTranslateY < minTranslateY) {
+          targetTranslateY = minTranslateY;
+        }
+        
+        // 使用CSS動畫實現慣性效果
+        this.style.transition = `transform ${Math.min(duration, 1)}s cubic-bezier(0.23, 1, 0.32, 1)`;
+        this.style.transform = `translateY(${targetTranslateY}px)`;
+        
+        // 動畫結束後對齊到最近的選項
+        setTimeout(() => {
+          this.style.transition = 'transform 0.3s ease';
+          snapToGradeItem();
+        }, Math.min(duration, 1) * 1000);
+      }
+      
+      // 對齊到最近的選項
+      function snapToGradeItem() {
+        const itemHeight = 50;
+        const currentTranslateY = getGradePickerTranslateY();
+        const targetIndex = Math.round(currentTranslateY / itemHeight) * -1 + 1;
+        
+        currentGradeIndex = Math.max(0, Math.min(gradePickerItems.length - 1, targetIndex));
+        updateGradePickerPosition();
+      }
+      
+      // 更新滑輪位置
+      function updateGradePickerPosition() {
+        const itemHeight = 50;
+        const translateY = (1 - currentGradeIndex) * itemHeight;
+        gradePickerWheel.style.transform = `translateY(${translateY}px)`;
+        
+        // 更新選中項樣式
+        gradePickerItems.forEach((item, index) => {
+          if (index === currentGradeIndex) {
+            item.classList.add('active');
+          } else {
+            item.classList.remove('active');
+          }
+        });
+      }
+      
+      // 更新年級選擇狀態
+      function updateGradeSelection(grade) {
+        gradePickerItems.forEach((item, index) => {
+          if (item.getAttribute('data-grade') === grade) {
+            currentGradeIndex = index;
+          }
+        });
+        updateGradeDisplay(grade);
+      }
+      
+      // 更新顯示的年級
+      function updateGradeDisplay(grade) {
+        const currentLang = localStorage.getItem('systemLang') || 'traditional';
+        const gradeKey = `grade_${grade}`;
+        
+        if (translations[currentLang] && translations[currentLang][gradeKey]) {
+          currentGradeDisplay.textContent = translations[currentLang][gradeKey];
+          currentGradeDisplay.setAttribute('data-lang-key', gradeKey);
+        }
+      }
+      
+      // 添加滑鼠滾輪事件支持
+      pickerWheel.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        
+        // 計算滾動方向和距離
+        const delta = e.deltaY;
+        const currentTranslateY = getPickerTranslateY();
+        let newTranslateY = currentTranslateY - delta * 0.5; // 調整滾動速度
+        
+        // 限制範圍，確保只有三個選項
+        const maxTranslateY = 50;
+        const minTranslateY = -50; // 限制為三個選項
+        
+        if (newTranslateY > maxTranslateY) {
+          newTranslateY = maxTranslateY;
+        } else if (newTranslateY < minTranslateY) {
+          newTranslateY = minTranslateY;
+        }
+        
+        // 應用新位置
+        this.style.transition = 'transform 0.3s ease';
+        this.style.transform = `translateY(${newTranslateY}px)`;
+        
+        // 清除之前的定時器
+        clearTimeout(this.wheelTimeout);
+        
+        // 設置新的定時器，在滾動停止後對齊到最近的選項
+        this.wheelTimeout = setTimeout(() => {
+          snapToItem();
+        }, 200);
+      });
+      
+      // 添加年級滑鼠滾輪事件支持
+      gradePickerWheel.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        
+        // 計算滾動方向和距離
+        const delta = e.deltaY;
+        const currentTranslateY = getGradePickerTranslateY();
+        let newTranslateY = currentTranslateY - delta * 0.5; // 調整滾動速度
+        
+        // 限制範圍
+        const maxTranslateY = 50;
+        const minTranslateY = -((gradePickerItems.length - 1) * 50 - 50);
+        
+        if (newTranslateY > maxTranslateY) {
+          newTranslateY = maxTranslateY;
+        } else if (newTranslateY < minTranslateY) {
+          newTranslateY = minTranslateY;
+        }
+        
+        // 應用新位置
+        this.style.transition = 'transform 0.3s ease';
+        this.style.transform = `translateY(${newTranslateY}px)`;
+        
+        // 清除之前的定時器
+        clearTimeout(this.wheelTimeout);
+        
+        // 設置新的定時器，在滾動停止後對齊到最近的選項
+        this.wheelTimeout = setTimeout(() => {
+          snapToGradeItem();
+        }, 200);
+      });
+      
+      // 點擊選擇語言
+      pickerItems.forEach((item, index) => {
+        item.addEventListener('click', function() {
+          currentIndex = index;
+          updatePickerPosition();
+        });
+      });
+      
+      // 點擊選擇年級
+      gradePickerItems.forEach((item, index) => {
+        item.addEventListener('click', function() {
+          currentGradeIndex = index;
+          updateGradePickerPosition();
+        });
+      });
+    });
+    
+    // 字體大小設置
+    const fontSizeModal = document.getElementById('font-size-modal');
+    const currentFontSizeEl = document.getElementById('current-font-size');
+    const fontSizeOptions = document.querySelectorAll('.font-size-option');
+    let currentFontSizeValue = 'medium'; // 默認為中等大小
+    
+    // 初始化字體大小
+    function initFontSize() {
+      // 從本地存儲獲取字體大小設置
+      const savedFontSize = localStorage.getItem('appFontSize') || 'medium';
+      applyFontSize(savedFontSize);
+      
+      // 設置當前選中的字體大小
+      currentFontSizeValue = savedFontSize;
+      updateFontSizeSelection();
+    }
+    
+    // 應用字體大小到整個應用
+    function applyFontSize(size) {
+      // 移除所有字體大小類
+      document.body.classList.remove('font-size-small', 'font-size-medium', 'font-size-large', 'font-size-xlarge');
+      
+      // 添加選中的字體大小類
+      document.body.classList.add(`font-size-${size}`);
+      
+      // 保存到本地存儲
+      localStorage.setItem('appFontSize', size);
+      
+      // 更新顯示
+      const sizeKey = size;
+      currentFontSizeEl.textContent = translations[currentLangType][sizeKey] || translations['traditional'][sizeKey];
+      
+      // 通知所有其他頁面更新字體大小
+      notifyAllPagesForFontSizeChange(size);
+    }
+    
+    // 通知所有頁面更新字體大小
+    function notifyAllPagesForFontSizeChange(size) {
+      // 創建自定義事件
+      const fontSizeChangeEvent = new CustomEvent('fontSizeChange', { 
+        detail: { size: size } 
+      });
+      
+      // 發送事件到父窗口（如果在iframe中）
+      if (window.parent && window.parent !== window) {
+        try {
+          window.parent.dispatchEvent(fontSizeChangeEvent);
+        } catch (e) {
+          console.error('無法向父窗口發送字體大小變更事件:', e);
+        }
+      }
+      
+      // 發送事件到當前窗口
+      window.dispatchEvent(fontSizeChangeEvent);
+    }
+    
+    // 更新字體大小選擇
+    function updateFontSizeSelection() {
+      // 更新選中項樣式
+      fontSizeOptions.forEach(option => {
+        if (option.getAttribute('data-value') === currentFontSizeValue) {
+          option.classList.add('active');
+        } else {
+          option.classList.remove('active');
+        }
+      });
+      
+      // 更新預覽
+      const previewContent = document.querySelector('.preview-content');
+      previewContent.classList.remove('font-size-small', 'font-size-medium', 'font-size-large', 'font-size-xlarge');
+      previewContent.classList.add(`font-size-${currentFontSizeValue}`);
+    }
+    
+    // 字體大小設置事件 - 已禁用
+    /*
+    document.querySelector('.settings-item:nth-child(4)').addEventListener('click', function() {
+      fontSizeModal.classList.add('active');
+      updateFontSizeSelection();
+    });
+    */
+    
+    document.getElementById('close-font-size-modal').addEventListener('click', function() {
+      fontSizeModal.classList.remove('active');
+    });
+    
+    // 點擊選擇字體大小
+    fontSizeOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        const value = this.getAttribute('data-value');
+        currentFontSizeValue = value;
+        updateFontSizeSelection();
+      });
+    });
+    
+    document.getElementById('confirm-font-size').addEventListener('click', function() {
+      applyFontSize(currentFontSizeValue);
+      fontSizeModal.classList.remove('active');
+      
+      // 顯示提示信息
+      showToast(translations[currentLangType]['font_size_updated'] || '字體大小已更新');
+    });
+    
+    // 初始化頁面
+    document.addEventListener('DOMContentLoaded', function() {
+      // 檢查本地存儲中的語言設置
+      const savedLang = localStorage.getItem('systemLang') || 'traditional';
+      
+      // 應用語言設置
+      applyFontSetting(savedLang);
+      
+      // 監聽存儲變更事件
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'systemLang') {
+          const newLang = e.newValue || 'traditional';
+          applyFontSetting(newLang);
+        }
+      });
+      
+      // 檢查並應用當前語言設置
+      setInterval(function() {
+        const savedLang = localStorage.getItem('systemLang');
+        if (savedLang && savedLang !== currentLang) {
+          currentLang = savedLang;
+          updateLanguageSelection(currentLang);
+          // 應用新語言設置
+          applyFontSetting(currentLang);
+        }
+      }, 1000);
+    });
+    
+    // 顯示提示信息
+    function showToast(message, duration = 2000) {
+      // 檢查是否已存在toast元素
+      let toast = document.querySelector('.toast');
+      
+      if (!toast) {
+        // 創建toast元素
+        toast = document.createElement('div');
+        toast.className = 'toast';
+        document.body.appendChild(toast);
+      }
+      
+      // 設置消息
+      toast.textContent = message;
+      
+      // 顯示toast
+      toast.classList.add('show');
+      
+      // 設置定時器，自動隱藏toast
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, duration);
+    }
+    
+    // 初始化年齡選擇器
+    document.addEventListener('DOMContentLoaded', function() {
+      const ageSelect = document.getElementById('age-select');
+      
+      if (ageSelect) {
+        // 從本地存儲獲取年齡
+        const savedAge = localStorage.getItem('userAge');
+        if (savedAge && savedAge >= 1 && savedAge <= 99) {
+          ageSelect.value = savedAge;
+        } else {
+          // 如果沒有有效的保存年齡，設置為空
+          ageSelect.selectedIndex = 0;
+        }
+        
+        // 添加年齡變更事件監聽
+        ageSelect.addEventListener('change', function() {
+          const selectedAge = parseInt(this.value);
+          if (selectedAge >= 1 && selectedAge <= 99) {
+            localStorage.setItem('userAge', selectedAge);
+          } else {
+            // 如果選擇的年齡無效，重置為之前的選擇
+            this.value = localStorage.getItem('userAge') || '';
+          }
+        });
+      }
+      
+      // 底部標籤欄點擊事件
+      document.getElementById('tab-home').addEventListener('click', function() {
+        navigateWithAnimation('home.html', 'slide-in-left');
+      });
+      
+      document.getElementById('tab-ai').addEventListener('click', function() {
+        navigateWithAnimation('ai_tutor.html', 'slide-in-right');
+      });
+      
+      document.getElementById('tab-scan').addEventListener('click', function() {
+        navigateWithAnimation('scan.html', 'slide-in-right');
+      });
+      
+      document.querySelector('.scan-button').addEventListener('click', function() {
+        navigateWithAnimation('scan.html', 'slide-in-right');
+      });
+      
+      document.getElementById('tab-practice').addEventListener('click', function() {
+        navigateWithAnimation('quiz_generator.html', 'slide-in-right');
+      });
+    });
+    
+    // 頁面過渡動畫函數
+    function navigateWithAnimation(url, animationType) {
+      // 獲取當前頁面內容
+      const appContent = document.querySelector('.app-content');
+      
+      // 添加退出動畫
+      if (animationType === 'slide-in-right') {
+        appContent.classList.add('slide-out-left');
+      } else if (animationType === 'slide-in-left') {
+        appContent.classList.add('slide-out-right');
+      } else if (animationType === 'scale-in') {
+        appContent.classList.add('scale-out');
+      } else {
+        appContent.classList.add('fade-out');
+      }
+      
+      // 動畫結束後跳轉頁面
+      setTimeout(function() {
+        window.location.href = url;
+      }, 300); // 動畫持續時間
+    }
+  </script>
+</body>
+</html> 

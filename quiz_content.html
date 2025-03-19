@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能出題</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: var(--bg-color);
+      padding: 0;
+      margin: 0;
+      font-family: "微軟正黑體", "Microsoft JhengHei", sans-serif;
+    }
+    
+    .quiz-container {
+      padding: 20px;
+      padding-bottom: 80px;
+      transition: all 0.3s ease;
+      position: relative;
+      transform: translateX(0);
+      opacity: 0;
+    }
+    
+    .timer-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: white;
+      padding: 10px 15px;
+      border-radius: var(--border-radius);
+      margin-bottom: 15px;
+      box-shadow: var(--shadow);
+    }
+    
+    .elapsed-time, .countdown-time {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    
+    .elapsed-time i, .countdown-time i {
+      margin-right: 5px;
+      font-size: 16px;
+    }
+    
+    .countdown-time.warning {
+      color: var(--warning-color);
+    }
+    
+    .countdown-time.danger {
+      color: var(--danger-color);
+    }
+    
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .quiz-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .quiz-progress {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    
+    .back-button {
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+      background-color: rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .back-button i {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+    
+    .back-button:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+    
+    .back-button:active {
+      background-color: rgba(0, 0, 0, 0.15);
+    }
+    
+    .question-card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    
+    .question-text {
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .option {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      border-radius: var(--border-radius);
+      background-color: rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .option:hover {
+      background-color: rgba(0, 0, 0, 0.08);
+    }
+    
+    .option.selected {
+      background-color: rgba(74, 107, 255, 0.1);
+      border: 1px solid var(--primary-color);
+    }
+    
+    .option.correct {
+      background-color: rgba(46, 213, 115, 0.1);
+      border: 1px solid #2ed573;
+    }
+    
+    .option.incorrect {
+      background-color: rgba(255, 71, 87, 0.1);
+      border: 1px solid #ff4757;
+    }
+    
+    .option-label {
+      width: 24px;
+      height: 24px;
+      border-radius: 12px;
+      background-color: rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      margin-right: 12px;
+    }
+    
+    .option.selected .option-label {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .option.correct .option-label {
+      background-color: #2ed573;
+      color: white;
+    }
+    
+    .option.incorrect .option-label {
+      background-color: #ff4757;
+      color: white;
+    }
+    
+    .option-text {
+      font-size: 14px;
+      flex: 1;
+    }
+    
+    .feedback-container {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: var(--shadow);
+      display: none;
+    }
+    
+    .feedback-container.active {
+      display: block;
+    }
+    
+    .feedback-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .feedback-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+    }
+    
+    .feedback-icon.correct {
+      background-color: rgba(46, 213, 115, 0.1);
+      color: #2ed573;
+    }
+    
+    .feedback-icon.incorrect {
+      background-color: rgba(255, 71, 87, 0.1);
+      color: #ff4757;
+    }
+    
+    .feedback-icon i {
+      font-size: 18px;
+    }
+    
+    .feedback-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .feedback-content {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+      margin-bottom: 15px;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .action-button {
+      flex: 1;
+      padding: 12px;
+      border-radius: var(--border-radius);
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+    }
+    
+    .submit-btn {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .next-btn {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .save-btn {
+      background-color: rgba(0, 0, 0, 0.05);
+      color: var(--text-secondary);
+    }
+    
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      z-index: 100;
+      max-width: 500px;
+      margin: 0 auto;
+      animation: slideUp 0.5s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      height: 100%;
+      color: var(--text-secondary);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .tab-item i {
+      font-size: 20px;
+      margin-bottom: 4px;
+      transition: transform 0.2s ease, color 0.3s ease;
+    }
+    
+    .tab-item:hover i {
+      transform: translateY(-2px);
+    }
+    
+    .tab-item.active {
+      color: var(--primary-color);
+    }
+    
+    .tab-item.active i {
+      transform: translateY(-2px);
+    }
+    
+    .scan-button {
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+      background-color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: -20px;
+      box-shadow: 0 4px 10px rgba(74, 107, 255, 0.3);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .scan-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(74, 107, 255, 0.4);
+    }
+    
+    .scan-button:active {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(74, 107, 255, 0.3);
+    }
+    
+    .scan-button i {
+      font-size: 20px;
+      color: white;
+    }
+    
+    /* 進入動畫效果 */
+    .slide-in-left {
+      animation: slideInLeft 0.3s forwards;
+    }
+    
+    .slide-in-right {
+      animation: slideInRight 0.3s forwards;
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.3s forwards;
+    }
+    
+    .scale-in {
+      animation: scaleIn 0.3s forwards;
+    }
+    
+    .smart-animate {
+      animation: smartAnimate 0.3s forwards;
+    }
+    
+    @keyframes slideInLeft {
+      from {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    
+    @keyframes scaleIn {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes smartAnimate {
+      from {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <div class="quiz-header">
+      <div class="quiz-title">數學練習</div>
+      <div class="quiz-progress">1/10</div>
+    </div>
+    
+    <div class="timer-container">
+      <div class="elapsed-time">已用時間：<span id="elapsed-time">00:00</span></div>
+      <div class="countdown-time">剩餘時間：<span id="countdown-time">00:00</span></div>
+    </div>
+    
+    <div class="back-button" id="back-button">
+      <i class="fas fa-arrow-left"></i>
+    </div>
+    
+    <div class="question-card">
+      <div class="question-text">
+        已知函數 f(x) = 2x² - 3x + 1，求 f'(x) 的值。
+      </div>
+      
+      <div class="options-container">
+        <div class="option" data-option="A">
+          <div class="option-label">A</div>
+          <div class="option-text">f'(x) = 4x - 3</div>
+        </div>
+        
+        <div class="option" data-option="B">
+          <div class="option-label">B</div>
+          <div class="option-text">f'(x) = 4x² - 3</div>
+        </div>
+        
+        <div class="option" data-option="C">
+          <div class="option-label">C</div>
+          <div class="option-text">f'(x) = 2x - 3</div>
+        </div>
+        
+        <div class="option" data-option="D">
+          <div class="option-label">D</div>
+          <div class="option-text">f'(x) = 4x + 3</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="action-buttons">
+      <div class="action-button submit-btn" id="submit-btn">提交答案</div>
+    </div>
+    
+    <div class="feedback-container" id="feedback-container">
+      <div class="feedback-header">
+        <div class="feedback-icon correct" id="feedback-icon">
+          <i class="fas fa-check"></i>
+        </div>
+        <div class="feedback-title" id="feedback-title">回答正確！</div>
+      </div>
+      
+      <div class="feedback-content" id="feedback-content">
+        函數 f(x) = 2x² - 3x + 1 的導數為 f'(x) = 4x - 3。
+        <br><br>
+        解析：對於函數 f(x) = 2x² - 3x + 1，我們可以使用導數公式：
+        <br>
+        - 對於項 2x²，導數為 4x（冪的導數：nx^(n-1)）
+        <br>
+        - 對於項 -3x，導數為 -3（一次項的導數為係數）
+        <br>
+        - 對於常數項 1，導數為 0
+        <br><br>
+        因此，f'(x) = 4x - 3
+      </div>
+      
+      <div class="action-buttons">
+        <div class="action-button save-btn">保存到錯題本</div>
+        <div class="action-button next-btn" id="next-btn">下一題</div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // 獲取頁面元素
+    const quizContainer = document.querySelector('.quiz-container');
+    const optionElements = document.querySelectorAll('.option');
+    const submitButton = document.querySelector('.submit-btn');
+    const feedbackContainer = document.querySelector('.feedback-container');
+    const nextButton = document.querySelector('.next-btn');
+    
+    // 計時器相關變量
+    let startTime = new Date();
+    let elapsedTimeInterval;
+    let countdownTimeInterval;
+    let totalSeconds = 0;
+    let remainingSeconds = 30 * 60; // 默認30分鐘
+    
+    // 初始化計時器
+    function initTimers() {
+      // 獲取URL參數
+      const params = new URLSearchParams(window.location.search);
+      const timeParam = params.get('time');
+      
+      // 如果有時間參數，則設置倒數計時
+      if (timeParam) {
+        remainingSeconds = parseInt(timeParam) * 60;
+      }
+      
+      // 更新初始顯示
+      updateElapsedTime();
+      updateCountdownTime();
+      
+      // 設置定時器，每秒更新一次
+      elapsedTimeInterval = setInterval(updateElapsedTime, 1000);
+      countdownTimeInterval = setInterval(updateCountdownTime, 1000);
+    }
+    
+    // 更新已用時間
+    function updateElapsedTime() {
+      totalSeconds++;
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      
+      document.getElementById('elapsed-time').textContent = 
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    // 更新倒數計時
+    function updateCountdownTime() {
+      remainingSeconds--;
+      
+      // 如果時間到，則自動提交
+      if (remainingSeconds <= 0) {
+        clearInterval(countdownTimeInterval);
+        clearInterval(elapsedTimeInterval);
+        
+        // 顯示時間到的提示
+        alert('時間到！系統將自動提交您的答案。');
+        
+        // 模擬點擊提交按鈕
+        if (submitButton) {
+          submitButton.click();
+        }
+        
+        return;
+      }
+      
+      const minutes = Math.floor(remainingSeconds / 60);
+      const seconds = remainingSeconds % 60;
+      const countdownElement = document.getElementById('countdown-time');
+      
+      countdownElement.textContent = 
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      
+      // 當剩餘時間少於5分鐘時，顯示警告顏色
+      const countdownContainer = document.querySelector('.countdown-time');
+      if (remainingSeconds <= 300 && remainingSeconds > 60) {
+        countdownContainer.classList.add('warning');
+        countdownContainer.classList.remove('danger');
+      } 
+      // 當剩餘時間少於1分鐘時，顯示危險顏色
+      else if (remainingSeconds <= 60) {
+        countdownContainer.classList.add('danger');
+        countdownContainer.classList.remove('warning');
+      }
+    }
+    
+    // 頁面加載時初始化
+    window.addEventListener('load', function() {
+      // 檢查轉場動畫類型
+      const transitionType = sessionStorage.getItem('transitionType');
+      
+      // 根據轉場類型應用不同的動畫
+      if (transitionType === 'slide-in-right') {
+        quizContainer.classList.add('slide-in-right');
+      } else if (transitionType === 'slide-in-left') {
+        quizContainer.classList.add('slide-in-left');
+      } else if (transitionType === 'scale-in') {
+        quizContainer.classList.add('scale-in');
+      } else if (transitionType === 'smart-animate') {
+        quizContainer.classList.add('zoom-fade-in');
+      } else {
+        quizContainer.classList.add('fade-in');
+      }
+      
+      // 清除會話存儲中的轉場類型
+      sessionStorage.removeItem('transitionType');
+      
+      // 獲取URL參數
+      const urlParams = new URLSearchParams(window.location.search);
+      const subject = urlParams.get('subject') || '數學';
+      const count = urlParams.get('count') || '10';
+      const source = urlParams.get('source') || '教材';
+      
+      // 更新標題
+      document.querySelector('.quiz-title').textContent = `${subject}練習`;
+      
+      // 初始化計時器
+      initTimers();
+      
+      // 返回按鈕點擊事件
+      document.getElementById('back-button').addEventListener('click', function() {
+        // 儲存轉場類型
+        sessionStorage.setItem('transitionType', 'slide-in-left');
+        
+        // 添加退出動畫
+        quizContainer.style.transition = 'all 0.3s ease';
+        quizContainer.style.transform = 'translateX(100%)';
+        quizContainer.style.opacity = '0';
+        
+        // 動畫結束後返回上一頁
+        setTimeout(function() {
+          window.location.href = 'quiz_generator.html';
+        }, 300);
+      });
+    });
+    
+    // 選項點擊事件
+    document.querySelectorAll('.option').forEach(option => {
+      option.addEventListener('click', function() {
+        // 移除所有選項的選中狀態
+        document.querySelectorAll('.option').forEach(opt => {
+          opt.classList.remove('selected');
+        });
+        
+        // 為當前選項添加選中狀態
+        this.classList.add('selected');
+      });
+    });
+    
+    // 提交按鈕點擊事件
+    document.getElementById('submit-btn').addEventListener('click', function() {
+      const selectedOption = document.querySelector('.option.selected');
+      
+      if (selectedOption) {
+        // 獲取選中的選項
+        const optionValue = selectedOption.getAttribute('data-option');
+        
+        // 判斷答案是否正確（假設正確答案是A）
+        const isCorrect = optionValue === 'A';
+        
+        // 顯示正確或錯誤的樣式
+        if (isCorrect) {
+          selectedOption.classList.add('correct');
+          document.getElementById('feedback-icon').classList.add('correct');
+          document.getElementById('feedback-icon').classList.remove('incorrect');
+          document.getElementById('feedback-icon').innerHTML = '<i class="fas fa-check"></i>';
+          document.getElementById('feedback-title').textContent = '回答正確！';
+        } else {
+          selectedOption.classList.add('incorrect');
+          document.getElementById('feedback-icon').classList.add('incorrect');
+          document.getElementById('feedback-icon').classList.remove('correct');
+          document.getElementById('feedback-icon').innerHTML = '<i class="fas fa-times"></i>';
+          document.getElementById('feedback-title').textContent = '回答錯誤！';
+          
+          // 標記正確答案
+          document.querySelector('.option[data-option="A"]').classList.add('correct');
+        }
+        
+        // 顯示反饋
+        document.getElementById('feedback-container').classList.add('active');
+        
+        // 隱藏提交按鈕
+        this.style.display = 'none';
+      } else {
+        alert('請選擇一個答案');
+      }
+    });
+    
+    // 下一題按鈕點擊事件
+    document.getElementById('next-btn').addEventListener('click', function() {
+      // 重置選項狀態
+      document.querySelectorAll('.option').forEach(option => {
+        option.classList.remove('selected', 'correct', 'incorrect');
+      });
+      
+      // 隱藏反饋
+      document.getElementById('feedback-container').classList.remove('active');
+      
+      // 顯示提交按鈕
+      document.getElementById('submit-btn').style.display = 'block';
+      
+      // 更新進度（這裡只是示例，實際應該加載新題目）
+      document.querySelector('.quiz-progress').textContent = '2/10';
+      
+      // 更新題目（這裡只是示例）
+      document.querySelector('.question-text').textContent = '如果 sin(x) = 0.5，那麼 x 的值是多少？';
+      
+      // 更新選項（這裡只是示例）
+      const options = document.querySelectorAll('.option-text');
+      options[0].textContent = 'x = π/6 + 2nπ 或 x = 5π/6 + 2nπ，其中 n 為整數';
+      options[1].textContent = 'x = π/3 + 2nπ 或 x = 2π/3 + 2nπ，其中 n 為整數';
+      options[2].textContent = 'x = π/4 + 2nπ 或 x = 3π/4 + 2nπ，其中 n 為整數';
+      options[3].textContent = 'x = π/2 + nπ，其中 n 為整數';
+    });
+  </script>
+</body>
+</html> 
